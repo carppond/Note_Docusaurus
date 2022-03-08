@@ -14,8 +14,6 @@ Hi there~
 - 职业：iOS开发工程师
 - 技能：移动端性能优化、逆向与安全
 
-[这是我的个人简历](curriculumVitae)
-
 [![GitHub deployments](https://img.shields.io/github/deployments/carppond/Note_Docusaurus/Production?label=Build&style=flat-square)](https://vercel.com/carppond/note-docusaurus/deployments)
 [![GitHub last commit](https://img.shields.io/github/last-commit/carppond/Note_Docusaurus?color=FCD734&label=Last%20commit&style=flat-square)](https://github.com/carppond/Note_Docusaurus/commits/main)
 [![contact](https://img.shields.io/badge/Contact%20me-here-34ABE0?&style=flat-square)](ContactMe)
