@@ -21,12 +21,11 @@ title: 个人简历
 
 # 专业技能
 
-- 熟练掌握 Objective-C 编程语言，熟悉 C/C++、Swift、Flutter 编程语言，了解 Python 编程语言。
 - 熟练掌握 Runtime , Runloop 底层原理以及底层源码分析。
-- 熟练掌握 KVC , KVO 使⽤及其底层原理，熟练掌握多线程原理以及 NThread, GCG、NSOperation 使⽤。 
-- 熟练多线程编程以及 NThread、GCG、NSOperation 使⽤。
+- 熟练掌握 KVC , KVO 使⽤及其底层原理。
+- 熟练多线程编程以及 NThread、GCD、NSOperation 使⽤。
+- 熟悉内存管理、Block,善于查找定位因为内存管理问题引起的诡异问题
 - 掌握项⽬性能优化和组件化开发，了解常用设计模式。
-- 对 UI 控件优化经验，有适配不同屏幕不同分辨率的手机的经验。
 - 项⽬持续集成/⾃动化打包 。
 - 了解 MachO ⽂件,熟悉应⽤加载过程，熟悉项⽬动态调试/静态调试。
 - 擅长对于通信数据包签名、加密算法的逆向以及脚本的编写。
