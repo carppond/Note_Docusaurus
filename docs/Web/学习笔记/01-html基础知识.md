@@ -330,7 +330,7 @@ p
 
 ### 5. 表格标签
 
-#### 5.1 表哥的基本标签
+#### 5.1 表格的基本标签
 
 场景：在网页中以行+列的单元格的方式整齐展示和数据，如：学生成绩单
 
@@ -576,13 +576,317 @@ p
 
 ![web_study_07](../../assets/Web/Study/web_study_07.png)
 
-
-
 ### 6. 表单标签
 
+#### 6.1 input 系列便签
 
+场景：在网页中显示收集用户信息的表单效果，如：登录页、注册页
+
+标签名：input
+
+- input 标签可以通过 type 属性值的不同，展示不同的效果。
+
+type 属性值：
+
+| 标签名 | type 属性值 |                    说明                    |
+| :----: | :---------: | :----------------------------------------: |
+| input  |    text     |          文本框，用户输入单行文本          |
+| input  |  password   |            密码框，用于输入密码            |
+| input  |    radio    |             单选框，用于多选一             |
+| input  |  checkbox   |             多选框，用于多选多             |
+| input  |    file     |         文件选择，用于之后上传文件         |
+| input  |   submit    |             提交按钮，用于提交             |
+| input  |    reset    |             重置按钮，用于重置             |
+| input  |   button    | 普通按钮，默认无功能，之后配合 js 添加功能 |
+
+示例：
+
+```jsx
+<body>
+     <!-- 写什么就显示什么 -->
+     文本框: <input type="text">
+     <br>
+     <!-- 书写的内容会变成...显示 -->
+     密码框: <input type="password">
+     <br>
+     单选框: <input type="radio">
+     <br>
+     多选框: <input type="checkbox">
+     <br>
+     上传文件: <input type="file">
+</body>
+```
+
+![web_study_08](../../assets/Web/Study/web_study_08.png)
+
+##### 6.1.1 input系列标签-文本框
+
+场景：在网页中显示输入单行文本的表单空间
+
+type 属性值：text
+
+常见属性：
+
+|   属性名    |              说明              |
+| :---------: | :----------------------------: |
+| placeholder | 占位符。提示用户输入内容的文本 |
+
+示例：
+
+```jsx
+<body>
+     <input type="text" placeholder="用户名/Id">
+     <input type="password" placeholder="请输入密码">
+</body>
+```
+
+##### 6.1.2 input系列标签-单选框
+
+场景：在网页中显示多选一的单选表单空间
+
+type 属性值：radio
+
+常见属性：
+
+| 属性名  |                             说明                             |
+| :-----: | :----------------------------------------------------------: |
+|  name   | 分组。有相同name 属性值的单选框为一组，一组中同时只能有一个被选中 |
+| checked |                           默认选中                           |
+
+注意点：
+
+- name 属性对于单选框有分组功能
+- 有相同 name 属性值的单选框为一组，一组中只能同时有一个被选中。
+
+示例：
+
+```jsx
+<body>
+     性别: <input type="radio" name="性别">男 <input type="radio" name="性别">女
+</body>
+ ....
+  
+ <body>
+     <!-- 默认选中第一个 -->
+     性别: <input type="radio" name="性别" checked>男 <input type="radio" name="性别">女
+</body>
+```
+
+##### 6.1.3 input系列标签-文件选择
+
+场景：在网页中显示文件选择的表单控件
+
+type 属性值：file
+
+常见属性：
+
+|  属性名  |    说明    |
+| :------: | :--------: |
+| multiple | 多文件选择 |
+
+示例：
+
+```jsx
+<input type="file" multiple>
+```
+
+#### 6.2 button 按钮标签
+
+场景：在网页中显示不同功能的按钮表单控件
+
+type 属性值：
+
+| 标签名 | type 属性值 |                    说明                    |
+| :----: | :---------: | :----------------------------------------: |
+| input  |   submit    |   提交按钮，点击之后提交数据给后端服务器   |
+| input  |    reset    |      重置按钮。点击之后回复表单默认值      |
+| input  |   button    | 普通按钮。默认无功能，之后配合 js 添加功能 |
+
+注意点：
+
+- 如果需要实现以上按钮功能，需要配合 form 标签使用
+- form 使用方法：用 form 标签把表单标签一起包裹起来即可。
+
+示例：
+
+```jsx
+<body>
+     <form action="">
+          <!-- 用户名 -->
+          用户名: <input type="text">
+          <br>
+          密码 : <!-- 密码 -->
+          <input type="password">
+          <br>
+          <!-- 按钮 -->
+          <input type="submit">
+          <!-- 重置 -->
+          <input type="reset">
+          <input type="button" value="免费">
+     </form>
+
+</body>
+```
+
+#### 6.3 select 下拉菜单标签
+
+场景：在网页中提供多个选择项的下拉菜单表单控件
+
+标签组成：
+
+- select 标签：下拉菜单的整体
+- option 标签：下拉菜单的每一项
+
+常见属性：
+
+- selected：下拉菜单中的默认选中
+
+示例：
+
+```jsx
+<body>
+     <select>
+          <option>北京</option>
+          <option>上海</option>
+          <option>深圳</option>
+       		<!-- 默认选中 -->
+          <option selected>杭州</option>
+     </select>
+</body>
+```
+
+![web_study_09](../../assets/Web/Study/web_study_09.png)
+
+#### 6.4 textarea 文本域标签
+
+场景：在网页中提供可输入多行文本的表单控件
+
+标签名：textarea
+
+常见属性：
+
+- cols：规定了文本域内可见宽度
+- rows：规定了文本域内可见行数
+
+注意点：
+
+- 右下角可以拖拽改变大小
+- 实际开发时针对样式效果，推荐使用 CSS 设置
+
+示例：
+
+```jsx
+<body>
+     <textarea cols="30" rows="10">
+          
+     </textarea>
+</body》
+```
+
+#### 6.5 label 标签
+
+场景：常用于绑定内容与表单标签的关系
+
+标签名：label
+
+**使用方法一：**
+
+- 使用 label 标签把内容（如：文本）包裹起来
+- 在表单标签上添加 id 属性
+- 在 label 标签的 for 属性中设置对应的 id 属性值
+
+**使用方法二：**
+
+- 直接使用 label 标签把内容（如：文本）和表单标签一起包裹起来
+- 需要把 label 标签的 for 属性删除极客
+
+示例：
+
+```jsx
+<body>
+     性别:
+     <!-- 方法一 -->
+     <input type="radio" name="sex" id="man"> <label for="man">男</label>
+
+     <!-- 方法二 -->
+     <label><input type="radio" name="sex"> 女 </label>
+</body>
+```
 
 ### 7. 语义化标签
 
+#### 7.1 没有语义的布局标签-div 和 span
+
+场景：实际开发网页时会大量频繁的使用到 div 和 span 这两个没有语义的布局标签
+
+标签名：
+
+- div 标签：一行只显示一个（独占一行）
+- span 标签：一行可以显示多个
+
+示例：
+
+```jsx
+<body>
+     普通文字
+     <div>这是 div 标签</div>
+     <div>这是 div 标签</div>
+     <div>这是 div 标签</div>
+     <br>
+     <span>这是 span 标签</span>
+     <span>这是 span 标签</span>
+</body>
+```
+
+![web_study_10](../../assets/Web/Study/web_study_10.png)
+
+#### 7.2 有语义的布局标签--了解
+
+场景：在 HTML5 新版本中，推出了一些有语义的布局标签供开发者使用。
+
+标签：
+
+| 标签名  |    语义    |
+| :-----: | :--------: |
+| header  |  网页头部  |
+|   nav   |  网页导航  |
+| footer  |  网页底部  |
+|  aside  | 网页侧边栏 |
+| section |  网页区块  |
+| article |  网页文章  |
+
+**手机端网页会使用，其他设备基本上不使用**
+
+**手机端网页会使用，其他设备基本上不使用**
+
+注意点：
+
+- 以上标签显示特点和 div 一致，但是比 div 多了不同的语义
+
 ###  8. 字符实体
+
+场景：在网页中展示特殊符号效果时，需要使用字符实体替代
+
+结构：&英文;
+
+常见字符实体：
+
+| 显示结果 |       描述        |     实体名称      | 实体编号 |
+| :------: | :---------------: | :---------------: | :------: |
+|          |       空格        |       &nbsp       |  &#160   |
+|    <     |      小于号       |       &lt;        |  &#60;   |
+|    >     |      大于号       |       &gt;        |  &#62;   |
+|    &     |       和号        |       &amp;       |  &#38;   |
+|    "     |       引号        |      &quot;       |  &#34;   |
+|    '     |       撇号        | &apos; (IE不支持) |  &#39;   |
+|    ￠    |    分（cent）     |      &cent;       |  &#162;  |
+|    £     |    镑（pound）    |      &pound;      |  &#163;  |
+|    ¥     |     元（yen）     |       &yen;       |  &#165;  |
+|    €     |   欧元（euro）    |      &euro;       | &#8364;  |
+|    §     |       小节        |      &sect;       |  &#167;  |
+|    ©     | 版权（copyright） |      &copy;       |  &#169;  |
+|    ®     |     注册商标      |       &reg;       |  &#174;  |
+|    ™     |       商标        |      &trade;      | &#8482;  |
+|    ×     |       乘号        |      &times;      |  &#215;  |
+|    ÷     |       除号        |     &divide;      |  &#247;  |
 
