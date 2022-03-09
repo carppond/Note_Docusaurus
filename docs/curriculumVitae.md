@@ -8,7 +8,7 @@ title: 个人简历
 - 男 / 1990
 - 手机：18143406280
 - Email：objccf@gmail.com
-- 技术博客：ioscarp.com
+- 技术博客：note.ioscarp.com
 - 工作年限：6 年+
 
 # 个人简介
