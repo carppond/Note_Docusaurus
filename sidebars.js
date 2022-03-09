@@ -90,6 +90,7 @@ module.exports = {
       label: 'Web',
       items: [
         'Web/学习笔记/html基础知识',
+        'Web/学习笔记/CSS基础知识',
       ],
     },
   ],
