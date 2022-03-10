@@ -112,11 +112,70 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 ### 3.2 文本样式
 
-**文本缩进**
+#### 3.2.1 文本缩进
 
 属性名：text-indent
 
 取值：
 
 - 数字+px
+
 - 数字+em（推荐：1em = 当前标签的 font-size 的大小）：1em 相当于一个字的大小
+
+#### 3.2.2 文本水平对齐方式
+
+属性名：text-align
+
+取值：
+
+- left：左对齐
+
+- right：右对齐
+
+- center：居中对齐
+
+> text-align 可以使文本、span 标签、a 标签、input 标签、img 标签居中
+
+> 如果需要让文本水平居中，text-align 属性给文本所在标签（文本的父元素）设置
+
+#### 3.2.3 文本修饰
+
+属性名：text-decoration
+
+取值：
+
+- underline：下划线，常用
+- line-through：删除线，不常用
+- overline：上划线，几乎不用
+- none，无装饰线，常用
+
+> 开发中胡使用 text-decoration： none；清除 a 标签默认的下划线
+
+### 3.3 行高
+
+作用：控制一行的上下间距
+
+属性名：line-height
+
+取值：
+
+- 数字+px
+- 倍数：当前标签 font-size 的倍数
+
+应用：
+
+- 让单行文本垂直居中可以设置 line-height：文字父元素高度
+- 网页精准布局时，会设置 line-height：1，可以取消上下间距
+
+> 行高与 font 连写的注意点：
+>
+> - 如果同时设置了行高和 font 连写，注意覆盖问题
+> - font：style weight size/line-height family；
+
+### 总结
+
+![web_study_10](../../assets/Web/Study/web_study_11.png)
+
+这里出现黄色警号⚠️，说明这附近代码写错了。
+
+出现横线代码被覆盖或者注释掉了
