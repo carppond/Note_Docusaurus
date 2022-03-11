@@ -360,5 +360,55 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 ## 五、背景相关属性
 
+### 5.1 背景平铺
 
+属性名：background-repeat，bgr
 
+属性值：
+
+- repeat：默认值，水平和垂直方向都平铺
+- no-repeat：不平铺。最常用的方式
+- repeat-x：延水平方向( x 轴)平铺
+- repeat-y：沿着垂直方向( y 轴)平铺
+
+### 5.2 背景位置
+
+属性名：background-positon，快捷方式 bgp
+
+属性值：background-positon，水平方向位置，垂直方向位置
+
+![web_study_12](../../assets/Web/Study/web_study_12.png)
+
+注意点：方位名词取值和坐标取值可以混使用，第一个取值表示水平，第二个取值表示垂直
+
+### 5.3 背景相关属性的连写形式
+
+属性名：background，快捷方式 bg
+
+属性值：
+
+- 单个属性值的合写，取值之间可以空格隔开
+
+书写顺序：
+
+- background: color、image、repeat、position
+
+省略问题：
+
+- 可以按照需要省略
+- 特殊情况：在 PC 端，如果盒子大小和背景图片大小一样，此时可以直接写 background： url()
+
+注意点：
+
+- 如果需要设置单独的样式和连写
+  - 要么把单独的样式连写的下面
+  - 要么把单独的样式写在连写的里面
+
+### 小结
+
+背景相关属性连写：background
+
+背景相关属性连写的取值写法：
+
+- 单个属性值的合写，取值之间以空格隔开
+- 推荐
