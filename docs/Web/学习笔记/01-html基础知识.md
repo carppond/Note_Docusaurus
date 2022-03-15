@@ -328,6 +328,16 @@ p
 
 ![web_study_03](../../assets/Web/Study/web_study_03.png)
 
+
+
+#### 去掉列表符号
+
+```
+ul {
+	list-style: none;
+}
+```
+
 ### 5. 表格标签
 
 #### 5.1 表格的基本标签
