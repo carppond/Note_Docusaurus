@@ -1,5 +1,5 @@
 ---
-id: curriculumVitae1
+id: curriculumVitae_01
 title: 个人简历
 ---
 
