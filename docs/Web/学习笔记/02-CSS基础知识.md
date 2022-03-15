@@ -784,3 +784,231 @@ CSS 中规定每个盒子分别由：内容区域（content）、内边距区域
 
 - 控制文字细节
 
+
+
+## 十、浮动
+
+### 10.1 结构伪类选择器
+
+**目标：能够使用 `结构伪类选择器` 在 HTML 中定位元素**
+
+1. 作用与优势
+
+   1. 作用：根据元素在 HTML 中的结构关系查找元素
+   2. 优势：减少对于 HTML 中类的依赖，有利于保持代码整洁
+   3. 场景：常用于查找某父级选择器中的子元素
+
+2. 选择器：
+
+   |          选择器          |                     说明                     |
+   | :----------------------: | :------------------------------------------: |
+   |    `E:first-child {}`    |   匹配父元素中第一个子元素，并且是 E 元素    |
+   |    `E:last-child {}`     |  匹配父元素中最后一个子元素，并且是 E 元素   |
+   |   `E:nth-child(n) {}`    |   匹配父元素中第 n 个子元素，并且是 E 元素   |
+   | `E:nth-last-child(n) {}` | 匹配父元素中倒数第 n 个子元素，并且是 E 元素 |
+
+   n 的注意点：
+
+   1. n 为：0、1、2、3、4、5、6.....
+
+   2. 通过 n 可以组成常见公式：
+
+      |       功能        |      公式       |
+      | :---------------: | :-------------: |
+      |       偶数        |    2n、even     |
+      |       奇数        | 2n+1、2n-1、odd |
+      |    找到前 5 个    |      -n+5       |
+      | 找到从第 5 个往后 |       n+5       |
+
+      > 2也可以是其他数字，包括 5 也可以是其他数字
+
+示例：
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	   ....
+     <style>
+          /* 选中第一个 */
+          li:first-child {
+               background-color: green;
+          }
+          /* 选中最后一个 */
+          li:last-child {
+               background-color: red;
+          }
+          /* 任意一个 */
+          li:nth-child(3) {
+               background-color: yellow;
+          }
+          /* 倒数第 x 个 */
+          li:nth-last-child(2) {
+               background-color: brown;
+          }
+     </style>
+</head>
+<body>
+     <ul>
+          <li>这是第1个li</li>
+          <li>这是第2个li</li>
+          <li>这是第3个li</li>
+          <li>这是第4个li</li>
+          <li>这是第5个li</li>
+          <li>这是第6个li</li>
+          <li>这是第7个li</li>
+          <li>这是第8个li</li>
+     </ul>
+</body>
+</html>
+```
+
+![web_study_16](../../assets/Web/Study/web_study_16.png)
+
+公式示例：
+
+```jsx
+<style>
+      li:nth-child(2n) {
+           background-color: aliceblue;
+      }
+      li:nth-child(2n+1) {
+           background-color: red;
+      }
+ </style>
+```
+
+
+
+####  结构伪类选择器的易错点
+
+**示例一**
+
+代码：
+
+```jsx
+ <ul>
+      <li><a href="#">我是第1个a标签</a></li>
+      <li><a href="#">我是第2个a标签</a></li>
+      <li><a href="#">我是第3个a标签</a></li>
+      <li><a href="#">我是第4个a标签</a></li>
+      <li><a href="#">我是第5个a标签</a></li>
+      <li><a href="#">我是第6个a标签</a></li>
+      <li><a href="#">我是第7个a标签</a></li>
+      <li><a href="#">我是第8个a标签</a></li>
+ </ul>
+```
+
+找到一个 a 标签：
+
+```jsx
+<style>
+	 li:first-child a {
+				background-color: red;
+   }
+</style>
+```
+
+**示例二**
+
+代码：
+
+```jsx
+<ul>
+    <li>
+         <a href="#">我是第1个a标签</a>
+         <a href="#">我是第2个a标签</a>
+         <a href="#">我是第3个a标签</a>
+         <a href="#">我是第4个a标签</a>
+         <a href="#">我是第5个a标签</a>
+    </li>
+    <li><a href="#">我是第2个a标签</a></li>
+    <li><a href="#">我是第3个a标签</a></li>
+    <li><a href="#">我是第4个a标签</a></li>
+    <li><a href="#">我是第5个a标签</a></li>
+    <li><a href="#">我是第6个a标签</a></li>
+
+</ul>
+```
+
+选中第 3 个 a
+
+```jsx
+<style>
+    li:first-child a:nth-child(3) {
+         background-color: red;
+    }
+</style>
+```
+
+
+
+### 10.2 伪元素
+
+**目标：能够使用 `伪元素` 在网页中创建内容**
+
+伪元素：一般页面中的非主体内容可以使用伪元素，一般用于网页中不重要的小图一般用伪元素
+
+区别：
+
+- 元素：HTML 设置的标签
+- 伪元素：由 CSS 模拟出的标签结果
+
+种类：
+
+|  伪元素  |               作用               |
+| :------: | :------------------------------: |
+| ::before | 在父元素内容的最前添加一个伪元素 |
+| ::after  | 在父元素内容的最后添加一个伪元素 |
+
+注意点：
+
+- 必须设置 content 属性才能生效
+- 伪元素默认是行内元素
+
+示例：
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     ....
+     <style>
+          .father {
+               width: 300px;
+               height: 300px;
+               background-color: pink;
+          }
+          /* 通过伪元素,在爱的前面加上老鼠 */
+          .father::before {
+               content: "老鼠";
+          }
+          /* 通过伪元素,在爱的后面加上大米 */
+          .father::after {
+               content: "大米";
+          }
+     </style>
+</head>
+<body>
+     <!-- 伪元素,通过 css 创建创建标签,装饰性的不重要的小图 -->
+
+     <!-- 要找父级,在这个父级里面创建子级标签 -->
+     <div class="father">爱</div>
+
+     <!-- 老鼠老鼠爱大米 -->
+      
+</body>
+</html>
+```
+
+### 10.3 标准流
+
+**目标：能够认识标准流的默认排布方式及其特点**
+
+标准流：又称文档流，是浏览器在渲染显示网页内容时默认采用的一套排班规则，规定了应该以何种方式排列元素
+
+常见标准流排班规则：
+
+- 块级元素：从上往下，垂直布局，独占一行
+- 行内元素 或者 行内块元素：从左往右，水平布局，空间不够自动折行
+
