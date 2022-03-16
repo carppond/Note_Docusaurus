@@ -1362,3 +1362,41 @@ CSS 中规定每个盒子分别由：内容区域（content）、内边距区域
 - css 美化
   - 宽度、高度、背景色 ---> 调整位置
   - 放内容  --->  调整内容位置  --->  调整细节（文字样式等等）
+
+### css 默认设置
+
+```jsx
+<!--  -->
+* {
+     margin: 0;
+     padding: 0;
+  		<!-- 内减模式，防止撑大 -->
+     box-sizing: border-box;
+}
+
+<!-- 去除下划线 -->
+a {
+     text-decoration: none;
+}
+
+<!-- 去除默认样式小圆点 -->
+ul {
+     list-style: none;
+}
+ 
+<!-- 去除浮动的影响 -->
+.clearfix::before, .clearfix::after {
+     content: "";
+     display: table;
+}
+
+<!-- 去除浮动的影响 -->
+.clearfix::after {
+     clear: both;
+}
+
+body {
+     background-color: #f3f5f7;
+}
+```
+
