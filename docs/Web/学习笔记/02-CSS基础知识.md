@@ -1005,10 +1005,333 @@ CSS 中规定每个盒子分别由：内容区域（content）、内边距区域
 
 **目标：能够认识标准流的默认排布方式及其特点**
 
-标准流：又称文档流，是浏览器在渲染显示网页内容时默认采用的一套排班规则，规定了应该以何种方式排列元素
+标准流：又称文档流，是浏览器在渲染显示网页内容时默认采用的一套排版规则，规定了应该以何种方式排列元素
 
 常见标准流排班规则：
 
 - 块级元素：从上往下，垂直布局，独占一行
 - 行内元素 或者 行内块元素：从左往右，水平布局，空间不够自动折行
 
+
+
+### 10.4 浮动
+
+作用：网页布局。让垂直布局的盒子变成水平布局。
+
+属性名：float
+
+属性值：
+
+| 属性名 |  效果  |
+| :----: | :----: |
+|  left  | 左浮动 |
+| right  | 右浮动 |
+
+示例：
+
+```jsx
+ <style>
+      div {
+           width: 100px;
+           height: 100px;
+      }
+      .one {
+           background-color: pink;
+           float: left; 
+      }
+      .two {
+           background-color: skyblue;
+           float: left;
+      }
+ </style>
+```
+
+
+
+#### 10.4.1 浮动的特点
+
+1. 浮动元素会脱离标准流(简称脱标)，在标准流中不占位置。相当于从地面飘到空中
+2. 浮动元素比标准流高半个级别，可以覆盖标准中的元素
+3. 浮动找浮动，下一个浮动元素会在上一个浮动元素后面左右浮动
+4. 浮动元素有特殊的显示效果
+   - 一行可以显示多个
+   - 可以设置宽高
+
+> 注意点：
+>
+> - 浮动的元素不能通过 text-align：center 或者 margin：0 auto
+> - 浮动后的标签具备行内块特点，但是比行内块高半个级别
+
+#### 案例
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <style>
+          .header {
+               width: 1226px;
+               height: 100px;
+               background-color: #ffc0cb;
+               margin: 0 auto;
+          }
+          .content {
+               width: 1226px;
+               height: 460px;
+               background-color: #333;
+               margin: 0 auto;
+          }
+          .one {
+               width: 234px;
+               height: 460px;
+               background-color: #ffa500;
+               float: left;
+          }
+          .two {
+               width: 992px;
+               height: 460px;
+               background-color: #87ceeb;
+               
+               float: left;
+          }
+     </style>
+</head>
+<body>
+     
+     <div class="header">头部</div>
+     <div class="content">
+          <div class="one"></div>
+          <div class="two"></div>
+     </div>
+</body>
+</html>
+```
+
+![web_study_17](../../assets/Web/Study/web_study_17.png)
+
+#### 综合案例
+
+```jsx
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+     <style>
+          * {
+               margin: 0;
+               padding: 0;
+          }
+          .box {
+               margin: 0 auto;
+               width: 1226px;
+               height: 614px;
+               /* background-color: pink; */
+          }
+          .left {
+               float: left;
+
+               width: 234px;
+               height: 614px;
+               background-color: #800080;
+          }
+
+          .right {
+               float: right;
+
+               width: 978px;
+               height: 614px;
+               /* background-color: green; */
+          }
+          ul {
+               /* 去掉列表的符号 */
+               list-style: none;
+          }
+          .right li {
+               float: left;
+
+               margin-right: 14px;
+               margin-bottom: 14px; 
+               width: 234px;
+               height: 300px;
+               background-color: #87ceeb;
+          }
+          /* 如果父级的宽度不够,子级会自动换行 */
+          /* 第四个 li 和第八个 li 右侧间距清除 */
+          .right li:nth-child(4n) {
+               margin-right: 0;
+          }
+
+     </style>
+</head>
+<body>
+     
+     <div class="box">
+          <div class="left"></div>
+          <div class="right">
+               <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+               </ul>
+          </div>
+     </div>
+</body>
+</html>
+```
+
+![web_study_18](../../assets/Web/Study/web_study_18.png)
+
+
+
+### CSS 的书写顺序
+
+按下面的顺序写，浏览器的执行效率会更高
+
+- 放浮动、display
+- 放盒子模型：marigin、border、padding、width、height
+- 文字样式
+
+
+
+### 书写网页导航步骤
+
+- 清除默认的 margin 和 padding
+- 找到 ul，去除小圆点
+- 找到 li 标签，设置浮动让 li 一行中显示
+- 找到 a 标签，设置宽高 --> a 标签默认是行内元素，默认不能设置宽高
+  - 方法一：给 a 标签设置 display：inline-block
+  - 方法二：给 a 标签设置 display：block
+  - 方法三：给 a 标签设置 float：left
+
+
+
+## 十一、清除浮动
+
+### 11.1 清除浮动的介绍
+
+含义：清除浮动带来的影响
+
+- 影响：如果子元素浮动了，此时子元素不能撑开标准流的块级父元素
+
+原因：
+
+- 子元素浮动后脱标，不占位置
+
+目的：需要父元素有高度，从而不影响其他网页元素的布局
+
+
+
+### 11.2 清除浮动的方法
+
+**直接设置父元素高度**
+
+特点：
+
+- 优点：简单粗暴、方便
+- 缺点：有些不居中 不能固定父元素高度。如：新闻列表、京东推荐模块
+
+
+
+**额外标签法**
+
+操作：
+
+- 给父元素内容的最后添加一个块级元素
+- 给添加的块级元素设置 clear:both
+
+特点：
+
+- 缺点：会在页面中添加额外的标签，会让页面的 HTML 结构变得复杂。
+
+
+
+**单伪元素清除法**
+
+操作：用伪元素替代了额外标签
+
+基本写法：
+
+```jsx
+.clearfix::after {
+	  content: '';
+ 		display: block;
+  	clear: bothl
+}
+```
+
+补充写法：
+
+```jsx
+.clearfix::after {
+ 		content: '';
+ 		display: block;
+  	clear: bothl
+    
+     /* 补充代码：在网页中看不到伪元素 */
+    height: 0;
+  	visibility: hidden;
+}
+```
+
+特点：
+
+- 优点：项目中使用，直接给标签加类即可清除浮动
+
+
+
+**双伪元素清除法**
+
+操作：
+
+```jsx
+.clearfix::before
+.clearfix::after {
+ 		content: '';
+ 		display: table;
+  
+}
+
+.clearfix::after {
+  	clear: bothl
+}
+```
+
+特点：
+
+- 优点：项目中使用，直接给标签加类即可清除浮动
+
+
+
+**给父元素设置 overflow：hidden**
+
+操作：
+
+- 直接给父元素设置 overflow：hidden
+
+特点：
+
+- 优点：方便
+
+#### 总结
+
+清除浮动的方法：
+
+- 直接给父元素设置高度
+- 额外标签法
+- 单伪元素清除法
+- 双伪元素清除法
+- 给父元素设置：overflow：hidden
+
+  
