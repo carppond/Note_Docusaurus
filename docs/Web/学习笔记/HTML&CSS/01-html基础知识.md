@@ -255,7 +255,7 @@ p
 ....
 ```
 
-![web_study_01](../../assets/Web/Study/web_study_01.png)
+![web_study_01](../../../assets/Web/Study/web_study_01.png)
 
 #### 4.3 有序列表
 
@@ -290,7 +290,7 @@ p
 ...
 ```
 
-![web_study_02](../../assets/Web/Study/web_study_02.png)
+![web_study_02](../../../assets/Web/Study/web_study_02.png)
 
 #### 4.4 自定义列表
 
@@ -326,7 +326,7 @@ p
 ...
 ```
 
-![web_study_03](../../assets/Web/Study/web_study_03.png)
+![web_study_03](../../../assets/Web/Study/web_study_03.png)
 
 
 
@@ -385,7 +385,7 @@ ul {
 </body>
 ```
 
-![web_study_04](../../assets/Web/Study/web_study_04.png)
+![web_study_04](../../../assets/Web/Study/web_study_04.png)
 
 
 
@@ -415,7 +415,7 @@ ul {
 </body>
 ```
 
-![web_study_05](../../assets/Web/Study/web_study_05.png)
+![web_study_05](../../../assets/Web/Study/web_study_05.png)
 
 #### 5.3 表格标题和表头单元格标签
 
@@ -463,7 +463,7 @@ ul {
 </body>
 ```
 
-![web_study_06](../../assets/Web/Study/web_study_06.png)
+![web_study_06](../../../assets/Web/Study/web_study_06.png)
 
 #### 5.4 表格的结构标签(了解)
 
@@ -519,7 +519,7 @@ ul {
 </body>
 ```
 
-![web_study_06](../../assets/Web/Study/web_study_06.png)
+![web_study_06](../../../assets/Web/Study/web_study_06.png)
 
 > 真实效果，肉眼很难看到，只是让浏览器，浏览器会去做处理
 
@@ -584,7 +584,7 @@ ul {
 </body>
 ```
 
-![web_study_07](../../assets/Web/Study/web_study_07.png)
+![web_study_07](../../../assets/Web/Study/web_study_07.png)
 
 ### 6. 表单标签
 
@@ -627,7 +627,7 @@ type 属性值：
 </body>
 ```
 
-![web_study_08](../../assets/Web/Study/web_study_08.png)
+![web_study_08](../../../assets/Web/Study/web_study_08.png)
 
 ##### 6.1.1 input系列标签-文本框
 
@@ -765,7 +765,7 @@ type 属性值：
 </body>
 ```
 
-![web_study_09](../../assets/Web/Study/web_study_09.png)
+![web_study_09](../../../assets/Web/Study/web_study_09.png)
 
 #### 6.4 textarea 文本域标签
 
@@ -848,7 +848,7 @@ type 属性值：
 </body>
 ```
 
-![web_study_10](../../assets/Web/Study/web_study_10.png)
+![web_study_10](../../../assets/Web/Study/web_study_10.png)
 
 #### 7.2 有语义的布局标签--了解
 

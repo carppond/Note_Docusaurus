@@ -89,12 +89,26 @@ module.exports = {
       type: 'category',
       label: 'Web',
       items: [
-        'Web/学习笔记/html基础知识',
-        'Web/学习笔记/CSS基础知识',
-        'Web/学习笔记/项目样式补充',
-        'Web/学习笔记/2D&3D转换与动画',
-        'Web/学习笔记/空间转换-动画',
-        'Web/学习笔记/移动端布局',
+        {
+          type: 'category',
+          label: 'HTML&CSS',
+          items: [
+            'Web/学习笔记/HTML&CSS/html基础知识',
+            'Web/学习笔记/HTML&CSS/CSS基础知识',
+            'Web/学习笔记/HTML&CSS/项目样式补充',
+            'Web/学习笔记/HTML&CSS/2D&3D转换与动画',
+            'Web/学习笔记/HTML&CSS/空间转换-动画',
+            'Web/学习笔记/HTML&CSS/移动端布局',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'JavaScript',
+          items: [
+            'Web/学习笔记/JavaScript/JavaScript基础',
+            'Web/学习笔记/JavaScript/JavaScript基础-API',
+          ],
+        },
       ],
     },
   ],

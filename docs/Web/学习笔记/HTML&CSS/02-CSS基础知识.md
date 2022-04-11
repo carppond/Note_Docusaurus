@@ -174,7 +174,7 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 ### 总结
 
-![web_study_10](../../assets/Web/Study/web_study_11.png)
+![web_study_10](../../../assets/Web/Study/web_study_11.png)
 
 这里出现黄色警号⚠️，说明这附近代码写错了。
 
@@ -377,7 +377,7 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 属性值：background-positon，水平方向位置，垂直方向位置
 
-![web_study_12](../../assets/Web/Study/web_study_12.png)
+![web_study_12](../../../assets/Web/Study/web_study_12.png)
 
 注意点：方位名词取值和坐标取值可以混使用，第一个取值表示水平，第二个取值表示垂直
 
@@ -547,7 +547,7 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 权重叠加计算公式：每一级之间不存在进位
 
-![web_study_13](../../assets/Web/Study/web_study_13.png)
+![web_study_13](../../../assets/Web/Study/web_study_13.png)
 
 比较规则：
 
@@ -579,7 +579,7 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 CSS 中规定每个盒子分别由：内容区域（content）、内边距区域（padding）、边框区域（border）、外边距区域（margin）构成，这就是盒子模型。
 
-![web_study_14](../../assets/Web/Study/web_study_14.png)
+![web_study_14](../../../assets/Web/Study/web_study_14.png)
 
 
 
@@ -591,7 +591,7 @@ CSS 中规定每个盒子分别由：内容区域（content）、内边距区域
 
 常见取值：数字+px
 
-![web_study_15](../../assets/Web/Study/web_study_15.png)
+![web_study_15](../../../assets/Web/Study/web_study_15.png)
 
 
 
@@ -863,7 +863,7 @@ CSS 中规定每个盒子分别由：内容区域（content）、内边距区域
 </html>
 ```
 
-![web_study_16](../../assets/Web/Study/web_study_16.png)
+![web_study_16](../../../assets/Web/Study/web_study_16.png)
 
 公式示例：
 
@@ -1111,7 +1111,7 @@ CSS 中规定每个盒子分别由：内容区域（content）、内边距区域
 </html>
 ```
 
-![web_study_17](../../assets/Web/Study/web_study_17.png)
+![web_study_17](../../../assets/Web/Study/web_study_17.png)
 
 #### 综合案例
 
@@ -1191,7 +1191,7 @@ CSS 中规定每个盒子分别由：内容区域（content）、内边距区域
 </html>
 ```
 
-![web_study_18](../../assets/Web/Study/web_study_18.png)
+![web_study_18](../../../assets/Web/Study/web_study_18.png)
 
 
 
@@ -1630,7 +1630,7 @@ body {
 
 基线：浏览器文字类型元素排版中存在用于对齐的基线：baseline
 
-![web_study_19](../../assets/Web/Study/web_study_19.png)
+![web_study_19](../../../assets/Web/Study/web_study_19.png)
 
 
 
@@ -1640,7 +1640,7 @@ body {
 
 问题：当图片和文字在一行显示时，其实底部不是对齐的
 
-![web_study_20](../../assets/Web/Study/web_study_20.png)
+![web_study_20](../../../assets/Web/Study/web_study_20.png)
 
 ### 14.3 装饰--垂直对齐方式
 
@@ -1697,7 +1697,7 @@ body {
 
 原理：
 
-![web_study_21](../../assets/Web/Study/web_study_21.png)
+![web_study_21](../../../assets/Web/Study/web_study_21.png)
 
 赋值规则：从左上角开始赋值，然后顺时针赋值，没有赋值的看对角！
 
@@ -1794,7 +1794,7 @@ border-radius: 10px， 40px;
 
 代码：border-collapse：collapse；
 
-![web_study_22](../../assets/Web/Study/web_study_22.png)
+![web_study_22](../../../assets/Web/Study/web_study_22.png)
 
 ## 十五、选择器拓展
 
