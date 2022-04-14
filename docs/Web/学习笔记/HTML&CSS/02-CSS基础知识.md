@@ -1849,3 +1849,17 @@ input: focus {
 
 
 
+## 额外补充
+
+### 消除按钮默认效果
+
+```
+button {
+		...
+		outline: none;
+		border: none;
+}
+```
+
+
+
