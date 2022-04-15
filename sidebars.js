@@ -106,7 +106,7 @@ module.exports = {
           label: 'JavaScript',
           items: [
             'Web/学习笔记/JavaScript/JavaScript基础',
-            'Web/学习笔记/JavaScript/JavaScript基础-API',
+            'Web/学习笔记/JavaScript/JavaScript基础-DOM和BOM',
           ],
         },
       ],
