@@ -1,6 +1,6 @@
 ---
-id: JavaScript基础-API
-title: JavaScript基础-API
+id: JavaScript基础-DOM和BOM
+title: JavaScript基础-API-DOM-BOM
 ---
 
 ## 一、DOM：获取 DOM 元素、修改属性
@@ -1034,7 +1034,7 @@ DOM.addEventListener(事件类型，事件处理函数，是否使用捕获机�
 
 - 获取宽高：
 
-  - 获取元素的内容总宽高（不包含滚动条）返回值不带单位
+  - 获取元素的 `内容总宽高`（不包含滚动条）返回值不带单位
   - `scrollWidth` 和 `scrollHeight`
 
 - 获取位置
@@ -1045,10 +1045,10 @@ DOM.addEventListener(事件类型，事件处理函数，是否使用捕获机�
 
   ```jsx
   div.addEventListener('scroll', function(e) {
-    		console.log(e.scrollTop)
-    		console.log(e.scrollLeft)
-    		console.log(e.scrollWidth)
-   			console.log(e.scrollHeight)
+    		console.log(this.scrollTop)
+    		console.log(this.scrollLeft)
+    		console.log(this.scrollWidth)
+   			console.log(this.scrollHeight)
   })
   ```
 
@@ -1094,13 +1094,15 @@ DOM.addEventListener(事件类型，事件处理函数，是否使用捕获机�
 
 
 
-#### 5.2.3 c.lient 家族
+#### 5.2.3 client 家族
+
+client 当前可视区域
 
 - 获取宽高：
   - 获取元素的可见部分宽高：不包含边框、滚动条等
   - `clientWidht` 和 `clientHeight`
 - 获取位置：
-  - 获取左边框和上边边框宽度
+  - 获取左边框和上边边框宽度，可以理解成获取边框的宽度
   - `clientLeft` 和 `clientTop`：注意是只读属性
 
 - 会在窗口尺寸改变的时候触发事件
@@ -1124,8 +1126,663 @@ DOM.addEventListener(事件类型，事件处理函数，是否使用捕获机�
     })
     ```
 
+
+
+## 六、BOM - 操作浏览器
+
+### 6.1 window 对象
+
+window 对象第一个全局对象，也可以说是 JavaScript 中的顶级对象
+
+像 document、alert、console.log 这些都是 window 的属性，基本上 BOM 的属性和方法都是 window 的
+
+所有通过 var 定义在全局作用域的变量、函数都会变成 window 对象的属性和方法
+
+
+
+#### 6.1.1 BOM - 浏览器对象模型
+
+- `BOM`：`browser Object Model`，浏览器对象模型
+
+  ![web_js_06](../assets/web_js_06.png)
+
+- `Window` 是浏览器内置中的全局对象，我们学习的所有 web apis 的知识内容都是基于 window 对象实现的
+
+- `window` 对象下包含 `navigator`、`location`、`document`、`history`、`screen` 5 个属性，即所谓的 `BOM`（浏览器对象模型）
+
+- `document` 是实现 `DOM` 的基础，它其实是依附于 `window` 的属性
+
+> 注意：依附于 window 对象的所有属性和方法，使用时可以`省略 window`
+
+
+
+#### 6.1.2 定时器 - 延时函数
+
+- JavaScript 内置了一个用来让代码延迟执行的函数，叫 `setTimeout`
+
+- 语法：
+
+  ```jsx
+  setTimeout(回调函数， 等待的毫秒数)
+  ```
+
+- `setTimeout` 仅仅只执行一次，所以可以理解为就是把一段代码延迟执行，平时省略 window
+
+- 清除延时函数：
+
+  ```jsx
+  let timer = setTimeout(回调函数，等待的毫秒数)
+  clearTimeout(timer)
+  ```
+
+- 结合递归函数可以使用 `setTimeout` 实现 `setInterval` 一样的功能
+
+  ```jsx
+  <div class="clock"></div>
+  <script>
+  		let clock = document.querySelector('.clock')
+    	function myInterval() {
+    			let d = new Date()
+          clock.innerText = d.toLocaleString();
+      		// 延时任务，自调用
+      		setTimeout(myInterval, 1000)
+  	  }
+      // 启动定时任务
+    	myInterval()
+  </script>
+  ```
+
+> 注意：演示器需要等待，所以后面的代码先执行
+>
+> 每一次调用延时都会产生一个新的延时器
+
+
+
+**setTimeout 和 setInterval 两种定时器对比：**
+
+- setInterval 的特征是重复执行，首次执行会延时
+- setTimeout 的特征是延迟执行，只执行一次
+- setTimeout 结合递归函数，能模拟 setInterval 重复执行
+- clearTimeout 清除由 setTimeout 创建的定时任务
+
+
+
+#### 6.1.3 JS 执行机制
+
+**JS 是单线程**
+
+JavaScript 语言的一大特点就是单线程，也就是说，同一个时间只能做一件事。这是因为 Javascript 这 门脚本语言诞生的使命所致——JavaScript 是为处理页面中用户的交互，以及操作 DOM 而诞生的。比 如我们对某个 DOM 元素进行添加和删除操作，不能同时进行。 应该先进行添加，之后再删除。
+
+单线程就意味着，所有任务需要排队，前一个任务结束，才会执行后一个任务。这样所导致的问 题是: 如果 JS 执行的时间过长，这样就会造成页面的渲染不连贯，导致页面渲染加载阻塞的感觉。
+
+
+
+**同步和异步**
+
+为了解决这个问题，利用多核 CPU 的计算能力，HTML5 提出 Web Worker 标准，允许 JavaScript 脚本创建多个线程。于是，JS 中出现了 `同步` 和 `异步`。
+
+
+
+**同步**
+
+前一个任务结束后再执行后一个任务，程序的执行顺序与任务的排列顺序是一致的、同步的。比如做饭的同步 做法:我们要烧水煮饭，等水开了(10分钟之后)，再去切菜，炒菜。
+
+例如：let num = 10
+
+
+
+**异步**
+
+你在做一件事情时，因为这件事情会花费很长时间，在做这件事的同时，你还可以去处理其他事 情。比如做饭的异步做法，我们在烧水的同时，利用这10分钟，去切菜，炒菜。
+
+定时器、事件 click、load 加载、ajax 都是异步任务
+
+
+
+> **他们的本质区别: 这条流水线上各个流程的执行顺序不同。**
+
+
+
+##### 6.1.3.1 同步和异步
+
+**同步任务**
+
+同步任务都在主线程上执行，形成一个**执行栈。**
+
+![web_js_07](../assets/web_js_07.png)
+
+**异步任务**
+
+JS 的异步是通过回调函数实现的。 
+
+一般而言，异步任务有以下三种类型:
+
+- 普通事件，如 click、resize 等
+- 资源加载，如 load、error 等
+- 定时器，包括 setInterval、setTimeout 等 
+
+
+
+异步任务相关添加到**任务队列**中(任务队列也称为消息队列)。
+
+![web_js_08](../assets/web_js_08.png)
+
+
+
+##### 6.1.3.2 JS 执行机制
+
+- 先执行执行栈中的同步任务。 
+- 异步任务放入任务队列中。
+
+- 一旦执行栈中的所有同步任务执行完毕，系统就会按次序读取任务队列中的异步任务，于是被读取的异步任务 结束等待状态，进入执行栈，开始执行。
+
+![web_js_09](../assets/web_js_09.png)
+
+
+
+
+
+##### 总结：
+
+![web_js_10](../assets/web_js_10.png)
+
+> **由于主线程不断的重复获得任务、执行任务、再获取任务、再执行，所以这种机制被称为事件循环( event loop)。**
+
+
+
+#### 6.1.4 location. 对象
+
+- `location` 的数据类型是对象，它拆分并保存了 URL 地址的各个组成部分 
+
+- **常用属性和方法:**
+
+  - `href` 属性获取完整的 URL 地址，对其赋值时用于地址的跳转
+
+    ```jsx
+    // 可以得到当前文件 URL 地址
+    console.log(location.href)
+    
+    // 可以通过 js 方式跳转到目标地址
+    location.href = 'http://www.itcast.cn'
+    ```
+
+  - `search` 属性获取地址中携带的参数，符号 ?后面部分
+
+    ```
+    console.log(location.search)
+    ```
+
+  - `hash` 属性获取地址中的啥希值，符号 # 后面部分
+
+    ```jsx
+    console.log(location.search)
+    
+    // 后期vue路由的铺垫，经常用于不刷新页面，显示不同页面，比如 网易云音乐
+    ```
+
+  - `reload` 方法用来刷新当前页面，传入参数 true 时表示强制刷新
+
+    ```jsx
+    <button>点击刷新</button>
+    <script>
+    		let btn = document.querySelector('button')
+    	  btn.addEventListener('click', function() {
+        		location.reload(true)
+        		// 强制刷新，类似 command + f5
+    	  })
+    </script>
+    ```
+
+
+
+#### 6.1.5 navigator 对象
+
+- navigator 的数据类型是对象，该对象下记录了浏览器自身的相关信息
+
+- 常用属性方法：
+
+  - 通过 userAgent 检测浏览器的版本及平台
+
+    ```jsx
+    检测 userAgent 浏览器信息
+    (function() {
+      	const userAgent = navigator.userAgent
+        // 验证是否为 android 或 iphone
+        const android = userAgent.match(/(Android);?[\s\/]+([\d.]+)?/) 
+        const iphone = userAgent.match(/(iPhone\sOS)\s([\d_]+)/)
+        // 如果是Android或iPhone，则跳转至移动站点 
+        if (android || iphone) {
+    				location.href = 'http://m.itcast.cn' 
+        }
+    })()
+    ```
+
     
 
+#### 6.1.6 history 对象
+
+管理历史记录：history.forward()、history.back()、history.go()
+
+- history 的数据类型是对象，该对象与浏览器地址栏的操作相对应，如前进、后退、历史记录等
+- 常见属性和方法：
+  - back()：可以后退功能
+  - forward()：前进功能
+  - go()：前进后退功能
+    - 如果参数是 1 前进一个页面
+    - 如果参数是-1，后退一个页面
+
+> history 对象一般在实际开发中比较少用，但是会在一些 OA 办公系统中常见
+
+
+
+### 6.2 swiper 插件
+
+- 插件: 就是别人写好的一些代码,我们只需要复制对应的代码,就可以直接实现对应的效果
+- 学习插件的基本过程
+  - 熟悉官网,了解这个插件可以完成什么需求 https://www.swiper.com.cn/
+  - 看在线演示,找到符合自己需求的demo https://www.swiper.com.cn/demo/index.html 
+  - 查看基本使用流程 https://www.swiper.com.cn/usage/index.html
+  - 查看APi文档,去配置自己的插件 https://www.swiper.com.cn/api/index.html 
+  - 注意: 多个swiper同时使用的时候, 类名需要注意区分
+
+
+
+**本地文件：**
+
+![web_js_11](../assets/web_js_11.png)
+
+
+
+### 6.3 本地存储
+
+#### 6.3.1 **本地存储特性**
+
+随着互联网的快速发展，基于网页的应用越来越普遍，同时也变的越来越复杂，为了满足各种各样的需求，会经常性在 本地存储大量的数据，HTML5规范提出了相关解决方案。
+
+1、数据存储在用户浏览器中 
+
+2、设置、读取方便、甚至页面刷新不丢失数据 
+
+3、容量较大，sessionStorage和localStorage约 5M 左右
+
+
+
+#### 6.3.2 **localStorage**
+
+1、生命周期永久生效，除非手动删除 否则关闭页面也会存在 
+
+2、可以多窗口(页面)共享(同一浏览器可以共享)
+
+3、以键值对的形式存储使用
+
+
+
+**存储数据:**
+
+```jsx
+localStorage.setItem(key, value)
+```
+
+
+
+**获取数据:**
+
+```jsx
+localStorage.getItem(key)
+```
+
+
+
+**删除数据:**
+
+```jsx
+localStorage.removeItem(key)
+```
+
+
+
+**存储复杂数据类型存储**
+
+- 本地只能存储字符串,无法存储复杂数据类型.需要将复杂数据类型转换成JSON字符串,在存储到本地
+
+
+
+**JSON.stringify(复杂数据类型)**
+
+- 将复杂数据转换成JSON字符串 **存储** 本地存储中 
+
+
+
+**JSON.parse(JSON字符串)** 
+
+- 将JSON字符串转换成对象 **取出** 时候使用
+
+
+
+#### 6.3.3 **sessionStorage 了解**
+
+1、生命周期为关闭浏览器窗口 
+
+2、在同一个窗口(页面)下数据可以共享 
+
+3、以键值对的形式存储使用
+
+4、用法跟localStorage 基本相同
+
+
+
+### 6.4 自定义属性--拓展
+
+**固有属性**:
+
+标签天生自带的属性 比如class id title等, 可以直接使用点语法操作
+
+
+
+**自定义属性**:
+
+由程序员自己添加的属性,在DOM对象中找不到, 无法使用点语法操作,必须使用专门的API
+
+- getAttribute('属性名') ：获取自定义属性 
+
+- setAttribute('属性名', '属性值')：设置自定义属性 
+
+- removeAttribute('属性名')：删除自定义属性
+
+  ```jsx
+  <div class='box'></div>
+  <script>
+  		let box = document.querySelector('.box')
+  	  box.setAtribute('myid', 10)
+    	console.log(box.getAttribute('myid'))
+  </script>
+  ```
+
+
+
+**data-自定义属性:**
+
+传统的自定义属性没有专门的定义规则，开发者随意定值，不够规范，所以在html5中推出来了专门的 `data-自定义属性` 
+
+在标签上一律以 `data-`开头
+
+在DOM对象上一律以 `dataset对象` 方式获取
+
+```jsx
+<div class='box' data-id='10'></div>
+<script>
+		let box = documnet.querySelector('.box')
+  	console.log(box.dataset.id)
+</script>
+```
+
+
+
+## 七、正则表达式
+
+### 7.1 什么是正则表达式
+
+- 正则表达式(Regular Expression)是用于匹配字符串中字符组合的模式。在 JavaScript中，正则表达式也是对象
+- 通常用来查找、替换那些符合正则表达式的文本，许多语言都支持正则表达式。
+- 正则表达式在 JavaScript中的使用场景:
+  - 例如验证表单:用户名表单只能输入英文字母、数字或者下划线， 昵称输入框中可以输入中文( `匹配` )
+  - 比如用户名: /^[a-z0-9_-]{3,16}$/
+  - 过滤掉页面内容中的一些敏感词(替换)，或从字符串中获取我们想要的特定部分( `提取` )等 。
+  - 
+
+
+
+### 7.2 正则表达式语法
+
+我们想要查找是否有戴眼镜的人, 怎么做呢?
+
+1. 定义规则: 戴眼镜的
+2. 根据规则去查找:找到则返回
+3. ![web_js_12](../assets/web_js_12.png)
+
+正则同样道理，我们分为两步:
+
+1. 定义规则
+2. 查找
+
+比如:查找下面文本中是否包含字符串 '前端’
+
+`let str = 'IT 培训，前端开发，web 前端培训，软件测试培训等'`
+
+**语法**
+
+**语法**
+
+**语法**
+
+JavaScript 中定义正则表达式的语法有两种，我们先学习其中比较简单的方法:
+
+- 定义正则表达式语法：
+
+  ```jsx
+  let 变量名 = / 表达式 /
+  ```
+
+  - 其中 `/ /` 是正则表达式字面量
+  - 比如：`let reg = /前端/`
+
+- **判断是否有符合规则的字符串:**
+
+  - test() 方法，用来查看正则表达式与指定的字符串是否匹配
+
+  - 语法：
+
+    ```jsx
+    regObj.test(被检测的字符串)
+    ```
+
+  - 比如：
+
+    ```jsx
+    let str = 'IT 培训，前端开发，web 前端培训，软件测试培训等'
+    let reg = /前端/
+    let re = reg.test(str)
+    console.log(re)
+    ```
+
+  - 如果正则表达式与指定的字符串匹配，返回 true，否则 false
+
+- **检索(查找)符合规则的字符串:**
+
+  - exec()：方法，在一个指定字符中执行一个搜索匹配
+
+  - 语法：
+
+    ```jsx
+    regObj.exec(被检测的字符串)
+    ```
+
+  - 比如：
+
+    ```jsx
+    let str = 'IT 培训，前端开发，web 前端培训，软件测试培训等'
+    let reg = /前端/
+    let re = reg.exec(str)
+    console.log(re) // 返回的是个数组
+    ```
+
+  - 如果匹配成功，exec() 方法返回一个数字，否则返回 null
+
+
+
+### 7.3 元字符
+
+**普通字符：**
+
+大多数的字符仅能够描述它们本身，这些字符称作普通字符，例如所有的字母和数字。
+也就是说普通字符只能够匹配字符串中与它们相同的字符。
+
+
+
+**元字符：特殊字符**
+
+是一些具有特殊含义的字符，可以极大提高了灵活性和强大的匹配功能。
+
+- 比如，规定用户只能输入英文26个英文字母，普通字符的话 abcdefghijklm.....
+- 但是换成元字符写法: [a-z]
+
+
+
+**参考文档：**
+
+- MDN:https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions 
+- 正则测试工具: http://tool.oschina.net/regex
+
+
+
+为了方便记忆和学习，我们对众多的元字符进行了分类：
+
+- 边界符：表示位置，开头和结尾。必须用什么开头，用什么结尾
+- 量词：表示重复次数
+- 字符类：比如：\d 表示 0-9
+
+
+
+#### 7.3.1 边界符
+
+正则表达式中的边界符（位置符）用来提示字符所处的位置，主要有两个字符：
+
+- `^`：表示匹配行首的文本。以谁开头
+
+- `$`：表示匹配行尾的文本。以谁结束
+
+- > 如果 ^ 和 $ 在一起，表示必须精确匹配
+
+示例：
+
+```jsx
+console.log(/哈/.test('哈')) // true
+console.log(/二哈/.test('二哈')) // true
+console.log(/而哈/.test('很二哈哈')) // true
+
+// 以 ^ 开头
+console.log(/^二哈/.test('很二哈哈')) // false
+console.log(/^二哈/.test('二哈很傻')) // true
+
+// 以 $ 结尾
+console.log(/^二哈$/.test('二哈很傻')) // false
+console.log(/^二哈$/.test('二哈二哈')) // false
+console.log(/^二哈$/.test('二哈')) // true
+```
+
+
+
+#### 7.3.2 量词
+
+量词：用来设定某个模式出现的次数
+
+| 量词  |        说明         |
+| :---: | :-----------------: |
+|   *   | 重复 0 次或者更多次 |
+|   +   | 重复一次或者更多次  |
+|  ？   |  重复零次或者一次   |
+|  {n}  |      重复 n 次      |
+| {n,}  | 重复 n 次或者更多次 |
+| {n,m} |   重复 n 到 m 次    |
+
+> 逗号左右两侧千万不要出现空格
+
+示例：
+
+```jsx
+```
+
+
+
+#### 7.3.3 字符类
+
+- `[]` 匹配字符集合：匹配中括号的 `任意字符`
+
+  - 后面的字符串只要包含 abc 中的任意一个字符，都返回 true
+
+    ```jsx
+    // 只要中括号里面的任意字符出现都会返回 true
+    console.log(/[abc]/.test('andy')) // true
+    console.log(/[abc]/.test('baby')) // true
+    console.log(/[abc]/.test('cry')) // true
+    console.log(/[abc]/.test('die')) // false
+    ```
+
+- `[-]`：中括号中间加上 - 连字符，表示一个范围
+
+  - `[a-z]`：表示 a 到 z 26 个英文字符都可以
+
+  - `[a-zA-Z]` ：表示a 到 z 26 个英文字符大小写都可以
+
+  - `[0-9]`：表示 0 ~ 9 的数字都可以
+
+  - 例如：
+
+    ```jsx
+    腾讯 QQ 号：
+    ^[1-9][0-9]{4,}$
+    腾讯 QQ 号从 10000 开始
+    ```
+
+- `[^]`：里面加上^取反符号
+
+  - `[^a-z]`：匹配除了小写字母意外的字符
+  - 注意 `^` 要写到中括号里面
+
+- `.`：匹配除换行符之外的任何单个字符
+
+
+
+预定义的字符类：指的是某些常见模式的简写模式
+
+| 预定类 |                             说明                             |
+| :----: | :----------------------------------------------------------: |
+|   \d   |           匹配 0 ~ 9 之间的任一数字，相当于 [0-9]            |
+|   \D   |            匹配 0 ~ 9 以外的字符，相当于`[^0-9]`             |
+|   \w   |       匹配任意字母、数字、和下划线，相当于[a-zA-Z0-9_]       |
+|   \W   | 除所有字母、数字、和下划线以外的字符，相当于`[^a-zA-Z0-9_]`  |
+|   \s   | 匹配空格（包括换行符、制表符、空格符等），相当于[\t\r\n\v\f] |
+|   \S   |           匹配非空格的字符，相当于`[^\t\r\n\v\f]`            |
+
+> 日期格式：^\d{4}-\d{1,2}-\d{1,2}
+
+
+
+#### 7.4 修饰符
+
+修饰符约束正则执行的某些细节行为，如是否区分大小写、是否支持多行匹配等
+
+语法：
+
+```jsx
+/表达式/修饰符
+```
+
+- i 是单词 ignore 的缩写，正则匹配时字母不区分大小写
+
+- g 是单词 global 的所以，匹配所有满足正则表达式的结果
+
+  ```jsx
+  console.log(/a/i.test('a')) // true
+  console.log(/a/i.test('A')) // true
+  ```
+
+
+
+**替换：replace 替换**
+
+- 语法：
+
+  ```jsx
+  字符串.replace(/正则表达式/，.替换的文本)
+  ```
+
+  
+
+
+
 ## 额外知识
+
+
 
 - console.dir()：打印对象所有的属性
