@@ -1849,6 +1849,48 @@ input: focus {
 
 
 
+## 十六、属性选择器
+
+CSS **属性选择器**通过已经存在的属性名或属性值匹配元素。
+
+```jsx
+/* 存在title属性的<a> 元素 */
+a[title] {
+  color: purple;
+}
+
+/* 存在href属性并且属性值匹配"https://example.org"的<a> 元素 */
+a[href="https://example.org"] {
+  color: green;
+}
+
+/* 存在href属性并且属性值包含"example"的<a> 元素 */
+a[href*="example"] {
+  font-size: 2em;
+}
+
+/* 存在href属性并且属性值结尾是".org"的<a> 元素 */
+a[href$=".org"] {
+  font-style: italic;
+}
+
+/* 存在class属性并且属性值包含以空格分隔的"logo"的<a>元素 */
+a[class~="logo"] {
+  padding: 2px;
+}
+```
+
+语法：
+
+- `[xxx]`：表示带有以xxx 属性的元素。例如：a[title] 表示存在 title 属性的 a 元素
+- `[xxx=value]`：表示带有以 xxx 命名的属性，且属性值是 value 的元素
+
+- `[xxx~=value]`：表示带有以 xxx 命名的属性的元素，并且该属性是一个以空格作为分隔的值列表，其中至少有一个值为 value。
+
+更多语法看：https://developer.mozilla.org/zh-CN/docs/Web/CSS/Attribute_selectors
+
+
+
 ## 额外补充
 
 ### 消除按钮默认效果
