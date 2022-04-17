@@ -107,6 +107,7 @@ module.exports = {
           items: [
             'Web/学习笔记/JavaScript/JavaScript基础',
             'Web/学习笔记/JavaScript/JavaScript基础-DOM和BOM',
+            'Web/学习笔记/JavaScript/javascript高级使用',
           ],
         },
       ],
