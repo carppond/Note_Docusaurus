@@ -900,4 +900,110 @@ type 属性值：
 |    ×     |       乘号        |      &times;      |  &#215;  |
 |    ÷     |       除号        |     &divide;      |  &#247;  |
 
-f
+
+
+### 9 form 表单
+
+#### 什么是表单
+
+表单在网页中主要负责数据采集功能。HTML中的 `<form>` 标签，就是用于采集用户输入的信息，并通过 `<form>` 标签的提交操作，把采集到的信息提交到服务器端进行处理。
+
+![web_study_50](../../../assets/Web/Study/web_study_50.png)
+
+
+
+#### 表单的组成部分
+
+```jsx
+<form>
+    <input type="text" name="email_or_mobile" />
+    <input type="password" name="password" />
+    <input type="checkbox" name="remember_me" checked />
+    <button type="submit">提交</button>
+</form>
+```
+
+表单由三部分组成：
+
+- 表单标签：`<form></form>`
+- 表单域：上面代码的 `input` 部分
+  - 包含了文本框、密码框、隐藏域、多行文本框、复选框、单选框、下拉选择框、文件上传框等
+- 表单按钮：上述代码的 `button`
+
+
+
+#### 表单 form 的属性
+
+`<form>` 标签用来采集数据，`<form>` 标签的属性则是用来规定**如何把采集的数据发送到服务器**
+
+|  属性   |                              值                              |                    描述                     |
+| :-----: | :----------------------------------------------------------: | :-----------------------------------------: |
+| action  |                           URL地址                            |    规定当提交表单时，向何处发送表单数据     |
+| method  |                          get、post                           | 规定以何种方式把表单数据提交到到 action URL |
+| enctype | application/x-www-form-urlencoded
+multipart/form-data
+text/plain |   规定在发送表单数据之前如何对齐进行编码    |
+| target  |               _blank
+_self
+_parent
+_top
+framename                |          规定在何处打开 action URL          |
+
+**action：**
+
+- `action` 属性用来规定当提交表单时，向何处发送表单数据。
+
+- `action` 属性的值应该是后端提供的一个 `URL` 地址，这个 `URL` 地址专门负责接收表单提交过来的数据。
+
+- 当 `<form>` 表单在未指定 `action` 属性值的情况下，`action` 的默认值为当前页面的 URL 地址。
+
+>  注意：当提交表单后，页面会立即跳转到 `action` 属性指定的 `URL` 地址
+
+
+
+**target：**
+
+`target` 属性用来规定在何处打开 `action URL`。
+
+它的可选值有 `5` 个，默认情况下，`target` 的值是 `_self`，表示在相同的框架中打开 `action URL`。
+
+|  **值**   |            **描述**            |
+| :-------: | :----------------------------: |
+|  _blank   |        在新窗口中打开。        |
+|   _self   |   默认。在相同的框架中打开。   |
+|  _parent  |  在父框架集中打开。（很少用）  |
+|   _top    |  在整个窗口中打开。（很少用）  |
+| framename | 在指定的框架中打开。（很少用） |
+
+
+
+**method：**
+
+`method` 属性用来规定以何种方式把表单数据提交到 `action URL`。
+
+它的可选值有两个，分别是 `get` 和 `post`。
+
+默认情况下，`method` 的值为 `get`，表示通过 `URL` 地址的形式，把表单数据提交到 `action URL` 。
+
+> 注意：
+> `get` 方式适合用来提交少量的、简单的数据。
+> `post` 方式适合用来提交大量的、复杂的、或包含文件上传的数据。
+> 在实际开发中，`<form>` 表单的 `post` 提交方式用的最多，很少用 get。例如登录、注册、添加数据等表单操作，都需要使用 post 方式来提交表单。
+
+
+
+**enctype：**
+
+`enctype` 属性用来规定在发送表单数据之前如何对数据进行编码。
+
+它的可选值有三个，默认情况下，`enctype` 的值为 `application/x-www-form-urlencoded`，表示在发送前编码所有的字符。
+
+|              **值**               |                           **描述**                           |
+| :-------------------------------: | :----------------------------------------------------------: |
+| application/x-www-form-urlencoded |                 在发送前编码所有字符（默认）                 |
+|        multipart/form-data        | 不对字符编码。 在使用包含文件上传控件的表单时，必须使用该值。 |
+|            text/plain             |     空格转换为 “+” 加号，但不对特殊字符编码。（很少用）      |
+
+> 注意：
+> 在涉及到文件上传的操作时，必须将 `enctype` 的值设置为 `multipart/form-data`
+> 如果表单的提交不涉及到文件上传操作，则直接将 `enctype` 的值设置为 `application/x-www-form-urlencoded` 即可！

@@ -1139,6 +1139,17 @@ console.log($.fn.jquery)
 
 
 
+### 40 - 字符串操作 trim
+
+去掉字符串起始和结尾的空格
+
+```jsx
+str.trim()
+trim(str)
+```
+
+
+
 ## 二、jQuery 插件
 
 ### 1 - 轮播图插件 - slick

@@ -249,3 +249,156 @@ $.ajax({
 })
 ```
 
+
+
+## 二、模板引擎
+
+### 2.1 渲染 UI 结构时遇到的问题
+
+```jsx
+var rows = []
+$.each(res.data, function (i, item) { // 循环拼接字符串
+    rows.push('<li class="list-group-item">'+ item.content +'<span class="badge cmt-date">评论时间：'+ item.time +'</span><span class="badge cmt-person">评论人：'+ item.username +'</span></li>')
+})
+$('#cmt-list').empty().append(rows.join('')) // 渲染列表的UI结构
+```
+
+上述代码是通过字符串拼接的形式，来渲染UI结构。
+
+如果UI结构比较复杂，则拼接字符串的时候需要格外注意引号之前的嵌套。且一旦需求发生变化，修改起来也非常麻烦。
+
+
+
+### 2.2 什么是模板引擎
+
+模板引擎，顾名思义，它可以根据程序员指定的模板结构和数据，自动生成一个完整的HTML页面。
+
+![web_js_31](../assets/web_js_31.png)
+
+模板引擎的好处：
+
+- 减少了字符串的拼接操作
+- 使代码结构更清晰
+- 使代码更易于阅读和维护
+
+
+
+### 2.3 art-template 模板引擎
+
+`art-template` 是一个简约、超快的模板引擎。中文官网首页为 http://aui.github.io/art-template/zh-cn/index.html
+
+![web_js_32](../assets/web_js_32.png)
+
+
+
+**art-template 的安装：**
+
+在浏览器中访问 http://aui.github.io/art-template/zh-cn/docs/installation.html 页面，找到下载链接后，鼠标右键，选择“链接另
+
+存为”，将 `art-template` 下载到本地，然后，通过 <script> 标签加载到网页上进行使用。
+
+![web_js_33](../assets/web_js_33.png)
+
+
+
+#### 2.3.1  art-template 模板引擎的基本使用
+
+使用步骤：
+
+- 导入 `art-templa`
+- 定义数据
+- 定义模板
+- 调用 `template` 函数
+- 渲染 `HTML` 结构
+
+
+
+#### 2.3.2  art-template 的标准语法
+
+`art-template` 提供了 `{{ }}` 这种语法格式，在 ` {{ }}`  内可以进行变量输出，或循环数组等操作，这种  `{{ }}` 语法在 `art-template` 中被称为
+
+标准语法。
+
+**标准语法：输出**
+
+```jsx
+{{value}}
+{{obj.key}}
+{{obj['key']}}
+{{a ? b : c}}
+{{a || b}}
+{{a + b}}
+```
+
+在 `{{ }}` 语法中，可以进行变量的输出、对象属性的输出、三元表达式输出、逻辑或输出、加减乘除等表达式输出。
+
+
+
+**标准语法：原文输出**
+
+```jsx
+{{@ value}}
+```
+
+如果要输出的 `value` 值中，包含了 `HTML` 标签结构，则需要使用原文输出语法，才能保证 `HTML` 标签被正常渲染。 
+
+
+
+**标准语法：条件输出**
+
+如果要实现条件输出，则可以在 `{{ }}` 中使用 `if … else if … /if` 的方式，进行按需输出。
+
+```jsx
+{{if value}} 按需输出的内容 {{/if}}
+
+{{if v1}} 按需输出的内容 {{else if v2}} 按需输出的内容 {{/if}}
+```
+
+
+
+**标准语法：循环输出**
+
+如果要实现循环输出，则可以在 `{{ }}` 内，通过 `each` 语法循环数组，当前循环的索引使用 `$index` 进行访问，当前的循环项使用 `$value` 进行访问。
+
+```jsx
+{{each arr}}
+    {{$index}} {{$value}}
+{{/each}}
+```
+
+
+
+**标准语法：过滤器**
+
+![web_js_34](../assets/web_js_34.png)
+
+过滤器的本质，就是一个 `function` 处理函数。
+
+```jsx
+{{value | filterName}}
+```
+
+过滤器语法类似管道操作符，它的上一个输出作为下一个输入。
+
+定义过滤器的基本语法如下：
+
+```jsx
+template.defaults.imports.filterName = function(value){/*return处理的结果*/}
+```
+
+```jsx
+<div>注册时间：{{regTime | dateFormat}}</div>
+```
+
+定义一个格式化时间的过滤器 dateFormat 如下：
+
+```jsx
+ template.defaults.imports.dateFormat = function(date) {
+    var y = date.getFullYear()
+    var m = date.getMonth() + 1
+    var d = date.getDate()
+
+    return y + '-' + m + '-' + d // 注意，过滤器最后一定要 return 一个值
+ }
+```
+
