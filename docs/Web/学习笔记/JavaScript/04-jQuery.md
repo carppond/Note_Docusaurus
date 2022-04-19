@@ -3,6 +3,8 @@ id: JavaScript高级-jQuery
 title: jQuery
 ---
 
+## jQuery
+
 ### 01- 认识 jQuery
 
 - JavaScript 类库：js 文件
@@ -563,7 +565,53 @@ $(window).click(function(){})
 
 
 
-### 18 - 获取位置
+### 18 - 事件参数
+
+`jQuery` 绑定的事件中可以获取事件参数(事件对象)，用法和原生 js 完全一致。
+
+语法：
+
+```jsx
+// 没有设定事件参数
+$('选择器').事件名(function () {})
+
+// 设置时间参数
+$('选择器').事件名(function (e) {})
+$('选择器').事件名(function (event) {})
+$('选择器').事件名(function (event) {
+  	event.stopPropagation()
+})
+```
+
+- `jQuery` 已经处理好了时间参数的兼容性
+
+
+
+### 19 - 事件委托
+
+`jQuery` 中封装了事件委托的支持，直接通过 `on` 方法可以即可使用
+
+语法：
+
+```jsx
+// 直接绑定
+$('选择器').on('事件名', function(){})
+
+// 事件委托
+$('祖先选择器').on('事件名', '后代选择器', function(){})
+```
+
+- 减少事件注册
+
+- 解决动态增加后代元素的事件绑定问题
+
+- 原理是冒泡原理
+
+- 回调函数中的 `this` 是触发事件的 `DOM` 对象
+
+  
+
+### 20 - 获取位置
 
 通过 `jQuery` 直接获取元素的位置
 
@@ -590,7 +638,7 @@ $('选择器').position()
 
 
 
-### 19 - 滚动距离
+### 21 - 滚动距离
 
 通过 `jQuery` 获取元素的滚动距离
 
@@ -608,7 +656,7 @@ $('选择器').scrollTop(值)
 
 
 
-### 20 - 显示 & 隐藏动画
+### 22 - 显示 & 隐藏动画
 
 通过 `jQuery` 以动画的方式切换元素的显示&隐藏
 
@@ -632,7 +680,7 @@ $('选择器').toggle(持续时间)
 
 
 
-### 21 - 淡入 & 淡出动画
+### 23 - 淡入 & 淡出动画
 
 通过 `jQuery` 以淡入&淡出的方式切换元素的显示隐藏
 
@@ -656,7 +704,7 @@ $('选择器').fadeToggle(持续时间)
 
 
 
-### 22 - 展开 & 收起动画
+### 25 - 展开 & 收起动画
 
 通过 `jQuery` 以展开 & 收起的方式切换元素的显示隐藏
 
@@ -682,7 +730,7 @@ $('选择器').slideToggle(持续时间)
 
 
 
-### 23 - 动画队列及停止方法
+### 25 - 动画队列及停止方法
 
 通过 `jQuery` 为元素设置的多个动画会依次添加到动画队列中，并根据添加的顺序依次播放
 
@@ -696,3 +744,689 @@ $('选择器').slideToggle(持续时间)
 
 语法：
 
+```jsx
+// 停止当前动画
+$('选择器').stop()
+
+// 清空队列，在动画当前状态停止
+$('选择器').stop(true)
+
+// 清空队列，直接到当前动画的结束状态
+$('选择器').stop(true, true)
+```
+
+- 动画方法和 stop 方法返回等等是同一个 `jquery` 对象，支持链式编程
+
+
+
+### 26 - 自定义动画
+
+ `jQuery` 提供了 `animate` 方法来实现更为复杂的动画效果
+
+**语法1：**
+
+```jsx
+$('选择器').animate(动画属性)
+
+例如：
+// 默认单位是 px
+$('选择器').animate({
+		widht: 100,
+  	height: 100,
+  	marigin: 100
+})
+
+$('选择器').animate({
+		widht: 100,
+  	height: 100%,
+  	marigin: 100%
+})
+
+$('选择器').animate({
+		scrollTop: 100,
+  	scrollLeft: 100,
+}
+```
+
+- 数值类样式支持动画，支持多个
+- 默认单位是 px
+- 支持非样式的特殊属性
+
+
+
+**语法 2：**
+
+```jsx
+$('选择器').animate(动画属性, 持续时间)
+```
+
+- 动画的持续时间的单位是毫秒
+
+
+
+### 27 - 插入节点
+
+`jQuery` 中封装了在指定位置动态插入元素节点的方法，可以插入节点或者改变节点位置。
+
+**语法：**
+
+```jsx
+// 4 个方法参数一样，位置不同
+$('父元素选择器').append(参数) // 父元素结尾
+$('父元素选择器').prepend(参数) // 父元素开头
+$('兄弟元素选择器').before(参数) // 兄弟元素前面
+$('兄弟元素选择器').after(参数)  // 兄弟元素后面
+```
+
+- 插入节点：传入创建的 DOM 元素或者 html 结构
+- 改变位置：传入现有的 DOM 元素或者 `jQuery` 对象
+
+
+
+### 28 - 删除节点
+
+`jQuery` 中封装了动态删除元素节点的方法
+
+语法：
+
+```jsx
+jQuery对象.remove()
+```
+
+- remove 方法删除的是调用方法的元素节点
+
+
+
+### 29 - 动画的回调函数
+
+所有的 `jQuery` 动画方法都支持传入回调函数 
+
+**语法：**
+
+```jsx
+$('选择器').基础动画方法(回调函数)
+$('选择器').基础动画方法(持续时间, 回调函数)
+$('选择器').animate(属性, 回调函数)
+$('选择器').animate(属性, 持续时间, 回调函数)
+```
+
+- 回调函数会在动画执行完毕时立即执行
+- 回调函数中的 this 是执行动画的 DOM 元素
+
+
+
+### 30 - 动画的延迟方法
+
+`jQuery` 不仅可以设置动画执行的速度，还能在动画执行前设置一定的延时
+
+**语法：**
+
+```jsx
+$('选择器').delay(延迟时间).动画方法()
+$('选择器').delay(延迟时间).动画方法().delay(延迟时间).动画方法()
+```
+
+- 延迟时间的单位是毫秒
+
+
+
+### 31 - 获取尺寸
+
+`jQuery` 对获取元素尺寸进行了封装，使得在不同场景中获取元素尺寸十分方便
+
+**样式：**
+
+```jsx
+width: 200px;
+height: 100px
+padding: 10px 29px;
+border:10px dashed yellow;
+margin: 20px 20px;
+```
+
+**语法：**
+
+```jsx
+$('选择器').width() // 内容宽度
+$('选择器').height() // 内容高度
+
+// 内边距：padding
+$('选择器').innerWidht() // 内容宽度 + 内边距  
+$('选择器').innerHeight() // 内容高度 + 内边距
+
+// 内边距：padding
+// 边框：boder
+$('选择器').outerWidht() // 内容宽度 + 内边距 + 边框
+$('选择器').outerHeight() // 内容高度 + 内边距 + 边框
+
+// 内边距：padding
+// 边框：boder
+// 外边框：margin
+$('选择器').outerWidht(true) // 内容宽度 + 内边距 + 边框 + 外边框
+$('选择器').outerHeight(true) // 内容高度 + 内边距 + 边框 + 外边框
+```
+
+
+
+### 32 - 入口函数
+
+`jQuery` 中提供了更为方便的入口函数写法：
+
+测试代码：
+
+```jsx
+// 原生写法
+window.addEventLister('load', function(){})
+
+// JQ写法
+$(window).on('load', function(){})
+```
+
+- 页面资源加载完毕时执行的逻辑代码。比如图片、css 等执行完毕
+
+语法：
+
+```jsx
+// 完整写法
+$(document).ready(function(){})
+
+// 简化写法
+$(function(){})
+```
+
+- DOM 载入完毕就会执行
+
+> ready 会比 load 早执行
+
+
+
+### 33 - 提交事件
+
+`form` 标签本身具有提交数据的能力，但是限制基本不那么用
+
+测试代码：
+
+```jsx
+<form>
+  <input type="text" placeholder="用户名" />
+  <br />
+  <input type="password" placeholder="密码" />
+  <br />
+  <input type="submit" value="提交" />
+  <button>提交</button>
+</form>
+
+```
+
+- 点击提交按钮，输入区域点击回车都会触发表单提交
+- 表单中的 button 默认是提交按钮
+
+
+
+**现在比较流行在表单的 submit 事件中阻止默认行为，自己获取数据并提交**
+
+```jsx
+$('form').submit(function (event) {
+  	// 阻止默认行为
+  	event.preventDefault()
+  	// 阻止默认行为
+  	return false
+})
+```
+
+- 返回 false 或者 preventDefault 都可以阻止默认行为
+
+
+### 34 - 克隆
+
+`jQuery` 中封装了克隆（复制），节点的方法
+
+语法：
+
+```jsx
+// 不带事件
+.clone()
+
+// 带事件
+.clone(true)
+```
+
+- 方法返回的还是 `jQuery` 对象
+- 传入 true 事件也会一切克隆
+
+
+
+### 35 - 获取 dom 对象
+
+`jQuery` 封装了获取内部 `dom` 对象的方法
+
+测试代码：
+
+```jsx
+// 播放视频
+video标签.play()
+// 暂停视频
+video标签.pause()
+// 重置表单
+form表单.reset()
+```
+
+- `jQuery` 并没有封装所有 dom 方法
+
+```jsx
+// 播放视频
+$('video').trigger('play')
+// 暂停视频
+$('video').trigger('pause')
+// 重置表单
+$('form').trigger('reset')
+```
+
+- `jQuery` 通过 `trigger` 可以触发这些方法
+
+
+
+**获取 dom**
+
+语法：
+
+```jsx
+// get 方法获取
+.get(索引)
+
+// 中括号获取
+[索引]
+```
+
+- 索引从 `0` 开始
+- 获取到的是 `dom` 对象
+
+
+
+### 36 - 表单序列化
+
+`jQuery` 中封装了快速获取表单数据的方法，叫做序列化
+
+语法：
+
+```jsx
+$('from').serialize()
+```
+
+- 表单元素要有 `name` 属性才可以获取到 `value` 值
+- 获取到的数据格式是：`name1=value1&name2=value2` 的字符串
+
+
+
+### 37 - 插件机制
+
+插件是 `jQuery` 提供的扩展机制 , 本质是往 `jQuery` 原型对象上添加方法
+
+语法：
+
+```jsx
+jQuery.fn.extend({
+  	插件名(参数) {
+        // 逻辑
+    }
+})
+```
+
+- `jQuery` 是 `$` 的别名
+- `jQuery` 内部也是通过这种方式添加方法
+
+
+
+### 38 - 工具方法
+
+`jQuery` 除了封装了大量的 `DOM` 操作外，还提供了一些工具方法，这些方法通过 `$` 或 `jQuery` 直接调用 
+
+语法：
+
+```jsx
+// 遍历数组
+$.each(数组，function(下标, 值){})
+
+// 遍历并返回新数组
+$.map(数组，function(值){
+		// 返回新的值      	
+})
+```
+
+- 这里只列出 2 个方法，不仅仅只有 2 个方法
+
+
+
+### 39 - 多个版本 jQuery 共存
+
+如果我们也要用 `$` 变量，可以通过 `jQuery` 封装的方法来起别名
+
+语法：
+
+```jsx
+// 给$起别名 为 _
+let _ = $.noConflict()
+// 查看jquery的版本
+console.log($.fn.jquery)
+```
+
+- 导入其他版本的 `jQuery` 需要放在调用方法之后
+
+
+
+## 二、jQuery 插件
+
+### 1 - 轮播图插件 - slick
+
+**`jQuery` 的轮播图插件 slick**
+
+- 下包：把插件下载到本地
+- 导包：先导入 jQuery，再导入插件，导入 css（需要的话）
+- 用包：根据文档使用
+
+
+
+**导包：**
+
+语法：
+
+```jsx
+// 引入插件所需要的样式表
+<link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+
+// 导入 jQuery
+<script src="./jqury-3.6.0.js"></script>
+// 在 jQuery 之后引入插件
+<script type="text/javascript" src="slick/slick.min.js"></script>
+```
+
+
+
+**用包：**
+
+```jsx
+<div class="your-class">
+  <div>轮播元素 一</div>
+  <div>轮播元素 二</div>
+  <div>轮播元素 三</div>
+</div>
+
+$('.your-class').slick()
+$('.your-class').slick({
+  	setting-name: setting-value
+})
+```
+
+初始化配置值：
+
+| 常用配置  |           含义           | 默认值 |    备注     |
+| :-------: | :----------------------: | :----: | :---------: |
+| autoplay  | 轮播图效果自动执行、播放 | false  | true、false |
+|  arrows   |     是否显示翻页按钮     |  true  | true、false |
+| prevArrow |   自定义，上一页 按钮    |   无   | 标签选择器  |
+| nextArrow |   自定义，下一页 按钮    |   无   | 标签选择器  |
+|   dots    |      是否显示指示器      | false  | true、false |
+
+> 更多参数参考文档：https://www.slickjs.cn
+>
+> 更多配置也可以参考：:https://github.com/kenwheeler/slick
+
+```jsx
+// 调用插件方法初始化
+$('.your-class').slick({
+  	autoplay: true,
+  	dots: false,
+})
+```
+
+- 默认样式不符合需求直接添加 css 覆盖极客
+
+
+
+### 2 - 懒加载插件 - lazyload
+
+`jQuery` 的懒加载插件 `lazyload`
+
+懒加载：图片用到了再去加载，常见于有大量图片的网页。比如电商
+
+- 下包：把插件下载到本地
+- 导包：先导入 jQuery，再导入插件，导入 css（需要的话）
+- 用包：根据文档使用
+
+
+
+**导包：**
+
+语法：
+
+```jsx
+// 导入 jQuery
+<script src="jQuery.js"></script>
+<!-- 或 <script src="zepto.js"> -->
+<script src="lazyload.min.js"></script>
+```
+
+
+
+**用包：**
+
+```html
+// 图片：
+<img class="lazyload" src="img/example.jpg" width="765" height="574">
+// 图片地址设置给 data-original
+<img class="lazyload" data-original="img/example.jpg" width="765" height="574">
+  
+// 语法：
+// 找到希望懒加载的图片并调用 lazyload 方法
+$('.lazyload').lazyload()
+```
+
+
+
+> 更多参数参考文档：https://github.com/tuupola/lazyload/tree/1.x
+
+
+
+### 3 - 全屏滚动插件 - fullpage
+
+- 下包：把插件下载到本地
+- 导包：先导入 jQuery，再导入插件，导入 css（需要的话）
+- 用包：根据文档使用
+
+
+
+**导包：**
+
+语法：
+
+```jsx
+// 导入 fullpage 配餐样式
+<link rel="stylesheet" type="text/css" href="fullpage.css" />
+
+// 导入 jQuery
+<script src="./jqury-3.6.0.js"></script>
+<script type="text/javascript" src="fullpage.js"></script>
+```
+
+
+
+**用包：**
+
+```html
+<div id="fullpage">
+	<div class="section">第一屏</div>
+	<div class="section">第二屏</div>
+	<div class="section">第三屏</div>
+	<div class="section">第四屏</div>
+</div>
+
+$('#fullpage').fullpage({
+	...
+})
+```
+
+- 每个区域必须有 `section` 类名
+
+|      常用配置      |                含义                 | 默认值 |        备注        |
+| :----------------: | :---------------------------------: | :----: | :----------------: |
+|     navigation     |            是否显示导航             | false  |    true、false     |
+| navigationPosition |              导航位置               | right  |    left、right     |
+|      anchors       |         每个区域的锚链接名          |   []   |      在地址栏      |
+|     afterLoad      | 区域加载完毕的回调函数，有 2 个参数 |   无   | 参数：锚链接、索引 |
+
+> 更多配置：https://github.com/alvarotrigo/fullPage.js/tree/2.9.7
+
+
+
+### 4 - 日期选择器 - datepicker
+
+`jQuery` 的日期选择器插件 `datepicker`，让用户在不同的浏览器下可以用一致的方式来选择日期。
+
+- 下包：把插件下载到本地
+- 导包：先导入 jQuery，再导入插件，导入 css（需要的话）
+- 用包：根据文档使用
+- ![web_js_27](../assets/web_js_27.png)
+
+**导包：**
+
+语法：
+
+```jsx
+<!-- 导入日期选择器的样式 -->
+<link rel="stylesheet" href="./datepicker/datepicker.css" />
+
+<!-- 导入jQuery -->
+<script src="./jquery/jquery-3.5.1.js"></script>
+<!-- 导入日期选择器插件 -->
+<script src="./datepicker/datepicker.js"></script>
+<!-- 导入语言包 -->
+<script src="./datepicker/i18n/datepicker.zh-CN.js"></script>
+```
+
+- 默认显示的是英文，需要导入 中文语言包
+
+**用包：**
+
+```html
+<!-- 准备html结构 -->
+<input type="text" class="datapicker" />
+
+// 调用插件方法
+$('.datapicker').datepicker({
+  …
+})
+
+```
+
+| 常用配置 |           含义           | 默认值 |        备注        |
+| :------: | :----------------------: | :----: | :----------------: |
+| autoPick |   是否自动选择当前日期   | false  |    true、false     |
+| autoHide | 选择日期之后是否自动关闭 | false  |    true、false     |
+| language |         语言模式         |   空   | 需要结合语言包使用 |
+
+> 更多配置：https://github.com/fengyuanchen/datepicker/blob/master/README.md
+
+
+
+### 5 - 表单验证 - validate
+
+`jQuery` 的表单验证插件 `validate`，验证用户在表单中输入的内容
+
+`jQuery` 的日期选择器插件 `datepicker`，让用户在不同的浏览器下可以用一致的方式来选择日期。
+
+- 下包：把插件下载到本地
+- 导包：先导入 jQuery，再导入插件，导入 css（需要的话）
+- 用包：根据文档使用
+- ![web_js_28](../assets/web_js_28.png)
+
+**导包：**
+
+语法：
+
+```jsx
+    <!-- 导入jQuery -->
+    <script src="./jquery/jquery-3.5.1.js"></script>
+    <!-- 导入validate插件 -->
+    <script src="./jquery-validate/jquery-validate.js"></script>
+
+```
+
+
+
+**用包：**
+
+```html
+$('form').validate({
+  // 配置
+})
+
+```
+
+|  常用配置   |                   含义                   | 默认值 |      备注       |
+| :---------: | :--------------------------------------: | :----: | :-------------: |
+|   onBlur    |              失去焦点时验证              | false  |   true、false   |
+|  onSubmit   |              提交表单时验证              |  true  |   true、false   |
+|  sendForm   |               是否提交表单               |  true  |   true、false   |
+|    valid    |      所有表单验证通过执行的回调函数      |   无   | this 是 JQ 对象 |
+|   invalid   | 至少一个表单项为通过验证时执行的回调函数 |   无   | this 是 JQ 对象 |
+| description |               错误提示信息               |   无   |     Object      |
+
+自定义属性1：
+
+|  自定义属性   |        含义        |    备注    |
+| :-----------: | :----------------: | :--------: |
+| data-required | 验证表单项不能为空 |  不需要值  |
+| data-pattern  | 基于正则表达式验证 | 正则表达式 |
+
+语法：
+
+```jsx
+<input
+  type="password"
+  name="password"
+  data-required
+  data-pattern=".{6,}"
+/>
+```
+
+- 表单元素要放在 form 里面
+
+自定义属性2：
+
+|    自定义属性    |          含义          |            备注             |
+| :--------------: | :--------------------: | :-------------------------: |
+| data-describedby | 指定显示错误信息的标签 |          标签的 id          |
+| data-description |   指定错误信息的内容   | 和 description 中的属性对应 |
+
+- 这两个属性需要结合 description 配置使用
+
+语法：
+
+```jsx
+<input
+  type="password"
+  name="password"
+  data-required
+  data-describedby="password-error"
+  data-description="password"
+	data-pattern=".{6,}"
+/>
+<span class="error" id="password-error"></span>
+
+
+$('form').validate({
+		description: {
+  	password: {
+    		required: '密码不能为空!',
+    		pattern: '密码不能少于6位!',
+  	},
+},
+```
+
+
+
+###
+
+|
+|
