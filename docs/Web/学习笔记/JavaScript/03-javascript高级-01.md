@@ -1,6 +1,6 @@
 ---
 id: javascript高级使用
-title: javascript高级使用
+title: 03 | javascript高级使用
 ---
 
 > 学习作用域、变量提升、闭包等语言特征，加深对 JavaScript 的理解，掌握变量赋值、函数声明的简洁语法，降低代码的冗余度。

@@ -1,6 +1,6 @@
 ---
 id: JavaScript基础
-title: JavaScript 基础
+title: 01 | JavaScript 基础
 ---
 
 # JavaScript 基础 - 第1天

@@ -1,6 +1,6 @@
 ---
 id: JavaScript基础-DOM和BOM
-title: JavaScript基础-API-DOM-BOM
+title: 02 | JavaScript基础-API-DOM-BOM
 ---
 
 ## 一、DOM：获取 DOM 元素、修改属性
