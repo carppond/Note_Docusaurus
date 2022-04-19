@@ -295,7 +295,7 @@ $('#cmt-list').empty().append(rows.join('')) // 渲染列表的UI结构
 
 在浏览器中访问 http://aui.github.io/art-template/zh-cn/docs/installation.html 页面，找到下载链接后，鼠标右键，选择“链接另
 
-存为”，将 `art-template` 下载到本地，然后，通过 <script> 标签加载到网页上进行使用。
+存为”，将 `art-template` 下载到本地，然后，通过 `<script>` 标签加载到网页上进行使用。
 
 ![web_js_33](../assets/web_js_33.png)
 

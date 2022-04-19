@@ -1007,3 +1007,55 @@ framename                |          规定在何处打开 action URL          |
 > 注意：
 > 在涉及到文件上传的操作时，必须将 `enctype` 的值设置为 `multipart/form-data`
 > 如果表单的提交不涉及到文件上传操作，则直接将 `enctype` 的值设置为 `application/x-www-form-urlencoded` 即可！
+
+
+
+#### 阻止表单默认的提交行为
+
+当监听到表单的提交事件以后，可以调用事件对象的 event.preventDefault() 函数，来阻止表单的提交和页面的跳转，示例代码如下：
+
+```jsx
+$('#form1').submit(function(e) {
+   // 阻止表单的提交和页面的跳转
+   e.preventDefault()
+})
+
+$('#form1').on('submit', function(e) {
+   // 阻止表单的提交和页面的跳转
+   e.preventDefault()
+})
+```
+
+
+
+#### 快速获取表单中的数据
+
+**serialize(函数)**
+
+为了简化表单中数据的获取操作，jQuery 提供了 `serialize()` 函数，其语法格式如下：
+
+```jsx
+$('选择器').serialize()
+```
+
+> serialize() 函数的好处：可以一次性获取到表单中的所有数据
+
+示例：
+
+```html
+<form id="form1">
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+    <button type="submit">提交</button>
+</form>
+```
+
+获取表单数据：
+
+```jsx
+$('#form1').serialize()
+// 调用的结果：
+// username=用户名的值&password=密码的值
+```
+
+> 注意：在使用 serialize() 函数快速获取表单数据时，必须为每个表单元素添加 name 属性！
