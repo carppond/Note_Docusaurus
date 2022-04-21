@@ -3,8 +3,6 @@ id: node
 title: 02 | node.js
 ---
 
-
-
 ## 一、初识 Node.js
 
 ### 1.1 什么是 Node.js
@@ -51,6 +49,20 @@ Node.js 作为一个 JavaScript 的运行环境，仅仅提供了基础的功能
 Node.js 的学习路径:
 
 JavaScript 基础语法 + Node.js 内置 API 模块(fs、path、http等)+ 第三方 API 模块(express、mysql 等)
+
+
+
+### 1.3 node 代码提示
+
+- Vscode 安装 `node-snippets`
+- 安装 `typings`：
+  - 全局安装：`npm install -g typings`
+  - 项目根目录：`typings init`
+    - 目录下会出现一个`typings.json`的文件，这个文件就是`typings`的配置文件。
+  - 项目根目录：``typings install dt~node --global --save`
+    - `–-global`：代表全局文件）
+    - （`–-save` ：表示将此次的安装信息记录到上面讲的`typings.json`中)
+  - 项目根目录：`touch jsconfig.json`
 
 
 
@@ -184,6 +196,35 @@ fs.readFile('./Files/成绩.txt','utf8', function(err, dataStr) {
 
 
 
+### 2.5 fs 模块 - 路径动态拼接的问题
+
+在使用 fs 模块操作文件时，如果提供的操作路径是以 ./ 或 ../ 开头的相对路径，很容易出现路径动态拼接错误的问题。
+
+原因：代码在运行的时候，会以执行 node 命令时所处的目录，动态拼接出被操作文件的完整路径
+
+出现路径拼接错误的问题，是因为提供了 ./ 或 ../ 开头的相对路径
+
+如果要解决这个问题，可以直接提供一个完整的文件存放路径
+
+可以使用完整路径或者关键字 `__dirname`.
+
+`__dirname` ：表示当前文件所处的目录
+
+示例：
+
+```js
+const fs = require('fs')
+
+// 在当前文件下的/Files/111.txt中读取数据
+fs.readFile(__dirname + '/Files/111.txt', 'utf8', function(err, dataStr) {
+     console.log(err);
+     console.log('-========');
+     console.log(dataStr);
+})
+```
+
+
+
 ## 三、path 路径模板
 
 ### 3.1 什么是 path 路径模块
@@ -229,6 +270,23 @@ console.log(pathStr)
 
 const pathStr2 = path.join(_dirname, './file.txt')
 console.log(pathStr2) // 当前文件所有的目录是
+```
+
+> 注意：
+>
+> 今后凡是涉及到路劲拼接的操作，都要使用 path.join() 方法进行处理。不要直接使用 + 拼接
+
+读取文件示例：
+
+```jsx
+const fs = require('fs')
+const path = require('path')
+
+fs.readFile(path.join(__dirname + '/Files/111.txt'), 'utf8', function(err, dataStr) {
+     console.log(err);
+     console.log('-===');
+     console.log(dataStr);
+})
 ```
 
 
@@ -300,11 +358,11 @@ console.log(fext)
 
 回顾:什么是客户端、什么是服务器? 在网络节点中，负责消费资源的电脑，叫做客户端;负责对外提供网络资源的电脑，叫做服务器。
 
-http 模块是 Node.js 官方提供的、用来创建 web 服务器的模块。通过 http 模块提供的 http.createServer() 方法，就 能方便的把一台普
+`http` 模块是 Node.js 官方提供的、用来创建 web 服务器的模块。通过 http 模块提供的 `http.createServer()` 方法，就 能方便的把一台普
 
 通的电脑，变成一台 Web 服务器，从而对外提供 Web 资源服务。
 
-如果要希望使用 http 模块创建 Web 服务器，则需要先导入它:
+如果要希望使用 `http` 模块创建 Web 服务器，则需要先导入它:
 
 ```
 const http = require('http')
@@ -474,3 +532,943 @@ server.on('request', (req, res)=> {
 })
 ```
 
+
+
+## 五、模块化
+
+### 5.1 模块的基本概念
+
+**什么是模块化：**
+
+**模块化**是指解决一个复杂问题时，自顶向下逐层把系统划分成若干模块的过程。对于整个系统来说，模块是可组 合、分解和更换的单
+
+元。
+
+编程领域中的模块化，就是 **遵守固定的规则**，把一个大文件拆成独立并互相依赖的多个小模块。
+
+把代码进行模块化拆分的好处: 
+
+1. 提高了代码的复用性
+2. 提高了代码的可维护性
+3. 可以实现按需加载
+
+
+
+**模块化规范：**
+
+**模块化规范 **就是对代码进行模块化的拆分与组合时，需要遵守的那些规则。
+
+例如:
+
+- 使用什么样的语法格式来引用模块
+- 在模块中使用什么样的语法格式向外暴露成员
+
+**模块化规范的好处**：大家都遵守同样的模块化规范写代码，降低了沟通的成本，极大方便了各个模块之间的相互调用， 利人利己。
+
+
+
+### 5.2 Node.js 中的模块化
+
+**Node.js 中模块的分类：**
+
+Node.js 中根据模块来源的不同，将模块分为 3 大类：
+
+1. 内置模块：内置模块由 Node.js 官方提供的。例如fs、http、path 等
+2. 自定义模块：用户创建的每个 js 文件，都是自定义模块
+3. 第三方模块：由第三方开发出来的模块，并非官方提供的内置模块，也不是用户自己创建的，使用需要先下载。
+
+
+
+**加载模块：**
+
+使用强大的 `require()` 方法，可以加载需要的内置模块、自定义模块、第三方模块进行使用。
+
+例如：
+
+```jsx
+// 加载内置的 fs 模块
+const fs = require('fs')
+// 加载用户的自定义模块
+const custom = require('./custom.js')
+// 加载第三方模块
+const other = require('other')
+```
+
+> 在使用 `require` 加载自定义模块时，可以省略后缀名
+
+
+
+**Node.js 中的模块作用域：**
+
+模块作用域：和函数作用域类似，在自定义模块中自定义的变量、方法等成员，只能在当前模块内被访问，这种模块级别的访问限制，叫做模块作用域
+
+
+
+**模块作用域的好处：**
+
+防止了全局变量污染的问题
+
+`模块作用域.js`
+
+```jsx
+const userName = '张三'
+
+function sayHello() {
+     console.log('大家好,我是' + userName);
+}
+```
+
+测试：
+
+```jsx
+const cus = require('./模块作用域')
+
+console.log(cus);
+// 打印：
+// {} 空对象
+```
+
+
+
+#### 5.2.1 向外共享模块作用域中的成员
+
+**module 对象**
+
+在每个 js 自定义模块中都有一个 module 对象，它里面存储了和当前模块有关的信息。
+
+打印如下：
+
+```jsx
+console.log(module)
+
+// 打印
+/*
+Module {
+  id: '.',
+  path: '/Users/lcf/Desktop/Code/Web/Node/模块',
+  exports: {},
+  filename: '/Users/lcf/Desktop/Code/Web/Node/模块/作用域 test.js',
+  loaded: false,
+  children: [
+    Module {
+      id: '/Users/lcf/Desktop/Code/Web/Node/模块/模块作用域.js',
+      path: '/Users/lcf/Desktop/Code/Web/Node/模块',
+      exports: {},
+      filename: '/Users/lcf/Desktop/Code/Web/Node/模块/模块作用域.js',
+      loaded: true,
+      children: [],
+      paths: [Array]
+    }
+  ],
+  paths: [
+    '/Users/lcf/Desktop/Code/Web/Node/模块/node_modules',
+    '/Users/lcf/Desktop/Code/Web/Node/node_modules',
+    '/Users/lcf/Desktop/Code/Web/node_modules',
+    '/Users/lcf/Desktop/Code/node_modules',
+    '/Users/lcf/Desktop/node_modules',
+    '/Users/lcf/node_modules',
+    '/Users/node_modules',
+    '/node_modules'
+  ]
+}
+*/
+```
+
+
+
+**module.exports 对象**
+
+在自定义模块中，可以使用 `module.exports` 对象，将模块内的成员共享出去，供外界使用。
+
+在外界用 `require()` 方法导入自定义模块时，得到的就是 `module.exports` 所指向的对象。
+
+示例：
+
+```jsx
+// 自定义模块
+// 在一个自定义模块中,默认情况下 module.expoerts = {}
+// 向 module.expoerts 对象上添加一个 username 属性
+module.exports.username = '张三'
+
+module.exports.sayHello = function () {
+     console.log('Hello');
+}
+
+// 加载自定义模块
+//  在外界使用 require 方法 导入一个自定义模块的时候,
+// 得到的成员是 module.exports 对象
+const m = require('./11-自定义模块')
+console.log(m);
+// 打印：
+// { username: '张三', sayHello: [Function (anonymous)] }
+```
+
+
+
+**共享成员时的注意点：**
+
+使用 `require()` 方法导入模块时，导入的结果，**永远以** **module.exports** **指向的对象为准**。
+
+```jsx
+module.exports = {
+     username: 'sss',
+     ...
+}
+```
+
+
+
+**exports 对象：**
+
+由于 module.exports 单词写起来比较复杂，为了简化向外共享成员的代码，Node 提供了 exports 对象。默认情况 下，exports 和
+
+module.exports 指向同一个对象。最终共享的结果，还是以 module.exports 指向的对象为准。
+
+```jsx
+// 自定义模块
+exports.usernmame = '张萨姆'
+exports.sayHello = function () {
+     console.log('Hello');
+}
+
+
+// 加载自定义模块
+//  在外界使用 require 方法 导入一个自定义模块的时候,
+// 得到的成员是 module.exports 对象
+const m = require('./11-自定义模块')
+console.log(m);
+// 打印：
+// { username: '张萨姆', sayHello: [Function (anonymous)] }
+```
+
+
+
+**exports** **和** **module.exports** **的使用误区**
+
+时刻谨记，``require()`` 模块时，得到的永远是 `module.exports` 指向的对象:
+
+> **注意:**
+>
+> 为了防止混乱，建议大家不要在同一个模块中同时使用 exports 和 module.exports
+
+
+
+**Node.js** **中的模块化规范**
+
+Node.js 遵循了 `CommonJS` 模块化规范，``CommonJS` 规定了模块的特性和各模块之间如何相互依赖。
+
+`CommonJS` 规定:
+
+1. 每个模块内部，`module` 变量代表当前模块。
+2. module 变量是一个对象，它的 exports 属性(即 module.exports)是对外的接口。
+3. 加载某个模块，其实是加载该模块的 module.exports 属性。require() 方法用于加载模块。
+
+
+
+#### ... 在 module 的使用
+
+```jsx
+const xxx = require('xxx')
+module.exports = {
+  ...xxx
+}
+```
+
+会把所有 xxx 包里的暴露对象添加到 exports 中
+
+
+
+## 六、npm 与包
+
+### 6.1 包
+
+`Node.js` 中的第三方模块又叫做包。 就像电脑和计算机指的是相同的东西，第三方模块和包指的是同一个概念，只不过叫法不同。
+
+不同于 `Node.js` 中的内置模块与自定义模块，包是由第三方个人或团队开发出来的，免费供所有人使用。
+
+**注意**：`Node.js` 中的包都是免费且开源的，不需要付费即可免费下载使用。
+
+
+
+**为什么需要包**
+
+由于 `Node.js` 的内置模块仅提供了一些底层的 API，导致在基于内置模块进行项目开发的时，效率很低。
+
+包是基于内置模块封装出来的，提供了更高级、更方便的 API，极大的提高了开发效率。 
+
+包和内置模块之间的关系，类似于 jQuery 和 浏览器内置 API 之间的关系。
+
+
+
+**从哪里下载包**
+
+国外有一家 IT 公司，叫做 **npm, Inc.** 这家公司旗下有一个非常著名的网站: https://www.npmjs.com/ ，它是**全球最 大的包共享平台**，你
+
+可以从这个网站上搜索到任何你需要的包，只要你有足够的耐心!
+
+到目前位置，全球约 1100 多万的开发人员，通过这个包共享平台，开发并共享了超过 120 多万个包 供我们使用。 **npm, Inc.** **公司**提供
+
+了一个地址为 https://registry.npmjs.org/ 的服务器，来对外共享所有的包，我们可以从这个服务器上下载自己所需要的包。
+
+**注意:**
+
+- 从 https://www.npmjs.com/ 网站上搜索自己所需要的包
+- 从 https://registry.npmjs.org/ 服务器上下载自己需要的包
+
+
+
+**如何下载包**
+
+**npm, Inc.** **公司**提供了一个包管理工具，我们可以使用这个包管理工具，从 https://registry.npmjs.org/ 服务器把需要 的包下载到本地使
+
+用。
+
+这个包管理工具的名字叫做 `Node Package Manager`(简称 npm 包管理工具)，这个包管理工具随着 Node.js 的安 装包一起被安装到了用
+
+户的电脑上。
+
+大家可以在终端中执行 **npm -v** 命令，来查看自己电脑上所安装的 npm 包管理工具的版本号:
+
+
+
+### 6.2 **npm** 初体验
+
+**1.** **格式化时间的传统做法**
+
+- 创建格式化时间的自定义模块
+
+- 定义格式化时间的方法
+
+- 创建补零函数
+
+- 从自定义模块中导出格式化时间的函数 
+
+- 导入格式化时间的自定义模块
+
+- 调用格式化时间的函数
+
+  ```jsx
+  function dateFormat (dateStr) {
+       const dt = new Date(dateStr)
+       const y = dt.getFullYear()
+       const m = padZero(dt.getMonth() + 1)
+       const d = padZero(dt.getDate())
+       const h = padZero(dt.getHours())
+       const mm = padZero(dt.getMinutes())
+       const ss = padZero(dt.getSeconds())
+  
+       return `${y}-${m}-${d} ${h}:${mm}:${ss}`
+  }
+  
+  // 定义补零函数
+  function padZero (n) {
+       return n > 9 ? n : '0' + n
+  }
+  
+  module.exports = {
+       dateFormat
+  }
+  ```
+
+​		使用：
+
+- 
+
+  ```jsx
+  const Time = require('./时间格式化')
+  
+  const dt = new Date()
+  console.log(dt);
+  const newDt = Time.DateFormat(dt)
+  console.log(newDt);
+  
+  // 打印：
+  2022-04-21T08:25:28.461Z
+  2022-04-21 16:25:28
+  ```
+
+  
+
+
+
+**2.** **格式化时间的高级做法**
+
+- 使用 `npm` 包管理工具，在项目中安装格式化时间的包 `moment`
+
+- 使用 `require()` 导入格式化时间的包
+- 参考 `momen`t` 的官方 API 文档对时间进行格式化
+
+```jsx
+// 导入的名称就是装包的名称
+const moment = require('moment')
+
+const dt = moment().format('YYYY-MM-DD HH:mm:ss')
+console.log(dt);
+```
+
+
+
+**3.** **在项目中安装包的命令**
+
+如果想在项目中安装指定名称的包，需要运行如下的命令:
+
+```jsx
+npm install 包的完整名称
+```
+
+上述的装包命令，可以简写成如下格式：
+
+```jsx
+npm i 包的完整名称
+```
+
+
+
+**4.** **初次装包后多了哪些文件**
+
+初次装包完成后，在项目文件夹下多一个叫做 node_modules 的文件夹和 package-lock.json 的配置文件。
+
+其中:
+
+node_modules 文件夹用来存放所有已安装到项目中的包。require() 导入第三方包时，就是从这个目录中查找并加载包。 package-
+
+lock.json 配置文件用来记录 node_modules 目录下的每一个包的下载信息，例如包的名字、版本号、下载地址等。
+
+>  注意:程序员不要手动修改 node_modules 或 package-lock.json 文件中的任何代码，npm 包管理工具会自动维护它们。
+
+
+
+**5.** **安装指定版本的包**
+
+默认情况下，使用 npm install 命令安装包的时候，会自动安装最新版本的包。如果需要安装指定版本的包，可以在包 名之后，通过 @ 
+
+符号指定具体的版本，例如:
+
+```jsx
+npm i moment@22.2
+```
+
+
+
+**6.** **包的语义化版本规范**
+
+包的版本号是以“点分十进制”形式进行定义的，总共有三位数字，例如 **2.24.0** 
+
+其中每一位数字所代表的的含义如下:
+
+第1位数字:大版本
+
+第2位数字:功能版本
+
+第3位数字:Bug修复版本 
+
+
+
+>  版本号提升的规则:只要前面的版本号增长了，则后面的版本号归零。
+
+
+
+### 6.3 包管理配置文件
+
+npm 规定，在项目根目录中，**必须**提供一个叫做 package.json 的包管理配置文件。用来记录与项目有关的一些配置 信息。
+
+例如:
+
+- 项目的名称、版本号、描述等
+- 项目中都用到了哪些包
+- 哪些包只在开发期间会用到
+- 那些包在开发和部署时都需要用到
+
+
+
+**1.** **多人协作的问题**
+
+整个项目的体积是 30.4M，第三方包的体积是 28.8M，项目源代码的体积 1.6M。
+
+遇到的问题:
+
+- 第三方包的体积过大，不方便团队成员之间共享项目源代码。
+
+解决方案:共享时剔除 `node_modules`
+
+
+
+**2.** **如何记录项目中安装了哪些包**
+
+在项目根目录中，创建一个叫做 package.json 的配置文件，即可用来记录项目中安装了哪些包。从而方便剔除 node_modules 目录之
+
+后，在团队成员之间共享项目的源代码。
+
+>  **注意**:
+>
+> 今后在项目开发中，一定要把 node_modules 文件夹，添加到 .gitignore 忽略文件中。
+
+
+
+**3.** **快速创建** **package.json**
+
+npm 包管理工具提供了一个快捷命令，可以在执行命令时所处的目录中，快速创建 package.json 这个包管理 配置文件:
+
+```jsx
+npm init -y
+```
+
+> 注意:
+>
+> - 上述命令只能在英文的目录下成功运行!所以，项目文件夹的名称一定要使用英文命名，不要使用中文，不能出现空格。 
+> - 运行 npm install 命令安装包的时候，npm 包管理工具会自动把包的名称和版本号，记录到 package.json 中。
+
+
+
+**4.** **dependencies** **节点**
+
+`package.json` 文件中，有一个 `dependencies` 节点，专门用来记录您使用 `npm install` 命令安装了哪些包。
+
+
+
+**5.** **一次性安装所有的包**
+
+当我们拿到一个剔除了 `node_modules` 的项目之后，需要先把所有的包下载到项目中，才能将项目运行起来。 否则会报类似于下面的错
+
+误:
+
+```jsx
+// 由于项目运行依赖于 moment 这个包，如果没有安装，就会报如下错：
+Error：Cannot find module 'moment'
+```
+
+可以运行 `npm install` 命令(或 npm i)一次性安装所有的依赖包:
+
+```
+// 执行 npm install 命令时，npm 包管理工具会先读取 package.json 中的 dependencies 节点
+// 读取到记录的所有依赖包名称和版本后，npm 包管理工具会把这些包一次性下载到项目中
+npm install
+```
+
+
+
+**6.** **卸载包**
+
+可以运行 `npm uninstall` 命令，来卸载指定的包:
+
+```jsx
+// 使用 npm uninstall 具体的包名，来卸载包
+npm uninstall mement
+```
+
+> 注意:
+>
+> npm uninstall 命令执行成功后，会把卸载的包，自动从 package.json 的 dependencies 中移除掉。
+
+
+
+**7.** **devDependencies** **节点**
+
+如果某些包**只在项目开发阶段**会用到，在**项目上线之后不会用到**，则建议把这些包记录到 devDependencies 节点中。 与之对应的，如果
+
+某些包在开发和项目上线之后都需要用到，则建议把这些包记录到 dependencies 节点中。
+
+您可以使用如下的命令，将包记录到 devDependencies 节点中:
+
+```jsx
+// 安装指定的包，并记录到 devDependencies 节点中
+npm i 包名 -D
+
+// 注意：上述命苦了是简写，等价于下面完整写法
+npm install 包名 --save-dev
+```
+
+
+
+### 6.4 解决下包速度慢的问题
+
+**切换** **npm** **的下包镜像源**
+
+下包的镜像源，指的就是下包的服务器地址。
+
+```jsx
+// 查看当前的下包镜像源
+npm config get registry
+
+// 将下包的镜像源切换为淘宝镜像源
+npm config set registry=https://registry.nmp.taobao.org/
+
+// 检查镜像源是否下载成功
+npm config get registry
+```
+
+
+
+**nrm**
+
+为了更方便的切换下包的镜像源，我们可以安装 **nrm** 这个小工具，利用 nrm 提供的终端命令，可以快速查看和切换下 包的镜像源。
+
+```jsx
+// 通过 npm 包管理器，将 nrm 安装为全局可用的工具
+npm i nrm -g
+
+// 查看所有可用的镜像源
+nrm ls
+
+// 将下包的镜像源切换为 taobao 镜像
+nrm use taobao
+```
+
+
+
+### 6.5 包的分类
+
+使用 npm 包管理工具下载的包，共分为两大类，分别是: 
+
+- 项目包
+- 全局包
+
+#### 6.5.1 项目包
+
+那些被安装到项目的 node_modules 目录中的包，都是项目包。
+
+项目包又分为两类，分别是:
+
+- 开发依赖包(被记录到 devDependencies 节点中的包，只在开发期间会用到)
+- 核心依赖包(被记录到 dependencies 节点中的包，在开发期间和项目上线之后都会用到)
+
+```jsx
+npm i 包名 -D  // 开发依赖包：会被记录到 devDependencies 节点下
+npm i 包名     // 核心依赖包：会被记录到 dependencies 节点下
+```
+
+
+
+#### 6.5.2 全局包
+
+在执行 npm install 命令时，如果提供了 -g 参数，则会把包安装为全局包。 
+
+全局包会被安装到 C:\Users\用户目录\AppData\Roaming\npm\node_modules 目录下。
+
+```jsx
+npm -i 包名 -g         // 全局安装指定的包
+npm uninstall 包名 -g  // 卸载全局安装的包
+```
+
+> 注意:
+>
+> - 只有工具性质的包，才有全局安装的必要性。因为它们提供了好用的终端命令。 
+> - 判断某个包是否需要全局安装后才能使用，可以参考官方提供的使用说明即可。
+
+
+
+#### 6.5.3 **i5ting_toc**
+
+`i5ting_toc` 是一个可以把 `md` 文档转为 `html` 页面的小工具，使用步骤如下:
+
+```jsx
+// 将 i5ting_toc 安装为全局包
+npm i i5ting_toc -g
+
+// 调用i5ting_toc ，轻松实现 md 转 html 的功能
+i5ting_toc -f 要转换的 md 文件路径 -o
+```
+
+
+
+### 6.6 **规范的包结构**
+
+在清楚了包的概念、以及如何下载和使用包之后，接下来，我们深入了解一下包的内部结构。
+
+一个规范的包，它的组成结构，必须符合以下 3 点要求:
+
+- 包必须以单独的目录而存在
+- 包的顶级目录下要必须包含 package.json 这个包管理配置文件
+- `package.json` 中必须包含 `name`、`version`、`main` 这三个属性，分别代表包的名字、版本号、包的入口。
+
+注意:以上 3 点要求是一个规范的包结构必须遵守的格式，关于更多的约束，可以参考如下网址:
+
+https://yarnpkg.com/zh-Hans/docs/package-json
+
+
+
+### 6.7 **开发属于自己的包**
+
+ **需要实现的功能**
+
+- 格式化日期
+- 转义 HTML 中的特殊字符 
+- 还原 HTML 中的特殊字符
+
+
+
+```jsx
+// 到日自己的包
+const itheima = require('itehima-utils')
+
+// 格式化日期
+const dt = itheima.dateFormat(new Date())
+```
+
+```jsx
+const ithima = require('itehima-utils')
+
+const htmlStr = '<h1 style='color: red;'> 你好！防守打法<span>xxfdsf</span></h1>'
+const str = ithima.htmlEscape(htmlStr)
+console.log(styr)
+```
+
+```jsx
+const ithima = require('itehima-utils')
+
+const rawHTML = ithima.htmlUsEscape(str)
+console.log(rawHTML)
+```
+
+
+
+#### 6.7.1 初始化包的基本结构
+
+- 新建 itheima-tools 文件夹，作为包的根目录
+
+- 在 itheima-tools 文件夹中，新建如下三个文件:
+  - package.json (包管理配置文件) 
+  - index.js (包的入口文件) 
+  - README.md (包的说明文档)
+
+
+
+#### 6.7.2 初始化 package.json
+
+```json
+{
+     "name": "itheima-tools",
+     "version": "1.0.0",
+     "main": "index.js",
+     "description": "提供了格式化时间,HTMLEscape 功能",
+     "keywords": ["itheima", "dateFormat", "escape"],
+     "license": "ISC"
+}
+```
+
+- name：包名
+- version：版本号
+- main：主页
+- description：描述信息
+- keywords：关键字
+- license：开源许可协议
+
+> 关于更多 license 许可协议相关的内容，可参考 https://www.jianshu.com/p/86251523e898
+
+
+
+#### 6.7.3 **在** index.js 中定义格式化时间的方法
+
+```jsx
+//  定义格式化时间的函数
+function dateFormat(dateStr) {
+     const dt = new Date(dateStr)
+
+     const y = dt.getFullYear()
+     const m = padZero(dt.getMonth() + 1)
+     const d = padZero(dt.getDate())
+
+     const h = padZero(dt.getHours())
+     const mm = padZero(dt.getMinutes())
+     const ss = padZero(dt.getSeconds())
+
+     return `${y}-${m}-${d} ${h}:${mm}:${ss}`
+}
+
+function padZero(num) {
+     return num > 9 ? num : '0' + num
+}
+
+// 向外暴露需要的成员
+module.exports = {
+     dateFormat    
+}
+```
+
+
+
+#### 6.7.4 **在** index.js 中定义转义 HTML 的方法
+
+```jsx
+// 定义转移 HTML 的函数
+function htmlEscape(htmlStr) {
+     const reg = /<|>|"|&/g
+     const ret = htmlStr.replace(reg, (match) => {
+           switch (match) {
+                case '<':
+                     return '&lt'
+                case '>':
+                     return '&gt'
+                case '"':
+                     return '&quot'
+                case '&':
+                     return '&amp'
+           }
+     })
+     return ret
+}
+
+// 向外暴露需要的成员
+module.exports = {
+     dateFormat,
+     htmlEscape,    
+
+}
+```
+
+
+
+#### 6.7.5 **在** index.js 中定义还原 HTML 的方法
+
+```jsx
+// 定义还原 HTML 的函数
+function htmlUnEscape(htmlStr) {
+     const reg = /&lt;|&gt;|&quot;|&amp;/g
+     const ret = htmlStr.replace(reg, (match) => {
+           switch (match) {
+                case '&lt;':
+                     return '<'
+                case '&gt;':
+                     return '>'
+                case '&quot;':
+                     return '"'
+                case '&amp;':
+                     return '&'
+           }
+     })
+     return ret
+}
+// 向外暴露需要的成员
+module.exports = {
+     dateFormat,
+     htmlEscape, 
+     htmlUnEscape   
+}
+```
+
+
+
+#### 6.7.6 将不同的功能进行模块化拆分
+
+- 将格式化时间的功能，拆分到 `src -> dateFormat.js` 中
+- 将处理 `HTML` 字符串的功能，拆分到 `src -> htmlEscape.js` 中 
+- 在 `index.js` 中，导入两个模块，得到需要向外共享的方法
+- 在 `index.js` 中，使用 `module.exports` 把对应的方法共享出去
+
+
+
+#### 6.7.7 编写包的说明文档
+
+包根目录中的 `README.md` 文件，是包的使用说明文档。通过它，我们可以事先把包的使用说明，以 `markdown` 的 格式写出来，方便用
+
+户参考。
+
+README 文件中具体写什么内容，没有强制性的要求;只要能够清晰地把包的作用、用法、注意事项等描述清楚即可。 我们所创建的这个
+
+包的 README.md 文档中，会包含以下 6 项内容:
+
+安装方式、导入方式、格式化时间、转义 HTML 中的特殊字符、还原 HTML 中的特殊字符、开源协议
+
+
+
+#### 6.7.8 发布包
+
+**1. 注册** **npm** **账号**
+
+- 访问 https://www.npmjs.com/ 网站，点击 sign up 按钮，进入注册用户界面 
+- 填写账号相关的信息:Full Name、Public Email、Username、Password
+- 点击 Create an Account 按钮，注册账号
+- 登录邮箱，点击验证链接，进行账号的验证
+
+
+
+**2.** **登录** **npm** **账号**
+
+npm 账号注册完成后，可以在终端中执行 npm login 命令，依次输入用户名、密码、邮箱后，即可登录成功。
+
+> 注意:
+>
+> 在运行 npm login 命令之前，必须 先把下包的服务器地址切换为 npm 的官方 服务器。否则会导致发布包失败!
+
+
+
+**3.** **把包发布到** **npm** **上**
+
+将终端切换到包的根目录之后，运行 `npm publish` 命令，即可将包发布到 npm 上(注意:包名不能雷同)。
+
+
+
+**4.** **删除已发布的包**
+
+运行 npm unpublish 包名 --force 命令，即可从 npm 删除已发布的包。
+
+`npm unpublish 包名 --force`
+
+> 注意:
+>
+> - npm unpublish 命令只能删除 72 小时以内发布的包
+> - npm unpublish 删除的包，在 24 小时内不允许重复发布
+> - 发布包的时候要慎重，尽量不要往 npm 上发布没有意义的包!
+
+
+
+## 七、模块的加载机制
+
+#### 优先从缓存中加载
+
+**模块在第一次加载后会被缓存**。 这也意味着多次调用 require() 不会导致模块的代码被执行多次。 注意:不论是内置模块、用户自定义模
+
+块、还是第三方模块，它们都会优先从缓存中加载，从而提高模块的加载效率。
+
+
+
+#### 内置模块的加载机制
+
+内置模块是由 Node.js 官方提供的模块，内置模块的加载优先级最高。
+
+例如，``require('fs')`` 始终返回内置的 fs 模块，即使在 node_modules 目录下有名字相同的包也叫做 fs。
+
+
+
+#### 自定义模块的加载机制
+
+使用 require() 加载自定义模块时，必须指定以 ./ 或 ../ 开头的路径标识符。在加载自定义模块时，如果没有指定 ./ 或 ../ 这样的路径标识
+
+符，则 node 会把它当作内置模块或第三方模块进行加载。
+
+同时，在使用 require() 导入自定义模块时，如果省略了文件的扩展名，则 Node.js 会按顺序分别尝试加载以下的文件: 
+
+- 按照确切的文件名进行加载
+- 补全 .js 扩展名进行加载
+- 补全 .json 扩展名进行加载
+- 补全 .node 扩展名进行加载 
+- 加载失败，终端报错
+
+
+
+#### 第三方模块的加载机制
+
+如果传递给 require() 的模块标识符不是一个内置模块，也没有以 ‘./’ 或 ‘../’ 开头，则 Node.js 会从当前模块的父 目录开始，尝试从 
+
+/node_modules 文件夹中加载第三方模块。
+
+如果没有找到对应的第三方模块，则移动到再上一层父目录中，进行加载，直到文件系统的根目录。 例如，假设在 
+
+'C:\Users\itheima\project\foo.js' 文件里调用了 require('tools')，则 Node.js 会按以下顺序查找: 
+
+- C:\Users\itheima\project\node_modules\tools
+- C:\Users\itheima\node_modules\tools
+- C:\Users\node_modules\tools
+- C:\node_modules\tools
+
+
+
+#### 目录作为模块
+
+当把目录作为模块标识符，传递给 require() 进行加载的时候.
+
+有三种加载方式:
+
+- 在被加载的目录下查找一个叫做 package.json 的文件，并寻找 main 属性，作为 require() 加载的入口
+- 如果目录里没有 package.json 文件，或者 main 入口不存在或无法解析，则 Node.js 将会试图加载目录下的 index.js 文件。 
+- 如果以上两步都失败了，则 Node.js 会在终端打印错误消息，报告模块的缺失:Error: Cannot find module 'xxx'
