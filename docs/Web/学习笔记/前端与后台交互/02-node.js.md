@@ -1495,7 +1495,7 @@ Express 的中文官网: http://www.expressjs.com.cn/
 
 ##### 2. 进一步理解 Express
 
-思考：不使用 Express 能否创建 Web 服务器? 
+思考：不使用 `Express` 能否创建 Web 服务器? 
 
 答案：能，使用 Node.js 提供的原生 http 模块即可。
 
@@ -2096,27 +2096,38 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 
 #### 8.4.1 创建基本的服务器
 
-
+```js
+```
 
 
 
 #### 8.4.2 创建 API 路由模块
 
+```js
 
 
-
+```
 
 
 
 #### 8.4.3 编写 GET 接口
 
+```js
 
+```
 
 
 
 #### 8.4.4 编写 POST 接口
 
+```js
+```
 
+> 注意:
+>
+> 如果要获取 URL-encoded 格式的请求体数据，
+>
+> 必须配置中间件 app.use(express.urlencoded({ extended: false }))
 
 
 
@@ -2124,19 +2135,480 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 
 ##### 1. 接口的跨域问题
 
+刚才编写的 GET 和 POST接口，存在一个很严重的问题：不支持跨域请求。 
 
+解决接口跨域问题的方案主要有两种:
+
+- CORS(主流的解决方案，推荐使用)
+- JSONP(有缺陷的解决方案：只支持 GET 请求)
 
 
 
 ##### 2. 使用 cors 中间件解决跨域问题
 
+cors 是 Express 的一个第三方中间件。通过安装和配置 cors 中间件，可以很方便地解决跨域问题。 
+
+使用步骤分为如下 3 步:
+
+- 运行 npm install cors 安装中间件
+- 使用 const cors = require('cors') 导入中间件
+
+- 在路由之前调用 app.use(cors()) 配置中间件
+
+
+
+##### 3. 什么是 CORS
+
+CORS (Cross-Origin Resource Sharing，跨域资源共享)由一系列 HTTP 响应头组成，**这些** **HTTP** **响应头决定**
+
+**浏览器是否阻止前端** **JS** **代码跨域获取资源**。
+
+浏览器的同源安全策略默认会阻止网页“跨域”获取资源。但如果接口服务器配置了 CORS 相关的 HTTP 响应头， 
+
+就可以解除浏览器端的跨域访问限制。
+
+![web_ex_07](../assets/web_ex_07.png)
+
+
+
+##### 4. CORS的注意事项
+
+- CORS 主要在服务器端进行配置。客户端浏览器**无须做任何额外的配置**，即可请求开启了 CORS 的接口。
+
+- CORS 在浏览器中有兼容性。只有支持 XMLHttpRequest Level2 的浏览器，才能正常访问开启了 CORS 的服 
+
+  务端接口(例如:IE10+、Chrome4+、FireFox3.5+)。
+
+  
+
+##### 5. CORS 响应头部 - Access-Control-Allow-`Origin`
+
+响应头部中可以携带一个 **Access-Control-Allow-Origin** 字段，其语法如下:
+
+```JS
+```
+
+其中，origin 参数的值指定了允许访问该资源的外域 URL。 
+
+例如，下面的字段值将**只允许**来自 http://itcast.cn 的请求:
+
+```JS
+```
+
+如果指定了 Access-Control-Allow-Origin 字段的值为通配符 *****，表示允许来自任何域的请求，示例代码如下:
+
+```JS
+
+```
+
+
+
+##### 6. CORS 响应头部 - Access-Control-Allow-`Headers`
+
+默认情况下，CORS **仅**支持客户端向服务器发送如下的 9 个请求头:
+
+Accept、Accept-Language、Content-Language、DPR、Downlink、Save-Data、Viewport-Width、Width 、 
+
+Content-Type (值仅限于 text/plain、multipart/form-data、application/x-www-form-urlencoded 三者之一)
+
+如果客户端向服务器发送了额外的请求头信息，则需要在服务器端，通过 Access-Control-Allow-Headers 对额外 
+
+的请求头进行声明，否则这次请求会失败!
+
+```JS
+
+
+```
+
+
+
+##### 7. CORS 响应头部 - Access-Control-Allow-`Methods`
+
+默认情况下，CORS 仅支持客户端发起 GET、POST、HEAD 请求。
+
+如果客户端希望通过 PUT、DELETE 等方式请求服务器的资源，则需要在服务器端，
+
+通过 Access-Control-Alow-Methods 来指明实际请求所允许使用的 HTTP 方法。
+
+示例代码如下:
+
+```JSX
+```
+
+
+
+##### 8. CORS 请求的分类
+
+客户端在请求 CORS 接口时，根据请求方式和请求头的不同，可以将 CORS 的请求分为两大类，分别是: 
+
+- 简单请求
+- 预检请求
+
+
+
+##### 9. 简单请求
+
+同时满足以下两大条件的请求，就属于简单请求:
+
+- 请求方式:GET、POST、HEAD 三者之一
+
+- HTTP 头部信息不超过以下几种字段:无自定义头部字段、Accept、Accept-Language、Content-Language、
+
+  DPR、 Downlink、Save-Data、Viewport-Width、Width 、Content-Type(只有三个值application/x-www-
+
+  form- urlencoded、multipart/form-data、text/plain)
+
+
+
+##### 10. 预检请求
+
+只要符合以下任何一个条件的请求，都需要进行预检请求:
+
+- 请求方式为 GET、POST、HEAD 之外的请求 Method 类型 
+- 请求头中包含自定义头部字段
+- 向服务器发送了 application/json 格式的数据
+
+
+
+在浏览器与服务器正式通信之前，浏览器会先发送 OPTION 请求进行预检，以获知服务器是否允许该实际请求，
+
+所以这一 次的 OPTION 请求称为“预检请求”。服务器成功响应预检请求后，才会发送真正的请求，并且携带真实
+
+数据。
+
+
+
+##### 11. 简单请求与预检请求
+
+**简单请求的特点**：客户端与服务器之间只会发生一次请求。
+
+ **预检请求的特点**：客户端与服务器之间会发生两次请求，`OPTION` 预检请求成功之后，才会发起真正的请求。
+
+
+
+#### 8.4.6 JSONP 接口
+
+##### 1. 回顾 JSONP 的概念和特点
+
+概念：浏览器端通过 `<script>` 标签的 src 属性，请求服务器上的数据，同时，服务器返回一个函数的调用。这种
+
+请求数据的方式叫做 JSONP。
+特点:
+
+- `JSONP` 不属于真正的 `Ajax` 请求，因为它没有使用 `XMLHttpRequest` 这个对象。 
+- `JSONP` 仅支持 `GET` 请求，不支持 `POST`、`PUT`、`DELETE` 等请求。
+
+
+
+##### 2. 创建 JSONP 接口的注意事项
+
+如果项目中已经配置了 `CORS` 跨域资源共享，为了**防止冲突**，必须在配置 `CORS` 中间件之前声明  `JSONP` 的接口。
+
+否则 `JSONP` 接口会被处理成开启了 `CORS` 的接口。
+
+示例代码如下:
+
+```js
+
+
+```
+
+
+
+##### 3. 实现 JSONP 接口的步骤
+
+- 获取客户端发送过来的回调函数的名字
+- 得到要通过  `JSONP` 形式发送给客户端的数据
+- 根据前两步得到的数据，拼接出一个函数调用的字符串
+- 把上一步拼接得到的字符串，响应给客户端的 `<script>` 标签进行解析执行
+
+
+
+##### 4. 实现 JSONP 的具体代码
+
+````js
+
+````
+
+
+
+##### 5. 在网页中使用 jQuery 发起 JSONP 请求
+
+调用 `$.ajax()` 函数，提供  `JSONP` 的配置选项，从而发起  `JSONP` 请求，示例代码如下:
+
+```js
+```
+
+
+
+## 九、MySQL 和身份认证
+
+### 9.1 数据库的基本概念
+
+#### 9.1.1 什么是数据库
+
+数据库(database)是用来组织、存储和管理数据的仓库。 当今世界是一个充满着数据的互联网世界，充斥着大量
+
+的数据。数据的来源有很多，比如出行记录、消费记录、浏览的网页、发送的消息等等。除了文本类型的数据，图
+
+像、音乐、声音都是数据。
+
+为了方便管理互联网世界中的数据，就有了数据库管理系统的概念(简称:数据库)。用户可以对数据库中的数 据进
+
+行新增、查询、更新、删除等操作。
+
+
+
+#### 9.1.2 常见的数据库和分类
+
+市面上的数据库有很多种，最常见的数据库有如下几个:
+
+- MySQL 数据库(目前使用最广泛、流行度最高的开源免费数据库; Community + Enterprise) 
+- Oracle 数据库(收费)
+- SQL Server 数据库(收费)
+- Mongodb 数据库(Community + Enterprise)
+
+
+
+其中，MySQL、Oracle、SQL Server 属于**传统型数据库**(又叫做:关系型数据库 或 SQL 数据库)，这三者的 设计理
+
+念相同，用法比较类似。
+
+而 Mongodb 属于**新型数据库**(又叫做：非关系型数据库 或 NoSQL 数据库)，它在一定程度上弥补了传统型 数据库
+
+的缺陷。
+
+
+
+#### 9.1.3 传统型数据库的数据组织结构
+
+数据的组织结构：指的就是数据以什么样的结构进行存储。
+
+传统型数据库的数据组织结构，与 Excel 中数据的组织结构 比较类似。
+
+因此，我们可以对比着 Excel 来了解和学习传统型数据库的 数据组织结构。
+
+
+
+##### 1. Excel  的数据组织结构
+
+每个 Excel 中，数据的组织结构分别为工作簿、工作表、数据行、列这 4 大部分组成。
+
+- 整个 Excel 叫做工作簿
+- users 和 books 是工作表
+- users 工作表中有 3 行数据 
+- 每行数据由 6 列信息组成
+- 每列信息都有对应的数据类型
+
+![web_ex_08](../assets/web_ex_08.png)
+
+
+
+##### 2. 传统型数据库的数据组织结构
+
+在传统型数据库中，数据的组织结构分为数据库(database)、数据表(table)、数据行(row)、字段(field)这 4 大部分
+
+组成。
+
+- 数据库类似于 Excel 的工作簿
+- 数据表类似于 Excel 的工作表
+- 数据行类似于 Excel 的每一行数据 
+- 字段类似于 Excel 的列
+- 每个字段都有对应的数据类型
+
+
+
+##### 3. 实际开发中的库、表、行、字段的关系
+
+- 在实际项目开发中，一般情况下，每个项目都对应独立的数据库。
+
+- 不同的数据，要存储到数据库的不同表中，例如:用户数据存储到 users 表中，图书数据存储到 books 表中。
+
+- 每个表中具体存储哪些信息，由字段来决定，例如:我们可以为 users 表设计 id、username、password 这 3 
+
+  个 字段。
+
+- 表中的行，代表每一条具体的数据。
+
+  
+
+### 9.2 安装并配置 MySQL
+
+#### 9.2.1 了解需要安装哪些 MySQL 相关的软件
+
+对于开发人员来说，只需要安装 `MySQL Server` 和 `MySQL Workbench` 这两个软件，就能满足开发的需要了。
+
+- MySQL Server：专门用来提供数据存储和服务的软件。
+
+- MySQL Workbench：可视化的 MySQL 管理工具，通过它，可以方便的操作存储在 MySQL Server 中的数
+
+  据。
+
+
+
+#### 9.2.2 MySQL 在 Mac 环境下的安装
+
+在 Mac 环境下安装 MySQL 的过程比 Windows 环境下的步骤简单很多:
+
+- 先运行 **mysql-8.0.19-macos10.15-x86_64.dmg** 这个安装包，将 MySQL Server 安装到 Mac 系统
+
+- 再运行 **mysql-workbench-community-8.0.19-macos-x86_64.dmg** 这个安装包，将可视化的 MySQL 
+
+- Workbench 工具安装到 Mac 系统
+
+  
+
+具体的安装教程，可以参考 素材 -> MySQL for Mac ->安装教程 - Mac系统安装MySql -> README.md
+
+
+
+#### 9.2.3 MySQL 在 Win 环境下的安装
+
+在 Windows 环境下安装 MySQL，只需要运行 **mysql-installer-community-8.0.19.0.msi** 这个安装包，就能一
+
+次 性将 MySQL Server 和 MySQL Workbench 安装到自己的电脑上。
+
+具体的安装教程，可以参考 素材 -> MySQL for Windows ->安装教程 - Windows系统安装MySql -> README.md
+
+
+
+### 9.3 MySQL 的基本使用
+
+#### 9.3.1 使用 MySQL Workbench 管理数据库
+
+##### 1. 连接数据库
+
+![web_sql_01](../assets/web_sql_01.png)
+
+
+
+##### 2. 了解主界面的组成部分
+
+![web_sql_02](../assets/web_sql_02.png)
+
+
+
+##### 3. 创建数据库
+
+![web_sql_02](../assets/web_sql_03.png)
+
+
+
+##### 4. 创建数据表
+
+![web_sql_04](../assets/web_sql_04.jpg)
+
+
+
+DataType 数据类型: 
+
+- int整数
+- varchar(len) 字符串 
+- tinyint(1) 布尔值 
+
+字段的特殊标识:
+
+- PK(Primary Key)主键、唯一标识 
+- NN(Not Null)值不允许为空
+- UQ(Unique)值唯一
+- AI(Auto Increment)值自动增长
+
+
+
+##### 5. 向表中写入数据
+
+![web_sql_04](../assets/web_sql_05.jpg)
+
+
+
+#### 9.3.2 使用 SQL 管理数据库
+
+##### 1. 什么是 SQL
+
+SQL(英文全称:Structured Query Language)是结构化查询语言，专门用来访问和处理数据库的编程语言。能够让 
+
+我们**以编程的形式**，**操作数据库里面的数据**。
+
+三个关键点:
+
+- SQL 是一门数据库编程语言
+- 使用 SQL 语言编写出来的代码，叫做 SQL 语句
+
+- SQL 语言只能在关系型数据库中使用(例如 MySQL、Oracle、SQL Server)。非关系型数据库(例如 Mongodb) 不支持 SQL 语言
+
+  
+
+##### 2. SQL 能做什么
+
+- 从数据库中查询数据
+- 向数据库中插入新的数据
+- 更新数据库中的数据
+- 从数据库删除数据
+- 可以创建新数据库
+- 可在数据库中创建新表
+- 可在数据库中创建存储过程、视图 
+- etc...
+
+
+
+##### 3. SQL 的学习目标
+
+重点掌握如何使用 SQL 从数据表中:
+
+查询数据(select) 、插入数据(insert into) 、更新数据(update) 、删除数据(delete)
+
+额外需要掌握的 4 种 SQL 语法:
+
+where 条件、and 和 or 运算符、order by 排序、count(*) 函数
+
+
+
+#### 9.3.3 SQL 的 SELECT 语句
+
+##### 1. 语法
+
+SELECT 语句用于从表中查询数据。执行的结果被存储在一个结果表中(称为结果集)。
+
+语法格式如下:
+
+```js
+
+
+```
+
+>  注意：
+>
+> SQL 语句中的关键字对**大小写不敏感**。SELECT 等效于 select，FROM 等效于 from。
+
+
+
+##### 2. SELECT * 示例
 
 
 
 
-##### 3. 什么是 cors
+
+### 9.4 在项目中操作 MySQL
 
 
+
+
+
+### 9.5 前后端的身份认证
+
+
+
+
+
+
+
+#####
+
+#####
+
+#####
+
+#####
 
 #####
 
