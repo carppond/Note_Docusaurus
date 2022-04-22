@@ -2856,15 +2856,13 @@ $('#btb'),click(functon {
 
 #### 9.1.1 什么是数据库
 
-数据库(database)是用来组织、存储和管理数据的仓库。 当今世界是一个充满着数据的互联网世界，充斥着大量
+数据库(database)是用来组织、存储和管理数据的仓库。 当今世界是一个充满着数据的互联网世界，充斥着大量的数据。
 
-的数据。数据的来源有很多，比如出行记录、消费记录、浏览的网页、发送的消息等等。除了文本类型的数据，图
+数据的来源有很多，比如出行记录、消费记录、浏览的网页、发送的消息等等。除了文本类型的数据，图像、音乐、声音都是数据。
 
-像、音乐、声音都是数据。
+为了方便管理互联网世界中的数据，就有了数据库管理系统的概念(简称：数据库)。用户可以对数据库中的数据进行新增、查询、更新、
 
-为了方便管理互联网世界中的数据，就有了数据库管理系统的概念(简称:数据库)。用户可以对数据库中的数 据进
-
-行新增、查询、更新、删除等操作。
+删除等操作。
 
 
 
@@ -2931,9 +2929,9 @@ $('#btb'),click(functon {
 
 - 在实际项目开发中，一般情况下，每个项目都对应独立的数据库。
 
-- 不同的数据，要存储到数据库的不同表中，例如:用户数据存储到 users 表中，图书数据存储到 books 表中。
+- 不同的数据，要存储到数据库的不同表中，例如：用户数据存储到 users 表中，图书数据存储到 books 表中。
 
-- 每个表中具体存储哪些信息，由字段来决定，例如:我们可以为 users 表设计 id、username、password 这 3 
+- 每个表中具体存储哪些信息，由字段来决定，例如：我们可以为 users 表设计 id、username、password 这 3 
 
   个 字段。
 
@@ -3007,7 +3005,7 @@ $('#btb'),click(functon {
 
 ![web_sql_04](../assets/web_sql_04.jpg)
 
-
+ 
 
 DataType 数据类型: 
 
@@ -3020,7 +3018,7 @@ DataType 数据类型:
 - PK(Primary Key)主键、唯一标识 
 - NN(Not Null)值不允许为空
 - UQ(Unique)值唯一
-- AI(Auto Increment)值自动增长
+- AI(Auto Increment)值自动增长 
 
 
 
@@ -3034,9 +3032,9 @@ DataType 数据类型:
 
 ##### 1. 什么是 SQL
 
-SQL(英文全称:Structured Query Language)是结构化查询语言，专门用来访问和处理数据库的编程语言。能够让 
+SQL(英文全称:Structured Query Language)是结构化查询语言，专门用来访问和处理数据库的编程语言。
 
-我们**以编程的形式**，**操作数据库里面的数据**。
+能够让我们**以编程的形式**，**操作数据库里面的数据**。
 
 三个关键点:
 
@@ -3080,12 +3078,15 @@ SELECT 语句用于从表中查询数据。执行的结果被存储在一个结�
 
 语法格式如下:
 
-```js
+```sql
+--- 从 FROM 指定的表中，查询到所有的数据。 * 表示所有列
+SELECT * FROM 表名称
 
-
+--- 从 FROM 指定的表中，查询出指定的列名称字段的数据
+SELECT 列名称 FROM 表名称
 ```
 
->  注意：
+>   注意：
 >
 > SQL 语句中的关键字对**大小写不敏感**。SELECT 等效于 select，FROM 等效于 from。
 
@@ -3110,6 +3111,9 @@ SELECT 语句用于从表中查询数据。执行的结果被存储在一个结�
 INSERT INTO 语句用于向数据表中插入新的数据行，语法格式如下:
 
 ```js
+-- 向指定的表中，插入如下几列数据，列的值通过 values --指定
+-- 注意：列和值要一一对应，多个列和多个值之间，使用英文逗号分割
+INSERT INTO 表名 (列 1，列 2，...) VALUES (值 1，值 2，...)
 ```
 
 
@@ -3120,13 +3124,26 @@ INSERT INTO 语句用于向数据表中插入新的数据行，语法格式如�
 
 ![web_sql_08](../assets/web_sql_08.jpg)
 
+```SQL
+insert into users (username, password) values ("王五1", "fsdf132");
+```
+
+
+
+
+
 #### 9.3.5 SQL 的 UPDATE 语句
 
 ##### 1. 语句
 
 Update 语句用于修改表中的数据。语法格式如下:
 
-```jsx
+``` 
+--- 用 update 指定要更新哪个表中的数据
+--- 用 set 指定列对应的新值
+--- 用 WHERE 指定要更新的条件
+--- 更新多列数据，用英文逗号隔开
+UPDATE 表名称 SET 列名称=新值 WHERE 列名称=某值
 ```
 
 
@@ -3137,6 +3154,10 @@ Update 语句用于修改表中的数据。语法格式如下:
 
 ![web_sql_09](../assets/web_sql_09.png)
 
+```sql
+update users set password='11111111' where username='王五';
+```
+
 
 
 ##### 3. UPDATE 示例 - 更新某一行中的若干列
@@ -3144,6 +3165,7 @@ Update 语句用于修改表中的数据。语法格式如下:
 把 users 表中 id 为 2 的用户密码和用户状态，分别更新为 admin123 和 1。示例如下:
 
 ```jsx
+update users set password='admin123', status=1 where id=2;
 ```
 
 
@@ -3269,13 +3291,21 @@ ORDER BY 语句**默认**按照升序对记录进行排序。
 
 如果您希望按照**降序**对记录进行排序，可以使用 DESC 关键字。
 
+- ASC 升序
+- DESC 降序
+
 
 
 ##### 2. ORDER BY 子句 - 升序排序
 
 对 users 表中的数据，按照 status 字段进行升序排序，示例如下:
 
-![web_sql_09](../assets/web_sql_09.png)
+```sql
+SELECT * FROM user ORDER BY status;
+SELECT * FROM user ORDER BY statu ASC;
+```
+
+
 
 ##### 3. ORDER BY 子句 - 降序排序
 
@@ -3283,11 +3313,21 @@ ORDER BY 语句**默认**按照升序对记录进行排序。
 
 ![web_sql_10](../assets/web_sql_10.jpg)
 
+```sql
+SELECT * FROM users ORDER BY id DESC;
+```
+
+
+
 ##### 4. ORDER BY 子句 - 多重排序
 
 对 users 表中的数据，先按照 status 字段进行降序排序，再按照 username 的字母顺序，进行升序排序，示例如下:
 
 ![web_sql_11](../assets/web_sql_11.jpg)
+
+```sql
+SELECT * FROM users ORDER BY status DESC, username ASC;
+```
 
 
 
