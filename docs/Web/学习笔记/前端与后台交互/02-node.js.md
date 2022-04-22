@@ -64,6 +64,22 @@ JavaScript 基础语法 + Node.js 内置 API 模块(fs、path、http等)+ 第三
     - （`–-save` ：表示将此次的安装信息记录到上面讲的`typings.json`中)
   - 项目根目录：`touch jsconfig.json`
 
+- experess代码提示：
+  - npm i -D @types/express  
+
+
+
+### 1.4 项目需要的库
+
+```js
+npm init -y // 初始化package.json文件
+npm install express
+npm install -g nodemon
+npm install cors
+npm install mysql
+
+```
+
 
 
 ## 二、fs 文件系统模板
@@ -1538,6 +1554,15 @@ npm i express@4.17.1
 ##### 2.  创建基本的 Web 服务器
 
 ```jsx
+// 1. 导入 express
+const express = require('express')
+
+// 2. 创建 web 服务器
+const app = express()
+// 3.启动 web 服务
+app.listen(80, function (){
+     console.log('express server running at http://127.0.01:80');
+})
 ```
 
 
@@ -1547,6 +1572,10 @@ npm i express@4.17.1
 通过 app.get() 方法，可以监听客户端的 GET 请求，具体的语法格式如下:
 
 ```jsx
+app.get('请求 URL', function(req, res) {
+     // 调用 express 提供的 res.send 方法, 向客户端发送一个 json 对象
+     res.send({name:'zhansan',age:19})
+}
 ```
 
 
@@ -1556,15 +1585,29 @@ npm i express@4.17.1
 通过 `app.post()` 方法，可以监听客户端的 POST 请求，具体的语法格式如下:
 
 ```jsx
+app.post('请求 URL', function(req, res) {
+     // 调用 express 提供的 res.send 方法, 向客户端发送一个 json 对象
+     res.send({name:'zhansan',age:19})
+}
 ```
 
-
+ 
 
 ##### 5. 把内容响应给客户端
 
 通过 `res.send()` 方法，可以把处理好的内容，发送给客户端:
 
 ```jsx
+// 4. 监听客户端的 post 和 get 请求,并向用户响应具体的内容
+app.get('/user', function(req, res) {
+     // 调用 express 提供的 res.send 方法, 向客户端发送一个 json 对象
+     res.send({name:'zhansan',age:19})
+})
+
+app.post('/user', function(req, res) {
+     // 调用 express 提供的 res.send 方法, 向客户端发送一个 文本字符
+     res.send('请求成功')
+})
 ```
 
 
@@ -1574,6 +1617,13 @@ npm i express@4.17.1
 通过 `req.query` 对象，可以访问到客户端通过查询字符串的形式，发送到服务器的参数:
 
 ```jsx
+app.get('/', (req, res) {
+     //  req.query 默认是一个空对象
+     //  客户端使用 ?name=zs&age=20 这种查询字符串形式,发送到服务器的参数
+     //  可以通过 req.query 对象访问到,
+     //  例如:
+     //  req.query.name   req.query.age
+})
 ```
 
 
@@ -1583,6 +1633,46 @@ npm i express@4.17.1
 通过 `req.params` 对象，可以访问到 URL 中，通过 **:** 匹配到的动态参数:
 
 ```jsx
+app.post('/user/:id', function(req, res) {
+     // req.params 默认是一个空对象
+     // 里面存放着通过:动态匹配到的参数值
+     console.log(req.params);
+})
+```
+
+这里的 `:id` 是一个动态的参数
+
+多个动态参数：
+
+```jsx
+app.post('/user/:id/:name', function(req, res) {
+     // req.params 默认是一个空对象
+     // 里面存放着通过:动态匹配到的参数值
+     console.log(req.params);
+})
+
+// 请求的 url：http://127.0.0.1:80/user/23/l 成福
+// 打印是：
+{
+    "id": "23",
+    "name": "l 成福"
+}
+```
+
+匹配两个动态参数：id 和 name。
+
+
+
+##### 8. 获取 POST 的请求体
+
+在服务器，可以使用 req.body 这个属性，来接收客户端发送过来的请求体数据
+
+默认情况下，如果不配置解析表单数据的中间件，则 req.body 默认等于 undefined
+
+这种情况用 `express.json()` 中间件解析一下就可以了
+
+```jsx
+app.use(express.json())
 ```
 
 
@@ -1610,6 +1700,25 @@ http://localhost:3000/js/login.js
 > **注意:**Express 在指定的静态目录中查找文件，并对外提供资源的访问路径。
 >
 > 因此，存放静态文件的目录名不会出现在 URL 中。
+
+示例：
+
+```jsx
+// 1. 导入
+const express = require('express')
+
+// 创建 web 服务器
+const app = express()
+
+// 资源服务
+app.use(express.static('./Public'))
+// 3. 开启 web 服务
+app.listen(80, ()=> {
+     console.log('express server running at 127.0.0.1:80');
+})
+```
+
+可以通过http://127.0.0.1:80/xxxx，访问对应的资源了
 
 
 
@@ -1711,6 +1820,10 @@ Express 中的路由分 3 部分组成：
 app.METHOD(PATH, HANDLER)
 ```
 
+- MEHOD：请求的类型
+- PATH：请求的 URL 地址
+- HANDLER：处理函数
+
 
 
 ##### 3. Express 中路由的例子
@@ -1733,7 +1846,7 @@ app.post('/',function(req, res) {
 
 每当一个请求到达服务器之后，需要先经过路由的匹配，只有匹配成功之后，才会调用对应的处理函数。
 
-在匹配时，会按照路由的顺序进行匹配，如果请求类型和请求的 URL 同时匹配成功，则 Express 会将这次请求，转 交给对应的 function 
+在匹配时，会按照路由的顺序进行匹配，如果请求类型和请求的 URL 同时匹配成功，则 Express 会将这次请求，转交给对应的 function 
 
 函数进行处理。
 
@@ -1753,6 +1866,14 @@ app.post('/',function(req, res) {
 在 Express 中使用路由最简单的方式，就是把路由挂载到 app 上，示例代码如下:
 
 ```jsx
+const express = require('express')
+
+const app = express()
+// 挂载路由
+app.get('/', function(req, res) {})
+app.post('/', function(req, res) {})
+
+app.listen(80, ()=> {})
 ```
 
 
@@ -1772,6 +1893,21 @@ app.post('/',function(req, res) {
 ##### 3. 创建路由模块
 
 ```jsx
+// 1. 导入 express
+const express = require('express')
+// 2. 创建路由对象
+const router = express.Router()
+
+// 3.挂载获取用户列表的路由
+router.get('/user/list', (req,res)=> {
+     res.send('Get user list')
+})
+// 4. 挂载添加用户的路由
+router.get('/user/add', (req, res)=>{
+     res.send('Get user add')
+})
+// 5. 向外导出路由对象
+module.exports = router
 ```
 
 
@@ -1779,7 +1915,13 @@ app.post('/',function(req, res) {
 ##### 4. 注册路由模块
 
 ```jsx
+// 1.1 导入路由模块
+const userRouter = require('./05-router')
+// 2. 使用 app.use() 注册路由模块
+app.use(userRouter)
 ```
+
+> app.use() 函数的作用，就是注册全局中间件
 
 
 
@@ -1788,6 +1930,10 @@ app.post('/',function(req, res) {
 类似于托管静态资源时，为静态资源统一挂载访问前缀一样，路由模块添加前缀的方式也非常简单:
 
 ```jsx
+// 1.1 导入路由模块
+const userRouter = require('./05-router')
+// 2. 使用 app.use() 注册路由模块, 并添加统一的访问前缀 /api
+app.use('/api',userRouter)
 ```
 
 
@@ -1809,6 +1955,8 @@ app.post('/',function(req, res) {
 ![web_ex_02](../assets/web_ex_02.png)
 
 处理污水的这三个中间处理环节，就可以叫做中间件。
+
+中间件必须有输入和输出，上一级的输出，就是是下一级的输入
 
 
 
@@ -1847,6 +1995,13 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 可以通过如下的方式，定义一个最简单的中间件函数:
 
 ```jsx
+// 常量 mw 所指向的是一个中间件函数
+const mw = function(req, res, next) {
+     console.log('这是一个简单的中间件函数');
+     // 注意: 在当前中间件的业务处理完毕后,必须调用 next() 函数
+     // 表示把流转关系转交给下一个中间件或者路由
+     next()
+}
 ```
 
 
@@ -1858,6 +2013,49 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 通过调用 app.use(中间件函数)，即可定义一个全局生效的中间件，示例代码如下:
 
 ```jsx
+// 常量 mw 所指向的是一个中间件函数
+const mw = function(req, res, next) {
+     console.log('这是一个简单的中间件函数');
+     // 注意: 在当前中间件的业务处理完毕后,必须调用 next() 函数
+     // 表示把流转关系转交给下一个中间件或者路由
+     next()
+}
+
+// 全局的中间件
+app.use(mw)
+```
+
+示例：
+
+```jsx
+// 1. 导入 express
+const express = require('express')
+// 1.1 导入路由模块
+const userRouter = require('./05-router')
+
+// 2. 创建 web 服务器
+const app = express()
+
+// 常量 mw 所指向的是一个中间件函数
+const mw = function(req, res, next) {
+     console.log('这是一个简单的中间件函数');
+     // 注意: 在当前中间件的业务处理完毕后,必须调用 next() 函数
+     // 表示把流转关系转交给下一个中间件或者路由
+     next()
+}
+
+// 全局的中间件
+app.use(mw)
+
+
+// 2. 使用 app.use() 注册路由模块
+app.use(userRouter)
+
+
+/// 3. 启动服务器
+app.listen(80, ()=> {
+     console.log('express server running at 127.0.0.1:80');
+}) 
 ```
 
 
@@ -1865,9 +2063,12 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 ##### 3. 定义全局中间的简化形式
 
 ```jsx
+// 全局生效的中间件
+app.use(function(req, res, next) {
+     console.log('这是一个最简单的中间件函数');
+     next()
+})
 ```
-
-
 
 
 
@@ -1886,6 +2087,23 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 可以使用 app.use() 连续定义多个全局中间件。客户端请求到达服务器之后，会按照中间件定义的先后顺序依次进行 调用，示例代码如下:
 
 ```jsx
+// 第一个中间件
+app.use(function(req, res, next) {
+     console.log('调用第一个中间件');
+     next()
+})
+
+// 第二个中间件
+app.use(function(req, res, next) {
+     console.log('调用第二个中间件');
+     next()
+})
+
+// 第三个中间件
+app.use(function(req, res, next) {
+     console.log('调用第三个中间件');
+     next()
+})
 ```
 
 
@@ -1895,6 +2113,25 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 **不使用** app.use() 定义的中间件，叫做局部生效的中间件，示例代码如下:
 
 ```jsx
+const express = require('express');
+
+const app = express()
+
+const mw = function(req, res, next) {
+     console.log('我是中间件函数');
+     next()
+}
+
+// mw 这个中间件函数只在当前路由中生效,这种用户属于局部中间件
+app.get('/', mw, function(req, res) {
+     res.send('Home Page')
+})
+
+app.get('/user', function(req, res) {
+     res.send('User page')
+})
+
+app.listen(80)
 ```
 
 
@@ -1904,7 +2141,20 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 可以在路由中，通过如下两种等价的方式，使用多个局部中间件:
 
 ```jsx
+// mw 这个中间件函数只在当前路由中生效,这种用户属于局部中间件
+app.get('/', mw, mw1, function(req, res) {
+     res.send('Home Page')
+})
+
+app.get('/', [mw, mw1], function(req, res) {
+     res.send('Home Page')
+})
 ```
+
+多个中间件函数有两种方式：
+
+- 可以通过 `,` 隔开
+- 可以通过数组的形式
 
 
 
@@ -1933,9 +2183,16 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 
 ##### 1. 应用级别的中间件
 
-通过 app.use() 或 app.get() 或 app.post() ，绑定到 app 实例上的中间件，叫做应用级别的中间件，代码示例如下:
+通过 `app.use()` 或 `app.get()` 或 `app.post()` ，绑定到 app 实例上的中间件，叫做应用级别的中间件，代码示例如下:
 
-```jsx
+```js
+app.get('/', [mw, mw1], function(req, res) {
+     res.send('Home Page')
+})
+
+app.use(function(req, res, next) {
+     next()
+})
 ```
 
 
@@ -1947,6 +2204,13 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 件是绑定到 app 实例上，路由级别中间件绑定到 router 实例上，代码示例如下:
 
 ```jsx
+// 2. 创建路由对象
+const router = express.Router()
+
+// 路由级别的中间件
+router.use(function(req, res, next) {
+     next()
+})
 ```
 
 
@@ -1958,14 +2222,23 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 **格式**:错误级别中间件的 function 处理函数中，必须有 4 个形参，形参顺序从前到后，分别是 (err, req, res, next)。
 
 ```jsx
+// 路由
+app.get('/', function(req, res) { 
+     // 抛出一个自定义的错误
+     throw new Error('服务器内部发生了错误')
+     res.send('Home Page')
+})
+
+// 错误级别的中间件
+app.use(function(err, req, res, next) {
+     // 在服务器打印错误消息
+     console.log('发生了错误' + err.message);
+     // 向客户端响应错误的相关信息
+     res.send('Error' + err.message)
+})
 ```
 
 错误级别中间件的 function 处理函数中，必须有 4 个形参，形参顺序从前到后，分别是 (err, req, res, next)。
-
-```js
-
-
-```
 
 > **注意:**
 >
@@ -1977,15 +2250,18 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 
 自 Express 4.16.0 版本开始，Express 内置了 3 个常用的中间件，极大的提高了 Express 项目的开发效率和体验: 
 
-- express.static 快速托管静态资源的内置中间件，例如: HTML 文件、图片、CSS 样式等(无兼容性)
+- `express.static` 快速托管静态资源的内置中间件，例如: HTML 文件、图片、CSS 样式等(无兼容性)
 
-- express.json 解析 JSON 格式的请求体数据(有兼容性，仅在 4.16.0+ 版本中可用)
+- `express.json` 解析 JSON 格式的请求体数据(有兼容性，仅在 4.16.0+ 版本中可用)
 
-- express.urlencoded 解析 URL-encoded 格式的请求体数据(有兼容性，仅在 4.16.0+ 版本中可用
+- `express.urlencoded` 解析 URL-encoded 格式的请求体数据(有兼容性，仅在 4.16.0+ 版本中可用
 
 ```js
+// 配置解析 application/json 格式数据的内置中间件
+app.use(express.json())
 
-
+// 配置解析 application/x-www-form-urlencoded 格式数据的内置中间件
+app.use(express.urlencoded({ extended: false}))
 ```
 
 
@@ -2029,7 +2305,13 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 使用 app.use() 来定义全局生效的中间件，代码如下:
 
 ```jsx
+const express = require('express')
 
+const app = express()
+
+app.use(function(req, res, next) {
+     // 中间件的业务逻辑
+})
 ```
 
 
@@ -2043,6 +2325,16 @@ Express 的中间件，本质上就是一个 **function** **处理函数**，Exp
 data 事件时，获取到数据只是完整数据的一部分，需要手动对接收到的数据进行拼接。
 
 ```jsx
+app.use(function(req, res, next) {
+     // 中间件的业务逻辑
+     // 定义变量, 用来存储客户端发送过来的请求数据
+     let str = ''
+     // 监听 req 的 data 时间: 客户端发送过来的新的请求体数据
+     req.on('data',function(chunk) {
+          // 拼接请求体数据,隐式转换为字符串
+          str += chunk
+     })
+})
 ```
 
 
@@ -2054,6 +2346,12 @@ data 事件时，获取到数据只是完整数据的一部分，需要手动对
 因此，我们可以在 req 的 end 事件中，拿到并处理完整的请求体数据。示例代码如下:
 
 ```jsx
+// 监听 req 对象的 end 事件,请求体发送完毕自动触发
+req.on('end', function() {
+    // 打印完整的请求体数据
+    console.log(str);
+    // TODO: ba 把字符串格式的请求体数据,解析成对象格式
+})
 ```
 
 
@@ -2065,6 +2363,9 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 对象的格式。示例代码如下:
 
 ```js
+const qs = require('querystring')
+
+const body = qs.parse(str)
 ```
 
 
@@ -2076,18 +2377,92 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 为 req.body，供下游使用。示例代码如下:
 
 ```jsx
+// 监听 req 对象的 end 事件,请求体发送完毕自动触发
+req.on('end', function() {
+    // 打印完整的请求体数据
+    console.log(str);
+    // TODO: ba 把字符串格式的请求体数据,解析成对象格式
+    const body = qs.parse(str)
+    req.body = body
+    next()
+})
 ```
 
 
 
+##### 7. 完整代码
+
+```jsx
+const express = require('express')
+const qs = require('querystring')
+
+const app = express()
+
+app.use(function(req, res, next) {
+     // 中间件的业务逻辑
+     // 定义变量, 用来存储客户端发送过来的请求数据
+     let str = ''
+     // 监听 req 的 data 时间: 客户端发送过来的新的请求体数据
+     req.on('data',function(chunk) {
+          // 拼接请求体数据,隐式转换为字符串
+          str += chunk
+     })
+     // 监听 req 对象的 end 事件,请求体发送完毕自动触发
+     req.on('end', function() {
+          // 打印完整的请求体数据
+          console.log(str);
+          // TODO: ba 把字符串格式的请求体数据,解析成对象格式
+          const body = qs.parse(str)
+          req.body = body
+          next()
+     })
+})
+
+app.listen(80)
+
+```
 
 
-##### 7. 将自定义中间件封装为模块
+
+##### 8. 将自定义中间件封装为模块
 
 为了优化代码的结构，我们可以把自定义的中间件函数，封装为独立的模块，示例代码如下:
 
-```jsx
+`custom-body-parser.js`
 
+```jsx
+const qs = require('querystring')
+
+const bodyParser = function (req, res, next) {
+     // 中间件的业务逻辑
+     // 定义变量, 用来存储客户端发送过来的请求数据
+     let str = ''
+     // 监听 req 的 data 时间: 客户端发送过来的新的请求体数据
+     req.on('data',function(chunk) {
+          // 拼接请求体数据,隐式转换为字符串
+          str += chunk
+     })
+     // 监听 req 对象的 end 事件,请求体发送完毕自动触发
+     req.on('end', function() {
+          // 打印完整的请求体数据
+          console.log(str);
+          // TODO: ba 把字符串格式的请求体数据,解析成对象格式
+          const body = qs.parse(str)
+          req.body = body
+          next()
+     })
+}
+
+module.exports = bodyParser
+```
+
+使用自定义中间件的使用：
+
+```jsx
+// 导入自己封装的中间件模块
+const customBodyParser = require('./custom-body-parser.js')
+
+app.use(customBodyParser)
 ```
 
 
@@ -2097,14 +2472,43 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 #### 8.4.1 创建基本的服务器
 
 ```js
+// 导入 express
+const express = require('express')
+
+// 创建服务器实例
+const app = express()
+
+
+// 启动服务器
+app.listen(80, ()=> {
+     console.log('express server running at 127.0.0.1:80');
+})
 ```
 
 
 
 #### 8.4.2 创建 API 路由模块
 
-```js
+`ApiRouter.js`:
 
+```js
+// 导入 express
+const express = require('express')
+
+const router = express.Router()
+
+// 挂载路由
+
+module.exports = router
+```
+
+导入使用路由：
+
+```jsx
+// 导入路由模块
+const router = require('./apiRouter')
+// 把路由模块注册到 app
+app.use('/api',router)
 
 ```
 
@@ -2112,8 +2516,18 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 
 #### 8.4.3 编写 GET 接口
 
-```js
+`ApiRouter.js`:
 
+```js
+// 挂载路由
+apiRouter.get('/get', (req, res)=> {
+     const query = req.query
+     res.send({
+          status: 0 ,
+          msg: 'Get 请求成功',
+          data: query
+     })
+})
 ```
 
 
@@ -2121,6 +2535,14 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 #### 8.4.4 编写 POST 接口
 
 ```js
+apiRouter.post('/post', (req, res)=> {
+     const bodu = req.body
+     res.send({
+          status: 0 ,
+          msg: 'Post 请求成功',
+          data: bodu
+     })
+})
 ```
 
 > 注意:
@@ -2128,6 +2550,59 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 > 如果要获取 URL-encoded 格式的请求体数据，
 >
 > 必须配置中间件 app.use(express.urlencoded({ extended: false }))
+
+
+
+#### 完整代码
+
+`ApiRouter.js`
+
+```js
+// 导入 express
+const express = require('express')
+
+const apiRouter = express.Router()
+
+// 挂载路由
+apiRouter.get('/get', (req, res)=> {
+     const query = req.query
+     res.send({
+          status: 0 ,
+          msg: 'Get 请求成功',
+          data: query
+     })
+})
+
+apiRouter.post('/post', (req, res)=> {
+     const bodu = req.body
+     res.send({
+          status: 0 ,
+          msg: 'Post 请求成功',
+          data: bodu
+     })
+})
+module.exports = apiRouter
+```
+
+使用文件：
+
+```jsx
+// 导入 express
+const express = require('express')
+
+// 创建服务器实例
+const app = express()
+
+// 导入路由模块
+const router = require('./apiRouter')
+// 把路由模块注册到 app
+app.use('/api',router)
+
+// 启动服务器
+app.listen(80, ()=> {
+     console.log('express server running at 127.0.0.1:80');
+})
+```
 
 
 
@@ -2144,16 +2619,16 @@ Node.js 内置了一个 querystring 模块，专门用来处理查询字符串�
 
 
 
-##### 2. 使用 cors 中间件解决跨域问题
+##### 2. 使用 **cors 中间件**解决跨域问题
 
 cors 是 Express 的一个第三方中间件。通过安装和配置 cors 中间件，可以很方便地解决跨域问题。 
 
 使用步骤分为如下 3 步:
 
-- 运行 npm install cors 安装中间件
-- 使用 const cors = require('cors') 导入中间件
+- 运行 `npm install cors` 安装中间件
+- 使用 `const cors = require('cors')` 导入中间件
 
-- 在路由之前调用 app.use(cors()) 配置中间件
+- 在路由之前调用 `app.use(cors())` 配置中间件
 
 
 
@@ -2186,6 +2661,7 @@ CORS (Cross-Origin Resource Sharing，跨域资源共享)由一系列 HTTP 响�
 响应头部中可以携带一个 **Access-Control-Allow-Origin** 字段，其语法如下:
 
 ```JS
+Access-Control-Allow-Origin: <origin> | *
 ```
 
 其中，origin 参数的值指定了允许访问该资源的外域 URL。 
@@ -2193,12 +2669,13 @@ CORS (Cross-Origin Resource Sharing，跨域资源共享)由一系列 HTTP 响�
 例如，下面的字段值将**只允许**来自 http://itcast.cn 的请求:
 
 ```JS
+res.setHeader('Access-Control-Allow-Origin', 'http://itcaset.com')
 ```
 
 如果指定了 Access-Control-Allow-Origin 字段的值为通配符 *****，表示允许来自任何域的请求，示例代码如下:
 
 ```JS
-
+res.setHeader('Access-Control-Allow-Origin', '*')
 ```
 
 
@@ -2216,8 +2693,9 @@ Content-Type (值仅限于 text/plain、multipart/form-data、application/x-www-
 的请求头进行声明，否则这次请求会失败!
 
 ```JS
-
-
+// 允许客户端额外向服务器发送 Content-Type 请求头和 X-Custom-Header 请求头
+// 注意：多个请求头之间使用英文的逗号进行分割
+res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Custom-Header')
 ```
 
 
@@ -2233,6 +2711,11 @@ Content-Type (值仅限于 text/plain、multipart/form-data、application/x-www-
 示例代码如下:
 
 ```JSX
+// 只允许 GET、POST、HEAD, DELETE 请求方法
+res.setHeader('Access-Control-Allow-Methods', 'GET、POST、HEAD, DELETE')
+
+// 允许所有的 HTTP 请求方法
+res.setHeader('Access-Control-Allow-Methods', '*')
 ```
 
 
@@ -2309,8 +2792,16 @@ Content-Type (值仅限于 text/plain、multipart/form-data、application/x-www-
 示例代码如下:
 
 ```js
+// 优先创建 JSONP 接口，这个接口不会被处理成 CORS 接口
+app.get('/api/jsonp', (req, res)=>{})
 
+// 在配置 CORS 中见面就：后续所有的接口，都会被处理成 CORS 接口
+app.use(cors())
 
+// 这是一个开启了 CORS 的接口
+app.get('/api/get', (req, res)=>{
+  
+})
 ```
 
 
@@ -2327,7 +2818,15 @@ Content-Type (值仅限于 text/plain、multipart/form-data、application/x-www-
 ##### 4. 实现 JSONP 的具体代码
 
 ````js
+app.get('/api/jsonp', (req, res)=> {
+  	const funcNmae =req.query.callbak
+    
+    const data = {name: 'zd', age: 22}
+  
+	  const scripeStr = `${funcNmae}(${JSON.stringify(data)})`
 
+    res.send(scripeStr)
+})
 ````
 
 
@@ -2337,6 +2836,16 @@ Content-Type (值仅限于 text/plain、multipart/form-data、application/x-www-
 调用 `$.ajax()` 函数，提供  `JSONP` 的配置选项，从而发起  `JSONP` 请求，示例代码如下:
 
 ```js
+$('#btb'),click(functon {
+		$.ajax({
+    		type: 'GET',
+        url : '',
+        dateType: 'jsonp', // 表示要发起 JSONP 请求
+        success: ()=>{
+  
+				}
+		})                
+})
 ```
 
 
@@ -2584,67 +3093,768 @@ SELECT 语句用于从表中查询数据。执行的结果被存储在一个结�
 
 ##### 2. SELECT * 示例
 
+我们希望从 users 表中选取所有的列，可以使用符号 * 取代列的名称，示例如下:
 
+![web_sql_06](../assets/web_sql_06.png)
+
+##### 3. SELECT 列名称 示例
+
+如需获取名为 "username" 和 "password" 的列的内容(从名为 "users" 的数据库表)，请使用下面的 SELECT 语句:
+
+![web_sql_07](../assets/web_sql_07.jpg)
+
+#### 9.3.4 SQL  的 INSERT INTO 语句
+
+##### 1. 语法
+
+INSERT INTO 语句用于向数据表中插入新的数据行，语法格式如下:
+
+```js
+```
+
+
+
+##### 2. INSERT INTO 示例
+
+向 users 表中，插入一条 username 为 tony stark，password 为 098123 的用户数据，示例如下:
+
+![web_sql_08](../assets/web_sql_08.jpg)
+
+#### 9.3.5 SQL 的 UPDATE 语句
+
+##### 1. 语句
+
+Update 语句用于修改表中的数据。语法格式如下:
+
+```jsx
+```
+
+
+
+##### 2. UPDATE 示例 - 更新某一列中的一个列
+
+把 users 表中 id 为 7 的用户密码，更新为 888888。示例如下:
+
+![web_sql_09](../assets/web_sql_09.png)
+
+
+
+##### 3. UPDATE 示例 - 更新某一行中的若干列
+
+把 users 表中 id 为 2 的用户密码和用户状态，分别更新为 admin123 和 1。示例如下:
+
+```jsx
+```
+
+
+
+#### 9.3.6 SQL 的DELETE 语句
+
+##### 1. 语句
+
+DELETE 语句用于删除表中的行。语法格式如下:
+
+```sql
+--- 语法解读：
+--- 从指定的表中，根据 WHERE 条件，删除对应的数据
+DELETE FROM 表名 WHERE 列名称 = 值
+```
+
+
+
+##### 2. DELETE 示例：
+
+从 users 表中，删除 id 为 4 的用户，示例如下:
+
+```sqlite
+DELETE FROM users WHERE id = 4
+```
+
+
+
+#### 9.3.7 SQL 的 WHERE 子句
+
+##### 1. 语法
+
+WHERE 子句用于限定选择的标准。在 SELECT、UPDATE、DELETE 语句中，皆可使用 WHERE 子句来限定选择的标准。
+
+```sql
+--- 查询语句中的 WHERE 条件
+SELECT 列名称 FROM 表名称 WHERE 列 运算符 值
+
+--- 更新语句中的 WHERE 条件
+UPDATE 表名称 SET 列=新值 WHERE 列 运算符 值
+
+--- 删除语句中的 WHERE 条件
+DELETE FROM 表名称 列 运算符 值
+```
+
+
+
+##### 2. 可在 WHERE 子句中使用的运算符
+
+下面的运算符可在 WHERE 子句中使用，用来限定选择的标准:
+
+| **操作符** | **描述**     |
+| :--------- | :----------- |
+| =          | 等于         |
+| <>         | 不等于       |
+| >          | 大于         |
+| <          | 小于         |
+| >=         | 大于等于     |
+| <=         | 小于等于     |
+| BETWEEN    | 在某个范围内 |
+| LIKE       | 搜索某周模式 |
+
+注意:在某些版本的 SQL 中，操作符 `<>` 可以写为 `!=`
+
+
+
+##### 3. WHERE 子句示例
+
+可以通过 WHERE 子句来限定 SELECT 的查询条件:
+
+```sql
+--- 查询 status 为 1 的所有用户
+SELECT * FROM users WHERE status = 1
+
+--- 查询 id 大于 2 的所有用户
+SELECT * FROM users WHERE status > 2
+
+--- 查询 username 不等于 admin 的所有用户
+SELECT * FROM users WHERE username <> 'admin'
+```
+
+
+
+#### 9.3.8 SQL 的 AND 和 OR 运算符
+
+##### 1.语法
+
+AND 和 OR 可在 WHERE 子语句中把两个或多个条件结合起来。
+
+AND 表示必须同时满足多个条件，相当于 JavaScript 中的 && 运算符，例如 if (a !== 10 && a !== 20) 
+
+OR 表示只要满足任意一个条件即可，相当于 JavaScript 中的 || 运算符，例如 if(a !== 10 || a !== 20)
+
+
+
+##### 2. AND 运算符示例
+
+使用 AND 来显示所有 status 为 0，并且 id 小于 3 的用户:
+
+```sql
+SELECT * FROM users WHERE status=0 AND id < 3
+```
+
+
+
+##### 3. OR 运算符示例
+
+使用 OR 来显示所有 status 为 1，或者 username 为 zs 的用户:
+
+```
+SELECT * FROM user WHERE status =1 OR username='zs'
+```
+
+
+
+#### 9.3.9 SQL 的 ORDER BY 子句
+
+##### 1. 语法
+
+ORDER BY 语句用于根据指定的列对结果集进行排序。
+
+ORDER BY 语句**默认**按照升序对记录进行排序。 
+
+如果您希望按照**降序**对记录进行排序，可以使用 DESC 关键字。
+
+
+
+##### 2. ORDER BY 子句 - 升序排序
+
+对 users 表中的数据，按照 status 字段进行升序排序，示例如下:
+
+![web_sql_09](../assets/web_sql_09.png)
+
+##### 3. ORDER BY 子句 - 降序排序
+
+对 users 表中的数据，按照 id 字段进行降序排序，示例如下:
+
+![web_sql_10](../assets/web_sql_10.jpg)
+
+##### 4. ORDER BY 子句 - 多重排序
+
+对 users 表中的数据，先按照 status 字段进行降序排序，再按照 username 的字母顺序，进行升序排序，示例如下:
+
+![web_sql_11](../assets/web_sql_11.jpg)
+
+
+
+#### 9.3.10 SQL 的 COUNT(*) 函数
+
+##### 1. 语法
+
+COUNT(*) 函数用于返回查询结果的总数据条数，语法格式如下
+
+```jsx
+SELECT COUNT(*) FROM 表名称
+```
+
+
+
+##### 2. COUNT(*) 示例
+
+查询 users 表中 status 为 0 的总数据条数:
+
+```jsx
+SELECT COUNT(*) FROM users WHERE status = 0
+```
+
+
+
+##### 3. 使用 AS 为列设置别名
+
+如果希望给查询出来的列名称设置别名，可以使用 AS 关键字，示例如下:
+
+![web_sql_12](../assets/web_sql_12.jpg)
 
 
 
 ### 9.4 在项目中操作 MySQL
 
+#### 9.4.1 在项目中操作数据库的步骤
 
+- 安装操作 MySQL 数据库的第三方模块(mysql) 
+- 通过 mysql 模块连接到 MySQL 数据库
+- 通过 mysql 模块执行 SQL 语句
+
+![web_sql_13](../assets/web_sql_13.jpg)
+
+
+
+#### 9.4.2 安装与配置 mysql 模块
+
+##### 1. 安装 mysql 模块
+
+mysql 模块是托管于 npm 上的第三方模块。它提供了在 Node.js 项目中连接和操作 MySQL 数据库的能力。 想要在项目中使用它，需要
+
+先运行如下命令，将 mysql 安装为项目的依赖包:
+
+```js
+npm install mysql
+```
+
+
+
+##### 2. 配置 mysql 模块
+
+在使用 mysql 模块操作 MySQL 数据库之前，必须先对 mysql 模块进行必要的配置，主要的配置步骤如下:
+
+```jsx
+// 1. 导入 mysql 模块
+const mysql = require('mysql')
+// 2. 建立与 mysql 数据库的连接
+const db = mysql.createPool ({
+  	host: '127.0.0.1',         // 数据库的 IP 地址
+  	user: 'root',							 // 登录数据库的账号
+  	password: 'admin123',      // 登录数据库的密码
+		database: 'my_db_01',      // 指定要操作哪个数据库
+})
+```
+
+
+
+##### 3. 测试 mysql 模块能否正常工作
+
+调用 db.query() 函数，指定要执行的 SQL 语句，通过回调函数拿到执行的结果:
+
+```sql
+db.query('SELECT 1',  (err, results)=> {
+		if (err) {
+    		console.log(err)
+        return
+		}         
+    console.log(results)
+})
+```
+
+
+
+#### 9.4.3 使用 mysql 模块操作 MySQL 数据库
+
+##### 1.查询数据
+
+查询 users 表中的所有数据
+
+```jsx
+// 查询 users 表中的用户数据
+db.query('SELECT * FROM users', (err, results)=> {
+		// 查询失败
+  	if(err) {
+      	console.log(err.message)
+      	return
+    }
+  	// 查询成功
+  	console.log(results)
+})
+```
+
+
+
+##### 2. 插入数据
+
+向 users 表中新增数据， 其中 username 为 Spider-Man，password 为 pcc321。示例代码如下:
+
+```jsx
+```
+
+
+
+##### 3. 插入数据的便捷方式
+
+向表中新增数据时，如果数据对象的每个属性和数据表的字段**一一对应**，则可以通过如下方式快速插入数据:
+
+```jsx
+```
+
+
+
+##### 4.更新数据
+
+可以通过如下方式，更新表中的数据:
+
+```
+
+```
+
+
+
+##### 5. 更新数据的便捷模式
+
+更新表数据时，如果数据对象的每个属性和数据表的字段**一一对应**，则可以通过如下方式快速更新表数据:
+
+```jsx
+```
+
+
+
+##### 6. 删除数据
+
+在删除数据时，推荐根据 id 这样的唯一标识，来删除对应的数据。示例如下:
+
+```jsx
+```
+
+
+
+##### 7. 标记删除
+
+使用 DELETE 语句，会把真正的把数据从表中删除掉。为了保险起见，**推荐使用**标记删除的形式，来**模拟删除的动作**。 所谓的标记删除，
+
+就是在表中设置类似于 **status** 这样的**状态字段**，来**标记**当前这条数据是否被删除。
+
+当用户执行了删除的动作时，我们并没有执行 DELETE 语句把数据删除掉，而是执行了 UPDATE 语句，将这条数据对应 的 status 字段标
+
+记为删除即可。
+
+```jsx
+```
 
 
 
 ### 9.5 前后端的身份认证
 
+#### 9.5.1 Web 开发模式
+
+目前主流的 Web 开发模式有两种，分别是: 
+
+- 基于服务端渲染的传统 Web 开发模式
+- 基于前后端分离的新型 Web 开发模式
 
 
 
+##### 1.服务端渲染的传统 Web 开发模式
+
+服务端渲染的概念：服务器发送给客户端的 HTML 页面，是在服务器通过字符串的拼接，动态生成的。因此，客户端不需要使用 Ajax 这
+
+样的技术额外请求页面的数据。
+
+代码示例如下:
+
+```jsx
+```
 
 
 
-#####
+##### 2. 服务端渲染的优缺点
 
-#####
+优点:
 
-#####
+- **前端耗时少。**因为服务器端负责动态生成 HTML 内容，浏览器只需要直接渲染页面即可。尤其是移动端，更省电。 
+- **有利于SEO。**因为服务器端响应的是完整的 HTML 页面内容，所以爬虫更容易爬取获得信息，更有利于 SEO。
 
-#####
+缺点:
 
-#####
+- **占用服务器端资源。**即服务器端完成 HTML 页面内容的拼接，如果请求较多，会对服务器造成一定的访问压力。
 
-#####
+- **不利于前后端分离，开发效率低。**使用服务器端渲染，则**无法进行分工合作**，尤其对于**前端复杂度高**的项目，不利于项目高效开发。
 
-#####
 
-#####
 
-#####
+##### 3. 前后端分离的 Web 开发模式
 
-#####
+前后端分离的概念：
 
-#####
+前后端分离的开发模式，**依赖于** **Ajax** **技术的广泛应用**。简而言之，前后端分离的 Web 开发模式， 就是**后端只负责**
 
-#####
+**提供** **API** **接口，前端使用** **Ajax** **调用接口**的开发模式。
 
-#####
 
-#####
 
-#####
+##### 4. **前后端分离的优缺点**
 
-#####
+优点:
 
-#####
+- **开发体验好。**前端专注于 UI 页面的开发，后端专注于api 的开发，且前端有更多的选择性。
+- **用户体验好。**Ajax 技术的广泛应用，极大的提高了用户的体验，可以轻松实现页面的局部刷新。 
+- **减轻了服务器端的渲染压力。**因为页面最终是在每个用户的浏览器中生成的。
 
-#####
+缺点:
 
-#####
+- **不利于 SEO。**因为完整的 HTML 页面需要在客户端动态拼接完成，所以爬虫对无法爬取页面的有效信息。(解决方案:利用 Vue、
 
-#####
+  React 等前端框架的 **SSR** (server side render)技术能够很好的解决 SEO 问题!)
 
-#####
 
-#####
 
-#####
+##### 5. 如何选择 Web 开发模式
+
+不谈业务场景而盲目选择使用何种开发模式都是耍流氓。
+
+- 比如企业级网站，主要功能是展示而没有复杂的交互，并且需要良好的 SEO，则这时我们就需要使用服务器端渲染; 
+
+- 而类似后台管理项目，交互性比较强，不需要考虑 SEO，那么就可以使用前后端分离的开发模式。
+
+  
+
+另外，具体使用何种开发模式并不是绝对的，为了**同时兼顾**了**首页的渲染速度**和**前后端分离的开发效率**，一些网站采用了首屏服务器端
+
+渲染 + 其他页面前后端分离的开发模式。
+
+
+
+#### 9.5.2 身份认证
+
+##### 1. 什么是身份认证
+
+**身份认证**(Authentication)又称“身份验证”、“鉴权”，是指**通过一定的手段，完成对用户身份的确认**。
+
+- 日常生活中的身份认证随处可见，例如:高铁的验票乘车，手机的密码或指纹解锁，支付宝或微信的支付密码等。 
+- 在 Web 开发中，也涉及到用户身份的认证，例如:各大网站的**手机验证码登录**、**邮箱密码登录**、**二维码登录**等。
+
+
+
+##### 2. 为什么需要身份认证
+
+身份认证的目的，是为了**确认当前所声称为某种身份的用户，确实是所声称的用户**。例如，你去找快递员取快递，你要怎么证明这份快
+
+递是你的。
+
+在互联网项目开发中，如何对用户的身份进行认证，是一个值得深入探讨的问题。例如，如何才能保证网站不会错误的将 “马云的存款数
+
+额”显示到“马化腾的账户”上。
+
+
+
+##### 3. 不同开发模式下的身份认证
+
+对于服务端渲染和前后端分离这两种开发模式来说，分别有着不同的身份认证方案: 
+
+- 服务端渲染推荐使用 **Session** **认证机制**
+- 前后端分离推荐使用 **JWT** **认证机制**
+
+
+
+#### 9.5.3 Session 认证机制
+
+##### 1. HTTP 协议的无状态性
+
+了解 HTTP 协议的无状态性是进一步学习 Session 认证机制的必要前提。
+
+HTTP 协议的无状态性，指的是客户端**的每次** **HTTP** **请求都是独立的**，连续多个请求之间没有直接的关系，**服务器不会 主动保留每次** 
+
+**HTTP** **请求的状态**。
+
+![web_sql_14](../assets/web_sql_14.jpg)
+
+
+
+##### 2. 如何突破 HTTP 无状态的限制
+
+对于超市来说，为了方便收银员在进行结算时给 VIP 用户打折，超市可以为每个 VIP 用户发放会员卡。
+
+![web_sql_15](../assets/web_sql_15.jpg)
+
+> 注意:现实生活中的**会员卡身份认证方式**，在 Web 开发中的专业术语叫做 **Cookie**。
+
+
+
+##### 3. 什么是 Cookie
+
+Cookie 是**存储在用户浏览器中的一段不超过** **4 KB** **的字符串**。它由一个名称(Name)、一个值(Value)和其它几个用
+
+于控制 Cookie 有效期、安全性、使用范围的可选属性组成。
+
+ 不同域名下的 Cookie 各自独立，每当客户端发起请求时，会**自动**把**当前域名下**所有**未过期的** **Cookie** 一同发送到服务器。 
+
+**Cookie**的几大特性:
+
+- 自动发送
+
+- 域名独立
+
+- 过期时限
+
+- 4KB限制 
+
+  
+
+##### 4. Cookie 在身份认证中的作用
+
+客户端第一次请求服务器的时候，服务器**通过响应头的形式**，向客户端发送一个身份认证的 Cookie，客户端会自动 将 Cookie 保存在浏
+
+览器中。
+
+随后，当客户端浏览器每次请求服务器的时候，浏览器会**自动**将身份认证相关的 Cookie，**通过请求头的形式**发送给 服务器，服务器即可
+
+验明客户端的身份。
+
+![web_sql_16](../assets/web_sql_16.jpg)
+
+##### 5. Cookie 不具有安全性
+
+由于 Cookie 是存储在浏览器中的，而且**浏览器也提供了读写** **Cookie** **的** **API**，因此 **Cookie** **很容易被伪造**，不具有安全
+
+性。因此不建议服务器将重要的隐私数据，通过 Cookie 的形式发送给浏览器。
+
+> **注意:**
+>
+> 千万不要使用** **Cookie** **存储重要且隐私的数据**!比如用户的身份信息、密码等。
+
+
+
+##### 6. 提高身份认证的安全性
+
+为了防止客户伪造会员卡，收银员在拿到客户出示的会员卡之后，可以**在收银机上进行刷卡认证**。只有收银机确认存在的会员卡，才能被
+
+正常使用。
+
+这种“**会员卡** **+** **刷卡认证**”的设计理念，就是 Session 认证机制的精髓。
+
+
+
+##### 7. Session 的工作原理
+
+![web_sql_17](../assets/web_sql_17.jpg)
+
+#### 9.5.4 在 Express 中使用 Session 认证
+
+##### 1. 安装express-session 中间件
+
+在 Express 项目中，只需要安装 express-session 中间件，即可在项目中使用 Session 认证:
+
+```npm
+npm install express-session
+```
+
+
+
+##### 2. 配置 express-session 中间件
+
+express-session 中间件安装成功后，需要通过 app.use() 来注册 session 中间件，示例代码如下:
+
+```jsx
+```
+
+
+
+##### 3. 向 session 中存数据
+
+当 express-session 中间件配置成功后，即可通过 **req.session** 来访问和使用 session 对象，从而存储用户的关键信息:
+
+```jsx
+```
+
+
+
+##### 4. 从 session 取数据
+
+可以直接从 **req.session** 对象上获取之前存储的数据，示例代码如下:
+
+```jsx
+```
+
+
+
+##### 5. 清空 session
+
+调用 **req.session.destroy()** 函数，即可清空服务器保存的 session 信息。
+
+```jsx
+```
+
+
+
+#### 9.5.5 JWT 认证机制
+
+##### 1. 了解 Session 认证的局限性
+
+Session 认证机制需要配合 Cookie 才能实现。由于 Cookie 默认不支持跨域访问，所以，当涉及到前端跨域请求后端接
+
+口的时候，**需要做很多额外的配置**，才能实现跨域 Session 认证。
+
+> 注意:
+>
+> - 当前端请求后端接口**不存在跨域问题**的时候，**推荐使用** **Session** 身份认证机制。
+> - 当前端需要跨域请求后端接口的时候，不推荐使用 Session 身份认证机制，推荐使用 JWT 认证机制。
+
+
+
+##### 2. 什么是 JWT
+
+JWT(英文全称:JSON Web Token)是目前**最流行**的**跨域认证解决方案**。
+
+
+
+##### 3. JWT 认证机制
+
+![web_sql_18](../assets/web_sql_18.jpg)
+
+总结:用户的信息通过 Token 字符串的形式，保存在客户端浏览器中。服务器通过还原 Token 字符串的形式来认证用户的身份。
+
+
+
+##### 4. JWT 的组成部分
+
+JWT 通常由三部分组成，分别是 Header(头部)、Payload(有效荷载)、Signature(签名)。
+
+三者之间使用英文的“.”分隔，格式如下:
+
+```jsx
+Header.Payload.Signature
+```
+
+下面是 JWT 字符串的示例:
+
+```jsx
+```
+
+
+
+##### 5. JWT 三个部分各自代表的含义
+
+JWT 的三个组成部分，从前到后分别是 Header、Payload、Signature。
+ 其中:
+
+- **Payload** 部分**才是真正的用户信息**，它是用户信息经过加密之后生成的字符串。 
+- Header 和 Signature 是**安全性相关**的部分，只是为了保证 Token 的安全性。
+
+![web_sql_19](../assets/web_sql_19.jpg)
+
+##### 6. JWT 的使用方式
+
+客户端收到服务器返回的 JWT 之后，通常会将它储存在 localStorage 或 sessionStorage 中。
+
+此后，客户端每次与服务器通信，都要带上这个 JWT 的字符串，从而进行身份认证。推荐的做法是**把** **JWT** **放在** **HTTP** **请求头的** 
+
+**Authorization** **字段中**，格式如下:
+
+```jsx
+Authorization：Bearer <token>
+```
+
+
+
+#### 9.5.6 在 Express 中使用 JWT
+
+##### 1. 安装 JWT 相关的包
+
+运行如下命令，安装如下两个 JWT 相关的包:
+
+```jsx
+npm install jsonwebtoken express-jwt
+```
+
+其中:
+
+- **jsonwebtoken** 用于**生成** **JWT** **字符串**
+- **express-jwt** 用于**将** **JWT** **字符串解析还原成** **JSON** **对象**
+
+
+
+##### 2. 导入 JWT 相关的包
+
+使用 **require()** 函数，分别导入 JWT 相关的两个包:
+
+```jsx
+```
+
+
+
+##### 3. 定义 secret 秘钥
+
+为了保证 JWT 字符串的安全性，防止 JWT 字符串在网络传输过程中被别人破解，我们需要专门定义一个用于**加密**和**解密** 的 secret 密钥:
+
+- 当生成 JWT 字符串的时候，需要使用 secret 密钥对用户的信息进行加密，最终得到加密好的 JWT 字符串 
+- 当把 JWT 字符串解析还原成 JSON 对象的时候，需要使用 secret 密钥进行解密
+
+```jsx
+```
+
+
+
+##### 4. 登录成功后生成 JWT 字符串
+
+调用 **jsonwebtoken** 包提供的 **sign()** 方法，将用户的信息加密成 JWT 字符串，响应给客户端:
+
+```jsx
+```
+
+
+
+##### 5. 将  JWT 字符串还原为 JSON 对象
+
+客户端每次在访问那些有权限接口的时候，都需要主动通过**请求头中的** **Authorization** **字段**，将 Token 字符串发送到服务器进行身份认
+
+证。
+
+此时，服务器可以通过 **express-jwt** 这个中间件，自动将客户端发送过来的 Token 解析还原成 JSON 对象:
+
+```
+```
+
+
+
+#####  6. 使用 req.user 获取用户信息
+
+当 express-jwt 这个中间件配置成功之后，即可在那些有权限的接口中，使用 **req.user** 对象，来访问从 JWT 字符串 中解析出来的用户信
+
+息了，示例代码如下:
+
+```jsx
+```
+
+
+
+##### 7. 捕获解析 JWT 失败后产生的错误
+
+当使用 express-jwt 解析 Token 字符串时，如果客户端发送过来的 Token 字符串**过期**或**不合法**，会产生一个**解析失败** 的错误，影响项目
+
+的正常运行。我们可以通过 **Express** **的错误中间件**，捕获这个错误并进行相关的处理，示例代码如下:
+
+```jsx
+```
+
+
 
