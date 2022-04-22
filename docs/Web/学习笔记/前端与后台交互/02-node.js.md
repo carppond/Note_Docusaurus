@@ -3898,3 +3898,31 @@ npm install jsonwebtoken express-jwt
 
 
 
+
+
+## 安装插件
+
+- Atom one Dart theme
+- bootstrap 3 snippets
+- chinese
+- code runner
+- code spell checker
+- Dart
+- Easy LESS
+- Flutter
+- Github theme
+- HTML CSS Supper
+- HTML Snippets
+- JS Snippets
+- Markdown all in one
+- monokai night theme
+- Node-Snippets
+- One dark pro
+- Open in browser
+- path intellisense
+- Russian code spell checker
+- view in browser
+- Viscode-icons
+- Viscode-icons-mac
+- 
+
