@@ -3440,6 +3440,8 @@ db.query('SELECT * FROM users', (err, results)=> {
 })
 ```
 
+获取的结果是数组
+
 
 
 ##### 2. 插入数据
@@ -3447,6 +3449,20 @@ db.query('SELECT * FROM users', (err, results)=> {
 向 users 表中新增数据， 其中 username 为 Spider-Man，password 为 pcc321。示例代码如下:
 
 ```jsx
+// 要插入的数据
+const user = {username: 'Spider-Man', password: 'pcc321'}
+// 待执行的 sql 语句,其中 ? 是占位符
+const qr = 'insert into users (username, password) values(?, ?)'
+// 使用数组的形式,依次为 ? 占位符指定具体的值
+db.query(qr, [user.username, user.password], (err, results) => {
+     if (err) {
+          console.log(err.message);
+          return
+     }
+     if (results.affectedRows === 1) {
+          console.log('插入数据成功');
+     }
+})
 ```
 
 
@@ -3456,16 +3472,42 @@ db.query('SELECT * FROM users', (err, results)=> {
 向表中新增数据时，如果数据对象的每个属性和数据表的字段**一一对应**，则可以通过如下方式快速插入数据:
 
 ```jsx
+// 要出啊如到 users 表中的数据对象
+const user2r = {username: 'z反倒3是', password: 'xxfdsx'}
+// 待执行的 sql 语句,其中 ? 表示占位符
+const sqlStr = 'insert into users SET ?'
+// 直接将数据当做占位符的值
+db.query(sqlStr, user2r,(err, results) => {
+     if (err) {
+          console.log(err.message);
+          return
+     }
+     if (results.affectedRows === 1) {
+          console.log('插入数据成功');
+     }
+})
 ```
 
-
+> insert into users SET ? : set ? 简化写法，不需要一一对应每个字段值
 
 ##### 4.更新数据
 
 可以通过如下方式，更新表中的数据:
 
-```
-
+```js
+// 要更新的数据对象
+const user = {id : 8, username:"反倒是", password: '0000'}
+// 待执行的 sql 语句
+const sqlStr = 'update users set username=?, password=? where id=?'
+db.query(sqlStr, [user.username, user.password, user.id], (err, results)=> {
+     if (err) {
+          console.log(err.message);
+          return
+     }
+     if (results.affectedRows === 1) {
+          console.log('更新数据成功');
+     }
+})
 ```
 
 
@@ -3475,6 +3517,20 @@ db.query('SELECT * FROM users', (err, results)=> {
 更新表数据时，如果数据对象的每个属性和数据表的字段**一一对应**，则可以通过如下方式快速更新表数据:
 
 ```jsx
+// 1. 要更新的数据对象
+const user = {id : 8, username:"11111111", password: '000fd0'}
+// 2. 待执行的 sql 语句
+const sqlStr = 'update users set ? where id=?'
+// 调用 query 执行语句
+db.query(sqlStr, [user, user.id], (err, results)=> {
+     if (err) {
+          console.log(err.message);
+          return
+     }
+     if (results.affectedRows === 1) {
+          console.log('更新数据成功');
+     }
+})
 ```
 
 
@@ -3484,7 +3540,24 @@ db.query('SELECT * FROM users', (err, results)=> {
 在删除数据时，推荐根据 id 这样的唯一标识，来删除对应的数据。示例如下:
 
 ```jsx
+// 删除数据
+// 1. 待执行的 sql 语句
+const sqlStr = 'delete from users where id=?'
+// 执行
+db.query(sqlStr, 8, (err, results)=> {
+     if (err) {
+          console.log(err.message);
+          return
+     }
+     if (results.affectedRows === 1) {
+          console.log('删除数据成功');
+     }
+})
 ```
+
+> 如果 sql 语句中有多个占位符，则必须使用 `数组` 为每个占位符指定具体的值
+>
+> 如果 sql 只有一个占位符，则可以省略数据
 
 
 
@@ -3499,6 +3572,17 @@ db.query('SELECT * FROM users', (err, results)=> {
 记为删除即可。
 
 ```jsx
+// 待执行的 sql 语句
+const sqlStr = 'update users set status=? where id=?'
+db.query(sqlStr, [1, 11], (err, results)=> {
+     if (err) {
+          console.log(err.message);
+          return
+     }
+     if (results.affectedRows === 1) {
+          console.log('标记删除数据成功');
+     }
+})
 ```
 
 
