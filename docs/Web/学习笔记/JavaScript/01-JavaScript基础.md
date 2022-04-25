@@ -842,3 +842,21 @@ for let k in obj {
 - 5 ~ 10 的随机数：`Math.floor(Math.random() *(5 + 1)) + 5`
 - N ~ M 的随机数：`Math.floor(Math.random() *(M - N + 1)) + N`
 
+
+
+## 其他知识
+
+### 引入图片
+
+js 中一般加载的都是网络图
+
+css 可以直接使用图片地址
+
+如果 js 需要使用本地图片，需要先导入，在使用
+
+```js
+import imgObj from './assets/1.gif'
+
+<img :src="imgObj">
+```
+
