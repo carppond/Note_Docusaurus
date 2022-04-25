@@ -1,6 +1,6 @@
 ---
-id: vue
-title: vue
+id: vue-基础
+title: 01 | vue基础语法
 ---
 
 ## 一、Vue 介绍
@@ -758,7 +758,7 @@ export default {
 
 目标：本质是保存节点信息，属性和内容的一个 JS 对象
 
-![vue_12](../assets/vue_12.jpg)
+![vue_12](./assets/vue_12.jpg)
 
 
 
@@ -806,7 +806,7 @@ export default {
 
 - 最大限度尝试就地修改/复用相同类型元素
 
-- ![vue_14](../assets/vue_06.jpg)
+- ![vue_14](./assets/vue_06.jpg)
 
 
 

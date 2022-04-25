@@ -111,6 +111,14 @@ module.exports = {
             'Web/学习笔记/JavaScript/JavaScript高级-jQuery',
           ],
         },
+        {
+          type: 'category',
+          label: 'Vue',
+          items: [
+            'Web/学习笔记/Vue/vue-基础',
+            'Web/学习笔记/Vue/vue组件基础',
+          ],
+        },
       ],
     },
   ],
