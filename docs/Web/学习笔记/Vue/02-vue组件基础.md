@@ -215,6 +215,7 @@ vue 规定 props 里的变量，本身是只读的
     <MyProduct
       v-for="(obj, index) in list" :key="obj.id"
       。。。
+      :index="index"
       @subprice="fn"
     ></MyProduct>
     
@@ -268,15 +269,57 @@ vue 规定 props 里的变量，本身是只读的
 ![vue_15](./assets/vue_15.jpg)
 
 - `EventBus` 常用于跨组件通信时使用
-
 - 语法：
 
   - `scr/EventBus/index.js`：创建空白 vue 对象并导出
   - 要在接收值的组件添加：`eventBus.$on('事件名', 函数体)`
   - 在传值的组件添加：`eventBus.$emit('事件名'， 值)`
 
-- ```jsx
-  ```
+示例：
+
+1. 创建空白 vue 并导出 vue：/EventBus/index.js
+
+   ```jsx
+   import Vue from 'vue';
+   //  导出空白的对象
+   export default new Vue()
+   ```
+
+   
+
+2. 接收数据方：List.vue
+
+   ```jsx
+   // 1. 引入空白 vue 对象
+   import eventBus from '../EventBus/index'
+   
+   export default {
+        props:['arr'],
+        created() {
+             // 接收数据,监听$on 事件
+             eventBus.$on('send', (index, price)=> {
+                  this.arr[index].proPrice -= price
+             })
+        },
+   }
+   ```
+
+3. 发送数据方：MyProduct.vue
+
+   ```jsx
+   import eventBus from '../EventBus/index'
+   export default {
+   		 。。。
+        methods: {
+             kanFn () {
+               		this.$emit('subPrice',this.index,1)
+                   eventBus.$emit('send',this.index,1)
+             }
+        },
+   }
+   ```
+
+   
 
 
 
@@ -287,10 +330,11 @@ vue 规定 props 里的变量，本身是只读的
 - `eventBus` 的本质是：
 
   - 空白 vue 对象，只负责 `$on` 和 `$emit`
-
+  - 空白 vue 对象，只负责监听和触发事件
   
-
   
-
+  
+  
+  
   
 
