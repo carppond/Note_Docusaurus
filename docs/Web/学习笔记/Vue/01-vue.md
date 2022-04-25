@@ -175,7 +175,16 @@ export default {
 
 
 
-## 二、Vue 语法
+### 08 | 新建项目一般需要运行的命令
+
+- vue create xxx
+- cd xxx
+- npm install less-loader@5.0.0 less
+- npm install bootstrap
+
+
+
+## 二、Vue 语法--指令
 
 ### 01 | 插值表达式
 
@@ -674,7 +683,7 @@ export default {
 
 
 
-### 13 | v-for 更新检
+### 13 | v-for 更新监测
 
 目标：目标结构变化，触发 `v-for` 的更新
 
@@ -682,13 +691,47 @@ export default {
 - 情况二：数组截取
 - 情况上：更新值
 - 口诀：
-  - 数组变更方法，就会导致 `v-for` 更新，页面更新
-  - 数组非变更方法，返回新数组，不会导致 `v-for` 更新，可以采用覆盖数组或 `this.$set()`
-  - push、pop、shift、unshift、splice、sort、reverse
-  - filter、concat、slice
+  - 数组调用变更方法，就会导致 `v-for` 更新，页面更新
+    - 变更方法：push、pop、shift、unshift、splice、sort、reverse
+  - 数组调用非变更方法，返回新数组，不会导致 `v-for` 更新，可以采用覆盖数组或 `this.$set()`
+    - 非变更方法：filter、concat、slice
 
 ```js
-<
+<template>
+  <div>
+    <ul>
+      <li v-for="(val, index) in arr" :key="index"> {{val}} </li>
+    </ul>
+    <button @click="revBtn">数组翻转</button>
+    <button @click="spliceBtn">截取前 3 个元素</button>
+    <button @click="changeItem">改掉第一个元素的值</button>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      arr: [5,34,2,1,4,6]
+    }
+  },
+  methods: {
+    revBtn() {
+      // 数组翻转,可以让 v-for 更新
+      this.arr .reverse()
+    },
+     spliceBtn() {
+      // 数组 slice 方法不会造成 v-for 更新
+      // slice 不会改变原始数据, 可以使用覆盖来更新
+      this.arr = this.arr.slice(0, 3)
+    },
+    changeItem() {
+      // 更新某个值的时候,v-for 是监测不到的
+      this.arr[0] = 11
+      // 可以使用 this.$set来解决
+      this.$set(this.arr,0, 11)
+    }
+  },
+}
 ```
 
 
@@ -703,7 +746,7 @@ export default {
 
   
 
-### 14 | 真事的 DOM
+### 14 | 真实的 DOM
 
 目标：在 document 对象上，渲染到浏览器上显示的标签
 
@@ -721,10 +764,10 @@ export default {
 
 目标：在内存中比较变化部分，然后给真实的DOM 打补丁(更新)
 
-![vue_12](./assets/vue_05.jpg)
+![vue_12](./assets/vue_06.jpg)
 
-- 虚拟 DOM 本质上是一个 JS 对象，不保存 DOM关键信息
-- 虚拟 DOM 的好处在于提高DOM 更新的性能，不频繁的使用真实的 DOM，在内存中找到变化部分，再更新真实的DOM
+- 虚拟 DOM 本质上是一个 JS 对象，保存 DOM关键信息
+- 虚拟 DOM 的好处在于提高 DOM 更新的性能，不频繁的使用真实的 DOM，在内存中找到变化部分，再更新真实的DOM
 
 
 
@@ -763,35 +806,380 @@ export default {
 
 - 最大限度尝试就地修改/复用相同类型元素
 
-- ![vue_08](./assets/vue_08.jpg)
-
-### 13 |
+- ![vue_14](../assets/vue_06.jpg)
 
 
 
+### 18 | 有 key，值为索引
 
+- 有 key属性，基于 key ，来比较新旧虚拟 DOM，移除 key 不存在元素
 
-### 14 |
+```jsx
+<ul id="myul">
+	<li v-for="(str, index) in arr" :key="index">
+  	{{ str }}
+    <input type="text">
+  </li> 
+</ul>
+```
 
+- 先产生新旧虚拟 DOM，根据 key 比较，还是就地更新
 
-
-
-
-### 15 |
-
-
-
-
-
-### 16 |
-
-
-
-### 17 |
+  ![vue_09](./assets/vue_09.jpg)
 
 
 
+### 14 | 有 key，值唯一不重复的字符串或数字
+
+- 有 key 属性，基于 key 来比较新旧虚拟 DOM，移除 key 不存在元素
+
+  - 给每个数据换成对象，准备 id，把 id 的值作为 key
+
+  ```jsx
+  <ul id="myul">
+  	<li v-for="obj in arr" :key="obj.id">
+    	{{ obj.name }}
+      <input type="text">
+    </li>
+  </ul>
+  ```
+
+- 先产生新旧虚拟 DOM，根据 key 比较
+
+  ![vue_10](./assets/vue_10.jpg)
 
 
 
+### 阶段小结
+
+#### key 小结
+
+- 最元素或者内容改变会分两种情况：
+  - 有 key，按照 key 比较
+  - 无 key，就地更新
+- key 值要求：
+  - 唯一不重复的字符串或者数值
+- key 应该怎么用：
+  - 有 id 用 id，无 id 用索引
+- key 的好处：
+  - 可以配合虚拟 DOM 提高更新的性能
+
+
+
+#### 阶段小结：
+
+- 数组采用更新方法，才会导致 v-for 更新页面
+- vue 是如何提高性能的？
+  - 采用虚拟 DOM+diff 算法提高更新性能
+- 虚拟 DOM：
+  - 本质是保存 dom 关键信息的 js 对象
+- diff 算法如何比较新旧虚拟 dom
+  - 根元素改变，删除当前 DOM 树重新建
+  - 根元素不变，属性改变，更新属性
+  - 根元素不变，子元素 / 内容改变
+    - 无 key 就地更新
+    - 有 key，比较 key，按 key 更新
+
+
+
+### 15 | 动态 class
+
+- 用 `v-bind` 给标签 `class` 设置动态的值
+
+- 语法：
+
+  - `:class = "{类名: 布尔值}"`
+
+  - ```vue
+    <div>
+    	<p :class="{redStr: bool}">
+      值为 true，key 作为类名生效
+      </p>
+    </div>
+    
+    <style>
+    	.redStr {
+         color: red
+      }
+    </style>
+    
+    <script>
+    	data() {
+        return {
+          bool: true
+        }
+      }
+    </script>
+    ```
+
+
+
+### 16 | 动态 style
+
+- 给标签动态设置 style 的值
+
+- 语法：
+
+  - `:style="{css属性名: 值}"`
+
+  - ```jsx
+    <div>
+    	<p :style="{color: colorStr}">
+      value 变量的值，将被赋予给 css 属性的 key 生效
+      </p>
+    </div>
+    
+    <script>
+    	data() {
+        return {
+          colorStr: 'red'
+        }
+      }
+    </script>
+    ```
+
+    
+
+## 三、Vue 基础 - 过滤器 - 计算属性 - 侦听器
+
+### 01 | 过滤器--定义使用
+
+- 转换格式，过滤器就是一个函数，传入值返回处理后的值
+- 过滤器只能用在：`插值表达式和 v-bind 动态属性里`
+- vue 中的过滤器场景：
+  - 字符串翻转，输入”hello，word“，输出”drow，olleh“
+  - 字母转大写，输入”hello“，输出”HELLO“
+- 语法：
+  - `Vue.filter("过滤器名", (值) => {return "返回处理后的值"})`：写在 `main.js` 文件
+  - `filters:{过滤器名字}: (值)=> {return "返回处理后的值"}` ： 写在具体的 `.vue` 文件中
+- 过滤器的使用
+  - `Vue 变量 | 过滤器名字`
+
+示例：
+
+- 全局过滤器：写在 `main.js`
+
+  - ```jsx
+    
+    // 定义全局过滤器
+    Vue.filter("reverse", function(val) {
+      // let ne = new String()
+        let arr = val.split("")
+        arr.reverse()
+        return arr.join("")
+    })
+    ```
+
+- 局部过滤器：当个 vue 文件中
+
+  - ```jsx
+    export default {
+      filters: {
+         rev (val) {
+            let arr = val.split("")
+            arr.reverse()
+            return arr.join("")
+         },
+      }
+    }
+    ```
+
+
+
+### 02 | 过滤器 - 传参和多个过滤器
+
+- 可同事使用多个过滤器，或者给过滤器传参
+
+- 语法：
+
+  - 过滤器传参：`vue 变量 | 过滤器(实参)`
+  - 多个过滤器：`vue 变量 | 过滤器 1 | 过滤器 2`
+
+- ```jsx
+  ```
+
+
+
+### 03 | 计算属性 - computed
+
+- 一个变量的值，依赖林外一些数据计算而来的结果
+
+- 语法：
+
+  - ```jsx
+    computed: {
+      	"计算属性名" () {
+          	return "值"
+        }
+    }
+    
+    <template>
+    	<div>
+      	<p>和为：{{num }}</p>
+      </div>
+    </template>
+    ```
+
+- 注意：
+
+  - 计算属性也是 vue 数据变量，所以不要和 data 里重名，用法和 data 相同
+
+
+
+### 04 | 计算属性 - 缓存
+
+- 计算属性，基于依赖项的值进行缓存，依赖的变量不变，都直接从缓存取结果
+- 计算属性的好处：
+  - 带缓存
+  - 依赖项不变，直接从缓存取
+  - 依赖项改变，函数自动执行，并重新缓存
+- 计算属性的使用场景：
+  - 在变量值，依赖其他变量计算而来才用
+
+
+
+### 05 | 计算属性完整写法
+
+简单写法：
+
+```jsx
+exort default {
+		computed: {
+  			"计算属性名" () {
+      			return "值"
+    		}
+		}
+}
+```
+
+完整写法：
+
+```vue
+<template>
+	<div>
+    <div>
+    	<span>名字：</span>  
+      <input type="text" v-model="full">
+  	</div>
+  </div>
+</template>
+
+exort default {
+	computed: {
+			"属性名": {
+					set(值) {},
+					get() { return "值"}
+			 }
+	}
+}
+
+例如：
+
+<script>
+export default {
+  computed: {
+    full: {
+      set(val) {
+        
+      },
+      get(){
+        return "默认值"
+      }
+    }
+  },
+}
+</script>
+```
+
+- 需要给计算属性变量赋值的时候，需要用到计算机完整写法
+- 
+
+### 06 | 侦听器 - wathc
+
+- 可以侦听 data 、computed 属性值的改变
+
+- 语法：
+
+  - ```jsx
+    watch： {
+       "被侦听的属性名" (newVal, oldVal){}
+    }
+    
+    
+    ```
+
+示例：
+
+```vue
+<template>
+		<div>
+       <input type="text" v-model="name">
+	  </div>
+</template>
+
+exprot default{
+	data() {
+		return {
+			name:""
+		}
+	}
+	watch: {
+		// 当 name 发生改变时，触发该函数
+		name(newVal, oldVal) {
+			console.log(newVal, oldVal)
+		}
+	}
+}
+```
+
+
+
+### 07 | 侦听器 - 深度侦听和立即执行
+
+- 侦听复杂类型或者立即执行侦听函数
+
+- 语法：
+
+  - ```jsx
+    watch: {
+      	"要侦听的属性名": {
+          immediate: true,   // 立即执行 
+          deep: true,        // 深度侦听复杂类型内变化
+          handler(newVal, oldVal) {
+            
+          }
+        }
+    }
+    ```
+
+  示例：
+
+  ```
+  <template >
+    <div>
+      <input type="text" v-model="obj.name">
+    </div>
+  </template>
+  <script>
+  export default {
+    data() {
+      return {
+        obj: {
+          name: "我是默认值"
+        }
+      }
+    },
+    watch: {
+      obj: {
+        deep: true,
+        handler(newVal, oldVal) {
+            console.log('newVal: '+ newVal.name + '\n' + 'oldVal:'+ oldVal.name);
+        }
+        
+      }
+    },
+  }
+  ```
+
+  
 
