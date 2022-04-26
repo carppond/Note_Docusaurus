@@ -3,6 +3,8 @@ id: vue组件基础+进阶
 title: 02 | vue组件基础+进阶
 ---
 
+## 一、组件基础
+
 ### 01 | 组件的概念
 
 - 组件是可复用的 Vue 实例，封装标签，样式和 JS 代码
@@ -332,7 +334,9 @@ vue 规定 props 里的变量，本身是只读的
 
 
 
-### 09 | vue 的生命周期
+## 二、组件进阶
+
+### 01 | vue 的生命周期
 
 **目标：从创建到销毁的整个过程就是 - Vue 实例的 - 生命周期**
 
@@ -446,5 +450,291 @@ vue 规定 props 里的变量，本身是只读的
 
 
 
-### 10 | axios 使用
+### 02 | axios 使用
 
+**目标：axios 是一个专门用于发送 ajax 请求的库**
+
+- 官网： http://www.axios-js.com/
+- 特点：
+  - 支持客户端发送 `Ajax` 请求
+  - 支持服务端 `Node.js` 发送请求
+  - 支持 `Promise` 相关方法
+  - 支持请求和响应的拦截功能
+  - 自动转换 JSON 数据
+- axios 底层还是原生 JS 实现，内部通过 `Promise` 封装
+
+```jsx
+axios({
+  methos: '请求方式'， // GET POST
+  url   : '请求地址'， 
+  data  : {   			 // 拼接到请求体的参数，POST 请求的参数
+  	xxx : xxx,
+	},
+  params: {          // 拼接到请求体的参数，GET 请求的参数
+  	xxx : xxx,    
+  },
+}).then(res => {
+  console.log(res.data) // 从后台返回的结果
+}).catch(err => {
+  console.log(err)    // 后台报错返回
+})
+```
+
+
+
+**小结：**
+
+- `ajax` 是一种前端异步请求后端的技术
+- `ajax` 原理：浏览器 window 接口 `XMLHttpRequest`
+- `axios`：基于原生 `ajax + Promise` 技术封装通用于前后端的请求库
+
+
+
+#### 01 | axios使用：GET获取数据
+
+**目标：获取所有图书信息**
+
+- 功能：点击调用后台接口，拿到所有数据，打印到控制台
+
+- 接口：接口文档
+
+- 引入：下载 axios，引入后才能使用
+
+- ```jsx
+  axios({
+    url: 'http://123.57.109.30:3006/api/getbooks'
+    method: 'get'
+  }).then(function (res) {
+    console.log(res)
+  })
+  ```
+
+**小结：**
+
+- axios 如何发起一次 get 请求
+  - 在 method 选项配置为 true，也可以不写，默认就是 get
+- axios 函数调用原地结果是什么？
+  - 是一个 Promise 对象
+
+- 如何拿到 Promise 里 ajax 的成功或失败的结果
+  - then、catch
+
+
+
+#### 02 | axios 使用：GET 传参
+
+```jsx
+axios({
+  url: 'http://123.57.109.30:3006/api/getbooks',
+  method: 'get',
+  params: {
+    bookname: this.bookName,
+  }
+}).then(function (res) {
+  console.log(res)
+})
+```
+
+- ajax 如何给后台传参
+  - 在 url?拼接：查询字符串
+  - 在 url 路径上：需要后台特殊处理
+  - 在请求体 / 请求头传参给后台
+- axios 在 params 配置想，会把参数自动写到 url? 后面
+
+
+
+#### 03 | axios 使用：POST 获取数据
+
+```jsx
+axios({
+  url: 'http://123.57.109.30:3006/api/addbook',
+  method: 'POST',
+  data: {
+    appkey: 'xxxxxxxxxxx',
+  }
+}).then(function (res) {
+  console.log(res)
+})
+```
+
+- post 请求方式，一般在请求体中传递数据给后台
+- axios 在 data 配置选项上，可以把参数自动转入
+- axios 默认发送给后台的请求体数据是 json 字符串
+
+
+
+#### 04 | axios 全局配置
+
+**目标：配置基础地址，统一管理**
+
+- 可以在官网看到 axios 的很多默认配置
+
+  - `axios.default.baseURL = 'xxxxxxx`
+
+- 修改请求URL ，以后的请求都不用带前缀基地址了，运行时，axios 的 baseURL 会自动拼在前
+
+  ```jsx
+  axios({
+    url: '/api/addbook',
+    method: 'POST',
+    data: {
+      appkey: 'xxxxxxxxxxx',
+    }
+  }).then(function (res) {
+    console.log(res)
+  })
+  ```
+
+
+
+### 03 | 获取 真实 DOM
+
+**目标：通过 id 或 ref 属性获取原生的 DOM**
+
+- 在 mounted 生命周期，有 2 种方式可以获取原生 DOM
+
+  - 目标标签：添加 id / ref
+
+    ```jsx
+    <h1 ref="myH1" id="h">1. ref/id 获取原生 DOM</h1>
+    ```
+
+  - 恰当时机，通过 id、ref 属性获取目标标签
+
+    ```jsx
+    mounted() {
+      	console.log(document.getElementById('h'))
+      	console.log(this.$refs.myH1)
+    }
+    ```
+
+
+
+### 04 | 获取组件对象
+
+**目标：通过 ref 属性获取组件对象**
+
+- 创建 Demo 组件，写一个方法
+
+- App.vue 使用 Demo 组件，给 ref 属性，名字随意
+
+  - `<Demo ref="de"></Demo>`
+
+- 恰当时机，通过 ref 属性，获取组件对象，可调用组件对象里的方法等
+
+  - ```ksx
+    mounted() {
+    	thid.$ref.de.fn()
+    }
+    ```
+
+
+
+**小结：**
+
+- 通过给目标组件添加 ref 属性，通过 `this.$ref.名字` 获取组件对象
+- 拿到组件可以调用组件里的属性和方法
+
+
+
+### 05 | Vue 异步更新 DOM
+
+**目标：点击改 data，获取原生的 DOM 内容**
+
+1. 创建标签显示数据
+
+   ```jsx
+   <p ref="a"> 数字：{{count }}</p>
+   <button @click="btnClick">点击+1，观察打印</button>
+   ```
+
+2. 点击+1，马上获取原生 DOM 内容
+
+   ```jsx
+   mehtods: {
+   	btnClick() {
+       this.count++;
+       console.log('this.$ref.a.innerHTML')
+     }
+   }
+   ```
+
+   > 原因：vue 更新 dom 是异步的
+
+
+
+### 06 | $nextTick 使用
+
+**目标：等 DOM 更新后，触发此方法里函数体执行**
+
+- 语法：`this.$nextTick(该函数体)`
+
+- ```jsx
+  mehtods: {
+  	btnClick() {
+      this.count++;
+      this.$nextTick(()=> {
+  			console.log('DOM 更新后触发 $nextTick 函数')
+        console.log('this.$ref.a.innerHTML')
+      })
+    }
+  }
+  ```
+
+
+
+**小结：**
+
+- data 改变更新 DOM 是异步执行的
+- 可以在下面两个方法内访问到更新的 DOM
+  - `this.$nextTick` 里的函数体
+  - `updated` 生命周期钩子函数
+- `$nextTick` 函数原地返回的是 Promise 对象
+- 如何在 JS 中主动触发标签的事件呢？
+  - 获取到 DOM 对象，调用事件方法
+
+
+
+### 07 |组件 name 属性的作用
+
+**目标：组件 name 可用于注册组件名字**
+
+- 组件定义 name 属性和值
+
+  ```jsx
+  <script>
+  export default {
+      name: 'ComNameHh'
+  }
+  </script>
+  ```
+
+- 注册组件可用上面的 name 值
+
+  ```
+  <ComNameHh></ComNameHh>
+  
+  import ComName from '/components/ComName.vue'
+  
+  export default {
+  		[ComName.name]: ComName
+  }
+  ```
+
+  
+
+### 08 | 动态组件
+
+**目标：多个组件使用同一个挂载点，并动态切换**
+
+效果如下：
+
+ ![vue_20](./assets/vue_20.jpg)
+
+
+
+1. 准备被切换的：`UserName.vue` 和 `UserInfo.vue` 2 个组件
+2. 引入到 `UseDynamic.vue` 注册
+3. 准备变量来承载要显示的 `组件名`
+4. 设置挂载点 `<component>`，使用 is 属性来设置要显示哪个组件
+5. 点击按钮：修改 comName 变量里的‘’组件名‘’

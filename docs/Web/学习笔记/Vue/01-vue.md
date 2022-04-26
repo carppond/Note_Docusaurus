@@ -21,6 +21,9 @@ vue 是一个 JS 渐进式框架，渐进式就是按需逐步继承功能。
 
 ```jsx
 npm install vue -g
+npm install @vue/cli -g
+或者
+yarn global add @vue/cli
 ```
 
 全局包会在计算机中配置全局命令（例：nodemon、vue命令）
@@ -181,6 +184,15 @@ export default {
 - cd xxx
 - npm install less-loader@5.0.0 less
 - npm install bootstrap
+- vue init webpack vue-demo：打包
+
+或者
+
+- npm install -g yarn：安装 yarn
+- yarn run dev
+- yarn run serve
+- yarn run build：打包
+- yarn install 安装依赖
 
 
 
