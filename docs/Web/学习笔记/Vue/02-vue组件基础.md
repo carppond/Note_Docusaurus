@@ -1,6 +1,6 @@
 ---
-id: vue组件基础
-title: 02 | vue组件基础
+id: vue组件基础+进阶
+title: 02 | vue组件基础+进阶
 ---
 
 ### 01 | 组件的概念
@@ -321,20 +321,130 @@ vue 规定 props 里的变量，本身是只读的
 
    
 
-
-
 **总结：**
 
 - 当 2 个没有引用关系的组件之间要通信传值时，用 `eventBus` 技术
-
 - `eventBus` 的本质是：
 
   - 空白 vue 对象，只负责 `$on` 和 `$emit`
   - 空白 vue 对象，只负责监听和触发事件
   
+
+
+
+### 09 | vue 的生命周期
+
+**目标：从创建到销毁的整个过程就是 - Vue 实例的 - 生命周期**
+
+
+
+#### 01 | 钩子函数
+
+**目标：Vue 框架内置函数，随着组件的生命周期阶段，自动执行**
+
+- 作用：特定的时间点，执行特点的操作
+
+- 场景：组件创建完毕后，可以在 `created 生命周期函数` 中发起 Ajax 请求，从而初始化 data 数据
+
+- 分类：4 大阶段，8 个方法
+
+  | 阶段   | 方法名        | 方法名    |
+  | ------ | ------------- | --------- |
+  | 初始化 | beforeCreated | created   |
+  | 挂载   | beforeMount   | mounted   |
+  | 更新   | beforeUpdate  | updated   |
+  | 销毁   | beforeDestroy | destroyed |
+
   
-  
-  
-  
-  
+
+#### 02 | 初始化
+
+1. `new Vue()` ：vue 实例化，组件也是一个小的 vue 实例
+2. `Init Event & Lifecycle`：初始化时间和生命周期函数
+3. `beforeCreate`：生命周期钩子函数被执行
+4. `Init injections & reactivity`：vue 内部添加 data 和 methods 等
+5. `created`：生命周期钩子函数被执行，实例创建
+6. 接下来是编译模板阶段：开始分析
+7. `Has el option ?`：是否有 `el` 选项，检查要挂到哪里
+   1. 没有，调用 `$mount`
+   2. 有，继续检查 `template` 选项
+
+ ![vue_16](./assets/vue_16.jpg)
+
+**小结：**
+
+- Vue 实例从创建到编译模板执行了两个钩子函数：
+  - `beforeCreate`
+  - `created`
+- `created` 函数触发能获取 data
+  - 能获取 data，并不能获取真实的 `DOM`
+
+
+
+#### 03 | 挂载
+
+1. `template` 选项检查
+   1. 有：编译 `template`，返回 `render` 渲染函数
+   2. 没有：编译 `el` 选项对应标签作为 `template`（要渲染的模板）
+2. 虚拟 DOM 挂载成真实的 DOM 之前
+3. `beforeMount`：生命周期钩子函数被执行
+4. `Create....`：把虚拟 DOM 和渲染的数据一并挂到真实的 DOM 上
+5. 真实 DOM 挂载完毕
+6. `mounted`：生命周期钩子函数被执行
+
+ ![vue_17](./assets/vue_17.jpg)
+
+
+
+**小结：**
+
+- Vue 实例冲创建到显示经历了哪些钩子函数？
+  - `beforeCreate`
+  - `created`
+  - `beforeMount`
+  - `mounted`
+- `created` 函数里，能获取真实的 DOM 吗?
+  - 不能获取到真实的 DOM
+- 在钩子函数里可以获取到真实 DOM 吗?
+  - 可以，在 `mounted` 钩子函数
+
+
+
+#### 04 | 更新
+
+1. 当 data 里数据改变，更新 DOM 之前
+2. `beforeUpdate`：生命周期钩子函数被执行
+3. `Virtual DOM....`：虚拟 DOM 重新渲染，打补丁到真实 DOM
+4. `updated`：生命周期钩子函数被执行
+5. 当有 data 数据改变：重复这个循环
+
+ ![vue_18](./assets/vue_18.jpg)
+
+**小结：**
+
+- 当数据发生变化并更新页面后，会执行 update 钩子函数
+- 在 update 钩子函数里可以获取到更新后的 DOM
+
+
+
+#### 05 | 销毁
+
+1. 当 `$destory()` 被调用：比如组件 DOM 被移除。例如：v-if
+2. `beforeDestory`：生命周期钩子函数被执行
+3. 拆卸数据监视器，子组件和时间监听器
+4. 实例销毁后，最后触发一个钩子函数
+5. `destoryed`：生命周期钩子函数被执行
+
+   ![vue_19](./assets/vue_19.jpg)
+
+
+
+- 一般会在 `beforeDestroy`、`destoryed` 里：
+  - 手动消除计时器
+  - 定时器
+  - 全局时间
+
+
+
+### 10 | axios 使用
 

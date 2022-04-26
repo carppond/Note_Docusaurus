@@ -113,10 +113,18 @@ module.exports = {
         },
         {
           type: 'category',
+          label: '前端与后台交互',
+          items: [
+            'Web/学习笔记/前端与后台交互/ajax+http+跨域+JSONP+mysql',
+            'Web/学习笔记/前端与后台交互/node.js',
+          ],
+        },
+        {
+          type: 'category',
           label: 'Vue',
           items: [
             'Web/学习笔记/Vue/vue-基础',
-            'Web/学习笔记/Vue/vue组件基础',
+            'Web/学习笔记/Vue/vue组件基础+进阶',
           ],
         },
       ],
