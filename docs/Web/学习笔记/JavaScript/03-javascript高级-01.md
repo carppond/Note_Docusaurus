@@ -750,16 +750,77 @@ let和var都有提升，但是let定义的变量没有赋值之前是不可以�
 总结：
 
 1. 推荐使用字面量方式声明数组，而不是 `Array` 构造函数
+
 2. 实例方法 `forEach` 用于遍历数组，替代 `for` 循环
+
+   ```jsx
+   arr.forEach(function(currentObj, index, arr) {
+     
+   })
+   --- currentObj: 必须参数，当前正在处理的元素
+   --- index：可选参数，当前处理元素的索引
+   --- arr： 可选参数，当前操作的数组
+   
+   可以简写：
+   arr.forEach(obj => console.log(obj))
+   ```
+
 3. 实例方法 `filter` 过滤数组单元值，生成新数组
+
 4. 实例方法 `map` 迭代原数组，生成新数组
+
 5. 实例方法 `join` 数组单元素拼接成了符串
+
 6. 实例方法 `concat`  合并两个数组，生成新数组
+
 7. 实例方法 `sort` 对原数组单元值排序
+
 8. 实例方法 `splice` 删除或替换原数组单元
+
 9. 实例方法 `indexOf` 检索数组单元值
+
 10. 实例方法 `reverse` 反转数组
+
 11. 静态方法 `from` 伪数组转成数组
+
+12. 实例方法 `every` 测试一个数组内的所有元素是否都能通过某个指定函数的测试
+
+    1. 若收到一个空数组，此方法在一切情况下都会返回 `true`
+    2. 参数和上面的 `forEach` 一样，规则一样
+
+13. 实例方法 `reduce`：对数组中的每个元素按序执行一个由您提供的 **reducer** 函数，每一次运行 **reducer** 会将先前元素的计算结果作
+
+    为参数传入，最后将其结果汇总为单个返回值。
+
+    ```
+    / Arrow function
+    reduce((previousValue, currentValue) => { /* ... */ } )
+    reduce((previousValue, currentValue, currentIndex) => { /* ... */ } )
+    reduce((previousValue, currentValue, currentIndex, array) => { /* ... */ } )
+    reduce((previousValue, currentValue, currentIndex, array) => { /* ... */ }, initialValue)
+    
+    // Callback function
+    reduce(callbackFn)
+    reduce(callbackFn, initialValue)
+    
+    // Inline callback function
+    reduce(function(previousValue, currentValue) { /* ... */ })
+    reduce(function(previousValue, currentValue, currentIndex) { /* ... */ })
+    reduce(function(previousValue, currentValue, currentIndex, array) { /* ... */ })
+    reduce(function(previousValue, currentValue, currentIndex, array) { /* ... */ }, initialValue)
+    ```
+
+    - `previousValue`：上一次调用 `callbackFn` 时的返回值。第一次调用时，若指定了初始值 `initialValue` ，则值为 `initialValue`，否则为数组索引 0 的元素 `arr[0]`
+
+    - `currentValue`：数组中正在处理的元素。在第一次调用时，若指定了初始值 `initialValue`，其值则为数组索引为 0 的元素 
+
+      `array[0]`，否则为 `array[1]`。
+
+    - `currentIndex`：数组中正在处理的元素的索引。若指定了初始值 `initialValue`，则起始索引号为 0，否则从索引 1 起始。
+
+    - `array`：用于遍历的数组。
+
+    - `initialValue`：作为第一次调用 `callback` 函数时参数 `previousValue` 的值。若指定了初始值 `initialValue`，则 `currentValue` 则将使用数组第一个元素；否则 `previousValue` 将使用数组第一个元素，而 `currentValue` 将使用数组第二个元素。
 
 
 
