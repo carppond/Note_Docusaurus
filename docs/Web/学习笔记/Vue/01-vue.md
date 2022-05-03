@@ -30,7 +30,145 @@ yarn global add @vue/cli
 
 ### 03 | vue 创建脚手架项目--启动
 
-vue create 项目名： 创建一个脚手架项目
+`vue create 项目名`： 创建一个脚手架项目
+
+下一步，选择配置方式
+
+```js
+Vue CLI v4.2.3
+? Please pick a preset:
+  default (babel, eslint)
+> Manually select features // 手动配置，更多功能
+```
+
+> manually：自定义勾选特性配置，选择完毕之后，才会进入装包
+
+选择插件安装
+
+```js
+? Please pick a preset: Manually select features
+? Check the features needed for your project:
+ (*) Babel
+ ( ) TypeScript
+ ( ) Progressive Web App (PWA) Support
+ (*) Router
+ (*) Vuex
+ (*) CSS Pre-processors
+>(*) Linter / Formatter
+ ( ) Unit Testing
+ ( ) E2E Testing
+```
+
+- Babel：转码器，可以将ES6代码转为ES5代码
+
+- TypeScript：一个JavaScript（后缀.js）的超集（后缀.ts）包含并扩展了 JavaScript 的语法，需要被编译输出
+
+  为 JavaScript在浏览器运行
+
+- Progressive Web App (PWA) Support：渐进式Web应用程序
+
+- Router：vue-router（vue路由）
+
+- Vuex：数据容器，存储共享数据，vuex（vue的状态管理模式）
+
+- CSS Pre-processors：CSS 预处理器，后面会提示你选择 less、sass、stylus 等
+
+- Linter / Formatter：代码风格检查和格式化（如：ESlint）
+
+- Unit Testing：单元测试
+
+- E2E Testing：*e2e（end to end） 测试* ,端到端测试
+
+下一步,选择vue.js版本
+
+```js
+? Please pick a preset: Manually select features
+? Check the features needed for your project: Choose Vue version, Babel, Router, Vuex, Linter
+? Choose a version of Vue.js that you want to start the project with (Use arrow keys)
+> 2.x
+  3.x (Preview)
+```
+
+选择3.x
+
+```js
+? Choose a version of Vue.js that you want to start the project with 3.x
+? Use history mode for router? (Requires proper server setup for index fallback in production) (Y/n)
+```
+
+是否使用 history 路由模式。
+
+Vue-Router 利用了浏览器自身的 `hash` 模式和  `history` 模式的特性来实现前端路由（通过调用浏览器提供的口）。
+
+我这边选择Y
+
+下一步，CSS预处理器选择
+
+```js
+? Pick a CSS pre-processor (PostCSS, Autoprefixer and CSS Modules are supported by default):
+  Sass/SCSS (with dart-sass)
+  Sass/SCSS (with node-sass)
+> Less
+  Stylus
+```
+
+下一步：选择校验工具
+
+```js
+? Pick a linter / formatter config: (Use arrow keys)
+❯ ESLint with error prevention only
+  ESLint + Airbnb config
+  ESLint + Standard config
+  ESLint + Prettier
+```
+
+下一步，选择在什么时机下触发代码格式校验：
+
+```js
+? Pick additional lint features: (Press <space> to select, <a> to toggle all, <i> to invert selection, and <enter> to proceed)
+❯◉ Lint on save
+ ◯ Lint and fix on commit
+```
+
+- Lint on save：当修改和保存文件的时候，会触发代码校验
+- Lint and fix on commit：在执行 git commit 的时候，执行代码校验
+
+下一步，配置文件写到哪里
+
+```js
+? Where do you prefer placing config for Babel, ESLint, etc.? (Use arrow keys)
+❯ In dedicated config files
+  In package.json
+```
+
+> Babel、ESLint 等工具会有一些额外的配置文件，这里的意思是问你将这些工具相关的配置文件写到哪里：
+>
+> - In dedicated config files：分别保存到单独的配置文件
+> - In package.json：保存到 package.json 文件中
+>
+> 这里建议选择第 1 个，保存到单独的配置文件，这样方便我们做自定义配置。
+
+下一步，是否要将刚才选择的一系列配置保存起来
+
+```js
+? Save this as a preset for future projects? (y/N) N
+```
+
+> 这里里是问你是否需要将刚才选择的一系列配置保存起来，然后它可以帮你记住上面的一系列选择，以便下次直接重用。
+
+下一步，开始安装包
+
+```js
+Vue CLI v5.0.4
+✨  Creating project in /Users/wyp/Desktop/Code/Web/toutiao-mobile.
+🗃  Initializing git repository...
+⚙️  Installing CLI plugins. This might take a while...
+```
+
+向导配置结束，开始装包。
+安装包的时间可能较长，请耐心等待......
+
+..............................................
 
 yarn server 启动本地热更新开发服务器
 

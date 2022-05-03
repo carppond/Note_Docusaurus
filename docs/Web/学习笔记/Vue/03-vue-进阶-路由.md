@@ -458,3 +458,70 @@ router.beforeEach((to, form, next)=> {
 弹出框地址: https://vant-contrib.gitee.io/vant/#/zh-CN/dialog
 
  ![vue_35](./assets/vue_35.jpg)
+
+
+
+## 封装
+
+###  01 | 网络请求相关的封装
+
+1. src/util/request.js：设置基地址，导出 axios 函数
+2. src/api/Home.js：请求方法 axios({url:‘‘’’})
+3. src/api/index.js：把 Home 里的函数引过来，统一导出
+4. 具体逻辑页面，引入 api/index.js 请求方法，async+await 等待 axios 的结果返回
+
+**src/util/request.js**
+
+```js
+// 网络请求 - 二次封装
+import axios from 'axios'
+axios.defaults.baseURL = "http://localhost:3000"
+export default axios
+```
+
+**src/api/Home.js**
+
+```js
+// 文件名-尽量和模块页面文件名统一(方便查找)
+import request from '@/utils/request'
+
+// 首页 - 推荐歌单
+export const recommendMusic = params => request({
+    url: '/personalized',
+    params
+    // 将来外面可能传入params的值 {limit: 20}
+})
+
+// 与上面等同
+export const recommendMusic = function(params) {
+  return request({
+    url: '/personalized',
+    params
+    // 将来外面可能传入params的值 {limit: 20}
+		})
+  
+}
+```
+
+**src/api/index.js**
+
+```js
+// api文件夹下 各个请求模块js, 都统一来到index.js再向外导出
+import {recommendMusic} from './Home'
+
+export const recommendMusicAPI = recommendMusic // 请求推荐歌单的方法导出
+```
+
+**具体使用**
+
+```js
+import { recommendMusicAPI } from '@/api/index'
+async function myFn(){
+  const res = await recommendMusicAPI({limit: 6});
+  console.log(res);
+}
+myFn();
+```
+
+
+
