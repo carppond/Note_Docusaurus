@@ -126,6 +126,7 @@ module.exports = {
             'Web/学习笔记/Vue/vue-基础',
             'Web/学习笔记/Vue/vue组件基础+进阶',
             'Web/学习笔记/Vue/vue-进阶-路由',
+            'Web/学习笔记/Vue/vuex',
           ],
         },
       ],
