@@ -1,9 +1,7 @@
 ---
 id: vue-进阶-路由
-title: 03 | vue-进阶-路由
+title: 03 | vue-进阶-路由-Vue-Router 路由系统
 ---
-
-## 一、Vue-Router 路由系统
 
 ### 01 | node.js 路由
 
@@ -96,6 +94,109 @@ title: 03 | vue-进阶-路由
 
 
 
+完整代码：
+
+`Find.vue`
+
+```vue
+<template >
+     <div>
+           <p>警钟没多少分</p> 
+           <p>防守打法史蒂夫</p> 
+           <p>企鹅王群二</p> 
+           <p>给对方给对方</p>
+     </div>
+</template>
+```
+
+`My.vue`
+
+```vue
+<template >
+     <div>
+          <p>我的收藏</p>
+          <p>我的收藏</p>
+          <p>我的收藏</p>
+          <p>我的收藏</p>
+     </div>
+</template>
+```
+
+`Part.vue`
+
+```jsx
+<template >
+     <div>
+          <p>我的收藏</p>
+          <p>喜欢明显</p>
+          <p>喜欢吃饭</p>
+           <p>我的收藏</p>
+     </div>
+</template>
+```
+
+`main.js`
+
+```jsx
+import Vue from 'vue'
+import App from './App.vue'
+import Find from './components/views/Find.vue'
+import Part from './components/views/Part'
+import My from './components/views/My'
+
+Vue.config.productionTip = false
+
+// 1. 导入 vue-router
+import VueRouter from 'vue-router'
+// 2. 注册全局组件
+Vue.use(VueRouter)
+// 3. 规则数组 
+const routes = [
+  {
+    path:"/find",
+    component: Find
+  },
+  {
+    path:"/my",
+    component: My
+  },
+  {
+    path:"/part",
+    component: Part
+  },
+]
+
+// 4. 生成路由对象
+const router = new VueRouter({
+  // 5. // 固定的 key,传入规则数组,这里可以简写routes
+  routes 
+})
+
+// 6. 注册到实例中
+new Vue({
+  router,
+  render: h => h(App),
+}).$mount('#app')
+```
+
+`App.vue`
+
+```vue
+<template>
+  <div>
+    <div class="footer_wrap">
+      <a href="#/find">发现音乐</a>
+      <a href="#/my">我的音乐</a>
+      <a href="#/part">朋友</a>
+    </div>
+    <div class="top">
+      <!-- 7. 设置挂载点,当 url 的 hash 值路径切换,显示规则里对饮搞的组件 -->
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+```
+
 > 注意：
 >
 > 一切都要以 url 上 hash 值为准
@@ -120,7 +221,22 @@ title: 03 | vue-进阶-路由
 
 ![vue_29](./assets/vue_29.jpg)
 
-
+```
+// 上述 App.vue 中的代码替换
+<template>
+  <div>
+    <div class="footer_wrap">
+      <router-link to="/find">发现音乐</router-link>
+      <router-link to="/m">我的音乐</router-link>
+      <router-link to="/part">朋友</router-link>
+    </div>
+    <div class="top">
+      <!-- 7. 设置挂载点,当 url 的 hash 值路径切换,显示规则里对饮搞的组件 -->
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+```
 
 **小结：**
 
@@ -144,7 +260,51 @@ title: 03 | vue-进阶-路由
   - `$route.query.参数名`
   - `$route.params.参数名`
 
+相关代码：
+
+`Part.vue` 准备接收路由上传递的参数和值
+
 ```jsx
+<template >
+     <div>
+          <p>我的收藏</p>
+          <p>喜欢明显</p>
+          <p>喜欢吃饭</p>
+          <p>我的收藏</p>
+          <p>人名: {{ $route.query.name }} -- {{ $route.params.username }}</p>
+     </div>
+</template>
+```
+
+`main.js` 相关路由更改
+
+```vue
+// 3. 规则数组 
+const routes = [
+  {
+    path:"/find",
+    component: Find
+  },
+  {
+    path:"/my",
+    component: My
+  },
+  {
+    path:"/part", 
+    component: Part 
+  },
+  {
+    path:"/part/:username", // 有:的路径代表要接收具体的值
+    component: Part 
+  },
+]
+```
+
+`App.vue` 传值给 `Part.vue` 组件中
+
+```jsx
+<router-link to="/part/小智">朋友-小智</router-link>
+<router-link to="/part?name=小传">朋友-小传</router-link>
 ```
 
 
@@ -161,7 +321,7 @@ title: 03 | vue-进阶-路由
   const routes = [
   	{
   		path: "/",
-  		redirect :'find'
+  		redirect :'/find'
   	},
   		{
   		path: "/find",
@@ -192,6 +352,9 @@ title: 03 | vue-进阶-路由
 - 路由最后，path 匹配 *(任意路径)，前面不匹配就命中最后这个
 
 ```jsx
+// 404组件页面
+import NotFound from './components/NotFound'
+
 const routes = [
 	{
 		path: "/",
@@ -250,6 +413,70 @@ const router = new VueRouter({
 
 - 切换路由路径，在 `this.$router.push()` 配置 `path`、`name` 要和路由规则数组里对应
 
+- 尽量用 name 参数，方便便捷
+
+完整写法：
+
+`main.js`
+
+```
+{
+    path: "/find",
+    name: "Find",
+    component: Find
+},
+{
+    path: "/my",
+    name: "My",
+    component: My
+},
+{
+    path: "/part",
+    name: "Part",
+    component: Part
+}
+```
+
+`App.vue`
+
+```vue
+<template>
+  <div>
+    <div class="footer_wrap">
+      <span @click="btn('/find', 'Find')">发现音乐</span>
+      <span @click="btn('/my', 'My')">我的音乐</span>
+      <span @click="btn('/part', 'Part')">朋友</span>
+    </div>
+    <div class="top">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+// 目标: 编程式导航 - js方式跳转路由
+// 语法:
+// this.$router.push({path: "路由路径"})
+// this.$router.push({name: "路由名"})
+// 注意:
+// 虽然用name跳转, 但是url的hash值还是切换path路径值
+// 场景:
+// 方便修改: name路由名(在页面上看不见随便定义)
+// path可以在url的hash值看到(尽量符合组内规范)
+export default {
+  methods: {
+    btn(targetPath, targetName){
+      // 方式1: path跳转
+      this.$router.push({
+        // path: targetPath,
+        name: targetName
+      })
+    }
+  }
+};
+</script>
+```
+
 
 
 ### 12 | 编程式导航 - 跳转传参
@@ -285,11 +512,82 @@ const router = new VueRouter({
   </template>
   ```
 
-- query 传，用$route.query 接
+- query 传，用$route.query 接。
 
 - params 传，用$route.params 接
 
+完整写法：
 
+`App.vue`
+
+```jsx
+<template>
+  <div>
+    <div class="footer_wrap">
+      <span @click="btn('/find', 'Find')">发现音乐</span>
+      <span @click="btn('/my', 'My')">我的音乐</span>
+      <span @click="oneBtn">朋友-小传</span>
+      <span @click="twoBtn">朋友-小智</span>
+    </div>
+    <div class="top">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+// 目标: 编程式导航 - 跳转路由传参
+// 方式1:
+// params => $route.params.参数名
+// 方式2:
+// query => $route.query.参数名
+// 重要: path会自动忽略params
+// 推荐: name+query方式传参
+// 注意: 如果当前url上"hash值和?参数"与你要跳转到的"hash值和?参数"一致, 爆出冗余导航的问题, 不会跳转路由
+export default {
+  methods: {
+    btn(targetPath, targetName){
+      // 方式1: path跳转
+      this.$router.push({
+        // path: targetPath,
+        name: targetName
+      })
+    },
+    oneBtn(){
+      this.$router.push({
+        name: 'Part',
+        params: {
+          username: '小传'
+        }
+      })
+    },
+    twoBtn(){
+      this.$router.push({
+        name: 'Part',
+        query: {
+          name: '小智'
+        }
+      })
+    }
+  }
+};
+</script>
+```
+
+**小结：**
+
+- 传参方式：
+
+  - `params ==> $route.params.参数名`
+  - `query ==> $route.query.参数名`
+  - path 会自动忽略 params
+  - 推荐使用 query +name 的方式传值
+
+- 注意：
+
+  - 如果当前 url 上的 `hash 值和?参数` 与要跳转到的`hash 值和?参数`一致，爆出冗余导航的问题，不会跳转路由
+
+  
 
 ### 13 | 路由 - 路由嵌套
 
@@ -315,26 +613,62 @@ const router = new VueRouter({
   - App.vue 的 `router-view` 负责发现音乐和我的音乐页面, 切换 
   - Find.vue 的的 router-view 负责发现音乐下的, 三个页面, 切换
 
+
+
+**配置二级导航和样式- 在Find.vue中**
+
+```jsx
+<template>
+  <div>
+    <!-- <p>推荐</p>
+    <p>排行榜</p>
+    <p>歌单</p> -->
+    <div class="nav_main">
+      <router-link to="/find/recommend">推荐</router-link>
+      <router-link to="/find/ranking">排行榜</router-link>
+      <router-link to="/find/songlist">歌单</router-link>
+    </div>
+
+    <div style="1px solid red;">
+      <router-view></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style scoped>
+...
+</style>
+```
+
+**配置路由规则-二级路由展示**
+
 ```jsx
 const routes = [
-	{
-		path: "/",
-		redirect :'find'
-	},
-	{
-		path: "/find",
-		component: Find,
+  // ...省略其他
+  {
+    path: "/find",
+    name: "Find",
+    component: Find,
     children: [
-			{
-				path: "ranking",
-	      component: Ranking
+      {
+        path: "recommend",
+        component: Recommend
       },
-      			{
-				path: "recomment",
-	      component: Recomment
+      {
+        path: "ranking",
+        component: Ranking
       },
-    ],
-	},
+      {
+        path: "songlist",
+        component: SongList
+      }
+    ]
+  }
+  // ...省略其他
 ]
 ```
 
@@ -348,7 +682,7 @@ const routes = [
   - 一级页面中设置 router-view 显示二级路由页面
 - 二级路由注意事项：
   - 二级路由 path 一般不写``根路径 /``
-  - 跳转时路径要从 `/` 开始写全
+  - 跳转时路径要从 `/` 开始写全。例如：`<router-link to="/find/recommend">推荐</router-link>`
 
 
 
@@ -371,6 +705,10 @@ const routes = [
 
 **路由跳转之前，会触发一个函数**
 
+> 目标: 路由跳转之前, 先执行一次前置守卫函数, 判断是否可以正常跳转
+
+
+
 - 例如：登陆状态去 < 我的音乐 > 页面, 未登录弹窗提示 
 - 语法：router.beforeEach((to, from, next) =>{})
   - 一定调next(), 才会跳转下一页
@@ -384,12 +722,30 @@ router.beforeEach((to, form, next)=> {
   } else {
       next()
   }
+})// 目标: 路由守卫
+// 场景: 当你要对路由权限判断时
+// 语法: router.beforeEach((to, from, next)=>{//路由跳转"之前"先执行这里, 决定是否跳转})
+// 参数1: 要跳转到的路由 (路由对象信息)    目标
+// 参数2: 从哪里跳转的路由 (路由对象信息)  来源
+// 参数3: 函数体 - next()才会让路由正常的跳转切换, next(false)在原地停留, next("强制修改到另一个路由路径上")
+// 注意: 如果不调用next, 页面留在原地
+
+// 例子: 判断用户是否登录, 是否决定去"我的音乐"/my
+const isLogin = true; // 登录状态(未登录)
+router.beforeEach((to, from, next) => {
+  if (to.path === "/my" && isLogin === false) {
+    alert("请登录")
+    next(false) // 阻止路由跳转
+  } else {
+    next() // 正常放行
+  }
 })
 ```
 
 **小结：**
 
 - 路由守卫：路由在真正跳转前, 会执行一次 `beforeEach` 函数, `next()`  调用则跳转, 也可以强制修改要跳转的路由
+- `next()` 放行, `next(false)` 留在原地不跳转路由, `next(path路径)` 强制换成对应path路径跳转
 
 
 
@@ -416,6 +772,18 @@ router.beforeEach((to, form, next)=> {
 3. 在main.js中全局导入所有组件,
 4. 使用按钮组件 – 作为示范的例子
 
+```jsx
+// Vant 支持一次性导入所有组件，引入所有组件会增加代码包体积，因此不推荐这种做法。
+import { createApp } from 'vue';
+import Vant from 'vant';
+import 'vant/lib/index.css';
+
+const app = createApp();
+app.use(Vant);
+```
+
+
+
  ![vue_32](./assets/vue_32.jpg)
 
 
@@ -426,7 +794,16 @@ router.beforeEach((to, form, next)=> {
 
 手动单独引入, 快速开始: https://vant-contrib.gitee.io/vant/#/zh-CN/quickstart
 
-![vue_33](./assets/vue_33.jpg)
+```js
+// 在不使用任何构建插件的情况下，可以手动引入需要使用的组件和样式。
+// 引入组件脚本
+import Button from 'vant/es/button/index';
+// 引入组件样式
+// 若组件没有样式文件，则无须引入
+import 'vant/es/button/style/index';
+```
+
+
 
 **手动引入步骤**
 

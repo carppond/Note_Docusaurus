@@ -3,7 +3,7 @@ id: vue组件基础+进阶
 title: 02 | vue组件基础+进阶
 ---
 
-## 一、组件基础
+## 一、组件基础 - 基本使用-组件通信
 
 ### 01 | 组件的概念
 
@@ -146,7 +146,7 @@ props: {
 
 
 
-### 05 | 组建通信 - 父向子-配和循环
+### 05 | 组件通信 - 父向子-配和循环
 
 **目标：父组件 --> 子组件 循环使用 -- 传值**
 
@@ -186,7 +186,7 @@ export default {
 
 
 
-### 06 | 组建通信 - 单向数据流
+### 06 | 组件通信 - 单向数据流
 
 **目标：从父到子的数据流向，就单向数据流**
 
@@ -210,7 +210,7 @@ vue 规定 props 里的变量，本身是只读的
 
 
 
-### 07 | 组建通信 - 子向父 - 自定义事件
+### 07 | 组件通信 - 子向父 - 自定义事件
 
 **目标：子组件触发父自定义事件方法**
 
@@ -366,7 +366,7 @@ vue 规定 props 里的变量，本身是只读的
 
   
 
-## 二、组件进阶
+## 二、组件进阶：生命周期-axios-获取 DOM
 
 ### 01 | vue 的生命周期
 
@@ -881,7 +881,46 @@ export default {
   - 组件内用 `<slot></slot>` 占位
   - 使用组件时 `<Pannel></Pannel>` 夹着的地方，传入标签替换 `slot`
 
-  ![vue_22](./assets/vue_22.jpg)
+
+示例：
+
+`Pannel.vue`
+
+```jsx
+<template >
+     <div>
+          <h1>插槽技术</h1>
+          <slot></slot>
+     </div>
+</template>
+// 在 Pannel 中使用  <slot></slot> 占位
+```
+
+`App.vue`
+
+```vue
+<template >
+  <div>
+    <h1>1. 动态 dynamic 组件使用</h1>
+    <Pannel>
+    		// 往 Pannel 中占位的部分插入标签等内容，替换<slot></slot>
+        <span>我是呢绒</span>
+    </Pannel>
+  </div>
+</template>
+<script>
+
+import Pannel from './components/02/Pannel.vue'
+
+export default {
+  components: {
+    Pannel,
+  }  
+}
+</script>
+```
+
+
 
 **小结：**
 
@@ -922,9 +961,43 @@ export default {
   - temlate 配合 `v-slot:` 名字来分发对应标签 
 - `v-slot:` 可以简化成 `#`
 
-![vue_23](./assets/vue_23.jpg)
+示例：
 
+`SlotName.vue` ：子组件
 
+```
+<template>
+     <div>
+          <div class="top">
+               <h2>我是 top 盒子</h2>
+               <slot name="top"></slot>
+          </div>
+          <div class="bottom">
+               <h2>我是 bottom 盒子</h2>
+               <slot name="bottom"></slot>
+          </div>
+     </div>
+</template>
+```
+
+`App.vue` ： 父组件
+
+```vue
+<template >
+  <div>
+      <SlotName>
+        // 对应 slot name="top"
+        <template v-slot:top>
+            <img src="./assets/1.jpg" alt="">
+        </template>
+				 // 对应 slot name="bottom"
+        <template v-slot:bottom>
+           <img src="./assets/2.jpg" alt="">
+        </template>
+      </SlotName>
+  </div>
+</template>
+```
 
 **小结：**
 
@@ -935,7 +1008,7 @@ export default {
 
 
 
-### 07 | 作用域插槽
+### 07 | 作用域插槽：使用子组件内变量
 
 准备工作：插在显示默认内容
 
@@ -1000,6 +1073,93 @@ export default {
 
 ![vue_26](./assets/vue_26.jpg)
 
+完整代码：
+
+`MyTable.vue`
+
+```jsx
+<template>
+  <div>
+      <table border="1">
+          <thead>
+              <tr>
+                  <th>序号</th>
+                  <th>姓名</th>
+                  <th>年龄</th>
+                  <th>头像</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr v-for="(obj, index) in arr" :key="index">
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ obj.name }}</td>
+                  <td>{{ obj.age }}</td>
+                  <td>
+                      <slot :row="obj">
+                          <!-- 默认值给上,如果使用组件不自定义标签显示默认文字 -->
+                          {{ obj.headImgUrl}}
+                      </slot>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+</template>
+
+<script>
+export default {
+    props: {
+        arr: Array
+    }
+}
+</script>
+```
+
+`App.vue`
+
+```vue
+<template>
+  <div>
+    <MyTable :arr="list"></MyTable>
+    <MyTable :arr="list">
+        <!-- scope: {row: obj} -->
+       <template v-slot="scope">
+            <a :href="scope.row.headImgUrl">{{ scope.row.headImgUrl }}</a>
+       </template>
+    </MyTable>
+    <MyTable :arr="list">
+       <template v-slot="scope">
+            <img style="width: 100px;" :src="scope.row.headImgUrl" alt="">
+       </template>
+    </MyTable>
+  </div>
+</template>
+
+<script>
+import MyTable from "../components/06/MyTable";
+export default {
+  components: {
+    MyTable,
+  },
+  data() {
+    return {
+      list: [
+        {
+          name: "小传同学",
+          age: 18,
+          headImgUrl:
+            "http://yun.itheima.com/Upload/./Images/20210303/603f2d2153241.jpg",
+        },
+        // ... 后面又多条数据
+      ],
+    };
+  },
+};
+</script>
+```
+
+
+
 > 使用作用域插槽可以让组件更加灵活的适用于不同的场景和项目
 
 
@@ -1061,3 +1221,59 @@ Vue.directive('color', {
 
 - 指令值变化触发方法：
   - 自定义指令的 update 方法二位 inserted 方法
+
+
+
+#### 01 | 局部注册和使用
+
+自动聚焦
+
+```jsx
+// UseDirective.vue
+<template>
+  <div>
+      <!-- <input type="text" v-gfocus> -->
+      <input type="text" v-focus>
+      
+  </div>
+</template>
+
+<script>
+// 目标: 创建 "自定义指令", 让输入框自动聚焦
+// 1. 创建自定义指令
+// 全局 / 局部
+// 2. 在标签上使用自定义指令  v-指令名
+// 注意:
+// inserted方法 - 指令所在标签, 被插入到网页上触发(一次)
+// update方法 - 指令对应数据/标签更新时, 此方法执行
+export default {
+    data(){
+        return {
+            colorStr: 'red'
+        }
+    },
+    directives: {
+        focus: {
+            inserted(el){
+                el.focus()
+            }
+        }
+    }
+}
+</script>
+
+```
+
+#### 02 | 全局注册
+
+在main.js用 Vue.directive()方法来进行注册
+
+```js
+// 全局指令 - 到处"直接"使用
+Vue.directive("gfocus", {
+  inserted(el) {
+    el.focus() // 触发标签的事件方法
+  }
+})
+```
+
