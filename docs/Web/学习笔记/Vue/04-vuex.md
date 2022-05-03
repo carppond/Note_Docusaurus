@@ -589,5 +589,8 @@ methods: {
 import { mapGetters, createNamespacedHelpers } from 'vuex'
 const { mapMutations } = createNamespacedHelpers('user')
 <button @click="updateToken">修改token2</button>
+methods: {
+     ...mapMutations(['updateToken'])
+}
 ```
 
