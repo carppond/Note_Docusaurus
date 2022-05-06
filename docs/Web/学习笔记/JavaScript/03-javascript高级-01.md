@@ -524,7 +524,124 @@ let和var都有提升，但是let定义的变量没有赋值之前是不可以�
 
 
 
-### 三、面向对象
+### 3.3 解构函数参数
+
+解构可以用在函数传递参数的过程中。我先先来看一下没有用到解构参数的例子，之后我们把它改造成解构参数。
+
+#### 3.3.1 **解构参数的使用场景**
+
+**没有用到解构参数**
+
+```js
+function setCookie(name, value, options) {
+    options = options || {};
+    let secure = options.secure,
+        path = options.path,
+        domain = options.domain,
+        expires = options.expires;
+    //其他代码
+}
+
+setCookie('type', 'js', {secure: true, path: '/example', domain: 'test', expires: 60});
+```
+
+我们有个函数，它的第三个参数是一个对象类型；但是只是查看函数的声明部分，我们无法得知这一点，这就会给使用者带来不便：使用
+
+者无法确定第三个参数是一个对象类型，无法确定这个对象里面需要哪些属性。以上的问题我们可以通过使用解构参数来得到解决：
+
+**改造成了解构参数**
+
+```js
+setCookie('type', 'js', 
+    {secure: true, path: '/example', domain: 'test', expires: 60});
+
+function setCookie(name, value, {secure, path, domain, expires}) {
+    console.log(expires); // 60
+    //其他代码
+}
+```
+
+在这个例子里面我们使用解构参数改写了函数声明，这样使用者能明确知道第三个参数是一个对象以及对象里需要的属性。
+
+
+
+#### 3.3.2 **解构参数必须传参**
+
+解构参数与一般的参数不同点在于，它是一个必须要传值的参数，如果不传，则会引发程序报错：
+
+```js
+function setCookie(name, value, {secure, path, domain, expires}) {
+    console.log(expires);
+    //其他代码
+}
+
+setCookie('type', 'js'); // Uncaught TypeError: Cannot destructure property `secure` of 'undefined' or 'null'.
+```
+
+原因是为什么呢？是因为解构参数存在的函数，当我们在调用setCookie()的时候，函数内部其实是这样的：
+
+```js
+function setCookie(name, value, options) {
+
+    let {secure, path, domain, expires} = options; //这是引擎背后做的
+
+    console.log(expires);
+    //其他代码
+}
+```
+
+用于结果的对象如果是null或者undefined，则程序会报错，所以当我们不给解构参数传值的时候，会引发了程序报错。
+
+为了解决以上问题，我们需要在定义函数的时候，给解构参数提供默认值：
+
+```js
+function setCookie(name, value, {secure, path, domain, expires} = {}) {}
+
+setCookie('id', 'mike'); //有了默认值，便不会报错
+```
+
+
+
+#### 3.3.3 **给解构参数属性设置默认值**
+
+上面的例子，我们通过`{secure, path, domain, expires} = {}`给整个解构参数设置了默认值。我们也可以给参数里面的每个属性设
+
+置默认值：
+
+```js
+let defaultOptions = {
+    secure: true,
+    path: '/example',
+    domain: 'test',
+    expires: 60
+};
+
+function setCookie(name, value, {
+    secure = defaultOptions.secure,
+    path = defaultOptions.path,
+    domain = defaultOptions.domain,
+    expires = defaultOptions.expires
+} = defaultOptions) {
+    console.log(secure); //true
+    console.log(path); //example
+    console.log(domain);//test
+    console.log(expires);//30
+}
+
+setCookie('id', 'mike', {path: '/example', domain: 'test', expires: 30});
+```
+
+给解构参数的属性设置默认值和一般对象的解构设置默认值是一样的，也是在用等号=给属性赋值。
+
+这里特别要注意的是，如果只是单纯地给**解构参数的属性**设置默认值，而不给**整个解构参数**设置默认值，依然不能解决类似于
+
+`setCookie('id', 'mike')`这样不传参所引发的代码报错问题，所以不要忘了给整个解构参数设置默认值（也就是这个例子里面的
+
+`= defaultOptions`)。
+
+
+
+## 四、面向对象
 
 > 了解面向对象编程的基础概念及构造函数的作用，体会 JavaScript 一切皆对象的语言特征，掌握常见的对象属性和方法的使用。
 
@@ -636,7 +753,7 @@ let和var都有提升，但是let定义的变量没有赋值之前是不可以�
 
 
 
-## 四、一切皆对象
+## 五、一切皆对象
 
 > 体会 JavaScript 一切皆对象的语言特征，掌握各引用类型和包装类型对象属性和方法的使用。
 

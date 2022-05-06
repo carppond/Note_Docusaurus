@@ -749,7 +749,42 @@ router.beforeEach((to, from, next) => {
 
 
 
-### 16  | Vant 组件库
+### 16 | 路由懒加载
+
+#### 01 | 懒加载
+
+```js
+const routes = [
+  {
+    path: '',
+    name: '',
+    // 路由懒加载
+    component: () => import('@/.....')
+  }
+]
+```
+
+
+
+### 17 | 路由的跳转和返回
+
+基础使用：
+
+```js
+this.$router.push {
+  path: "路由路径", // 都去 router/index.js 定义
+  name: "路由名"
+}
+```
+
+在 `<template></template>` 等标签中也可以写成 `<div @click="$router.push(路由信息)"></div>`
+
+- 跳转到新路由：`$router.push(xxx)`
+- 返回上一级路由： `$router.back()`
+
+
+
+### Vant 组件库
 
 **Vant 是一个轻量、可靠的移动端 Vue 组件库，开箱即用**
 

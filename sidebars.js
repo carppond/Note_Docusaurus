@@ -89,6 +89,7 @@ module.exports = {
       type: 'category',
       label: 'Web',
       items: [
+        'Web/学习笔记/小知识点/Knowledge',
         {
           type: 'category',
           label: 'HTML&CSS',
