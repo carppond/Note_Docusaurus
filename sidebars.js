@@ -118,6 +118,8 @@ module.exports = {
           items: [
             'Web/学习笔记/前端与后台交互/ajax+http+跨域+JSONP+mysql',
             'Web/学习笔记/前端与后台交互/node.js',
+            'Web/学习笔记/前端与后台交互/ES6模块化',
+            'Web/学习笔记/前端与后台交互/webpack',
           ],
         },
         {
