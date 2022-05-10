@@ -132,6 +132,16 @@ module.exports = {
             'Web/学习笔记/Vue/vuex',
           ],
         },
+        {
+          type: 'category',
+          label: '小程序和uni-app',
+          items: [
+            'Web/学习笔记/小程序和uni-app/小程序起步',
+            'Web/学习笔记/小程序和uni-app/模板-配置-网络请求',
+            'Web/学习笔记/小程序和uni-app/视图和逻辑',
+            'Web/学习笔记/小程序和uni-app/基础加强',
+          ],
+        },
       ],
     },
   ],
