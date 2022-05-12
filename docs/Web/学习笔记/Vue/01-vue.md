@@ -337,6 +337,15 @@ export default {
 **其他第三方**
 
 - npm install antd --save：阿里组件库
+- ant-design-vue：阿里组件库
+- axios：网络请求库
+- vue-element-admin：后端解决方法，它使用了最新的前端技术，内置了 i18 国际化解决方案，动态路由、权限验证，提供了丰富的功能组件，可快速搭建企业级中后台产品原型
+  - PC 端项目中使用
+
+- vant：有赞组件库
+- vue-router：路由
+- vuex：共享状态、共享数据
+- 
 
 ### 09 | 将单位转为 rem
 
@@ -528,6 +537,47 @@ module.exports = {
 ```
 
 配置完毕，把服务重启一下，最后测试，very good。
+
+
+
+### 11 | 项目运行机制和代码注释
+
+> 眼花缭乱的目录和文件到底是怎么工作的？ 我们进行一下最基本的讲解，帮助大家更好的去理解和开发
+
+```bash
+├── src                        # 源代码
+│   ├── api                    # 所有请求
+│   ├── assets                 # 主题 字体等静态资源
+│   ├── components             # 全局公用组件
+│   ├── icons                  # 项目所有 svg icons
+│   ├── layout                 # 全局 layout
+│   ├── router                 # 路由
+│   ├── store                  # 全局 store管理
+│   ├── styles                 # 全局样式
+│   ├── utils                  # 全局公用方法
+│   ├── vendor                 # 公用vendor
+│   ├── views                  # views 所有页面
+│   ├── App.vue                # 入口页面
+│   ├── main.js                # 入口文件 加载组件 初始化等
+│   └── permission.js          # 权限管理
+│   └── settings.js            # 配置文件
+```
+
+**main.js**
+
+ ![vue_39](assets/vue_39.jpg)
+
+**App.vue**
+
+ ![vue_40](assets/vue_40.jpg) 
+
+
+
+**Vuex结构**
+
+ ![vue_41](assets/vue_41.jpg)
+
+
 
 
 
