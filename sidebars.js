@@ -130,6 +130,8 @@ module.exports = {
             'Web/学习笔记/Vue/vue组件基础+进阶',
             'Web/学习笔记/Vue/vue-进阶-路由',
             'Web/学习笔记/Vue/vuex',
+            'Web/学习笔记/Vue/第三方包说明',
+            'Web/学习笔记/Vue/vue3.0',
           ],
         },
         {
@@ -142,6 +144,14 @@ module.exports = {
             'Web/学习笔记/小程序和uni-app/基础加强',
           ],
         },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Python',
+      items: [
+        'python/python入门第一天',
+        'python/爬虫',
       ],
     },
   ],
