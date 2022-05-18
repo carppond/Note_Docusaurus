@@ -350,11 +350,58 @@ vue 规定 props 里的变量，本身是只读的
 **总结：**
 
 - 当 2 个没有引用关系的组件之间要通信传值时，用 `eventBus` 技术
+
 - `eventBus` 的本质是：
 
   - 空白 vue 对象，只负责 `$on` 和 `$emit`
   - 空白 vue 对象，只负责监听和触发事件
   
+  
+
+### 09 | 自定义事件：.sync 修饰符 一般用于双向数据绑定
+
+在有些情况下，我们可能需要对一个 prop 进行“双向绑定”。不幸的是，真正的双向绑定会带来维护上的问题，因为子组件可以变更父组
+
+件，且在父组件和子组件两侧都没有明显的变更来源。
+
+这也是为什么我们推荐以 `update:myPropName` 的模式触发事件取而代之。举个例子，在一个包含 `title` prop 的假设的组件中，我们可
+
+以用以下方法表达对其赋新值的意图：
+
+```js
+this.$emit('update:title', newTitle)
+```
+
+然后父组件可以监听那个事件并根据需要更新一个本地的数据 property。例如：
+
+```html
+<text-document
+  v-bind:title="doc.title"
+  v-on:update:title="doc.title = $event"
+></text-document>
+```
+
+为了方便起见，我们为这种模式提供一个缩写，即 `.sync` 修饰符：
+
+```js
+<text-document v-bind:title.sync="doc.title"></text-document>
+```
+
+> 注意带有 `.sync` 修饰符的 `v-bind` **不能**和表达式一起使用 (例如 `v-bind:title.sync=”doc.title + ‘!’”` 是无效的)。取而代之的
+>
+> 是，你只能提供你想要绑定的 property 名，类似 `v-model`。
+
+当我们用一个对象同时设置多个 prop 的时候，也可以将这个 `.sync` 修饰符和 `v-bind` 配合使用：
+
+```html
+<text-document v-bind.sync="doc"></text-document>
+```
+
+这样会把 `doc` 对象中的每一个 property (如 `title`) 都作为一个独立的 prop 传进去，然后各自添加用于更新的 `v-on` 监听器。
+
+> 将 `v-bind.sync` 用在一个字面量的对象上，例如 `v-bind.sync=”{ title: doc.title }”`，是无法正常工作的，因为在解析一个
+>
+> 像这样的复杂表达式的时候，有很多边缘情况需要考虑。
 
 
 
