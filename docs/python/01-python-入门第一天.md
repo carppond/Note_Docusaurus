@@ -186,6 +186,253 @@ for i, x in emumerate(list):
 
 
 
+### 04 | 字符串
+
+字符串是 Python 中最常用的数据类型。我们可以使用引号 ( **'** 或 **"** ) 来创建字符串。
+
+```python
+str = 'Hello World'
+str2 = 'Python'
+```
+
+#### 04-01 | **访问字符串：**
+
+Python 不支持单字符类型，单字符在 Python 中也是作为一个字符串使用。
+
+Python 访问子字符串，可以使用方括号来截取字符串，如下实例：
+
+```python
+str = 'Hello World'
+str2 = 'Python'
+print "var1[0]: ", var1[0]
+print "var2[1:5]: ", var2[1:5]
+```
+
+以上实例执行结果:
+
+```python
+var1[0]:  H
+var2[1:5]:  ytho
+```
+
+#### 04-02 | **字符串连接：**
+
+我们可以对字符串进行截取并与其他字符串进行连接，如下实例：
+
+```python
+var1 = 'Hello World!'
+ 
+print "输出 :- ", var1[:6] + 'Runoob!'
+
+// 输出 :-  Hello Runoob!
+```
+
+#### 04-03 | **字符串运算符:**
+
+| 操作符 | 描述                                                         |
+| ------ | ------------------------------------------------------------ |
+| +      | 字符串拼接                                                   |
+| *      | 重复输出字符串                                               |
+| []     | 通过索引获取字符串中字符                                     |
+| [:]    | 截取字符串中的一部分                                         |
+| in     | 成员运算符，如果字符串中包含给定的字符返回 True              |
+| not in | 成员运算符，如果字符串中不包含给定的字符返回 True            |
+| R/r    | 原始字符串 - 原始字符串：所有的字符串都是直接按照字面的意思来使用，没有转义特殊或不能打印的字符。 原始字符串除在字符串的第一个引号前加上字母"r"（可以大小写）以外，与普通字符串有着几乎完全相同的语法。 |
+| %      | 格式字符串                                                   |
+
+具体实例：
+
+- +：
+
+  ```python
+  str = 'a' + 'b'
+  str = 'ab'
+  ```
+
+- *:
+
+  ```python
+  str = 'a' * 10
+  str = 'aaaaaaaaa'
+  ```
+
+- []:
+
+  ```python
+  str = '123456'
+  str[1]   # 1
+  str[2]   # 12
+  str[5]   # 12345
+  ```
+
+- [:]
+
+  ```python
+  str = '123456789'
+  str[:2]  # 12
+  str[1:2] # 2
+  str[1:6] # 23456
+  ```
+
+- in:
+
+  ```python
+  str = '12345'
+  if '123' in str:
+    print('在')
+  ```
+
+- not in：
+
+  ```python
+  str = '123456'
+  if 'afd' not in str:
+    print('不在')
+  ```
+
+- r、R：原始字符串，可以忽略转义字符
+
+  ```python
+  # 正常遇到转义字符
+  str = '\\d'
+  str1 = '//'
+  
+  # 使用 r、R 之后
+  str = r'\d'
+  str1 = r'/'
+  ```
+
+
+
+#### 04-04 | **字符串格式化:**
+
+Python 支持格式化字符串的输出 。尽管这样可能会用到非常复杂的表达式，但最基本的用法是将一个值插入到一个有字符串格式符 %s 
+
+的字符串中。
+
+在 Python 中，字符串格式化使用与 C 中 sprintf 函数一样的语法。
+
+| 符  号 | 描述                                 |
+| :----- | :----------------------------------- |
+| %c     | 格式化字符及其ASCII码                |
+| %s     | 格式化字符串                         |
+| %d     | 格式化整数                           |
+| %u     | 格式化无符号整型                     |
+| %o     | 格式化无符号八进制数                 |
+| %x     | 格式化无符号十六进制数               |
+| %X     | 格式化无符号十六进制数（大写）       |
+| %f     | 格式化浮点数字，可指定小数点后的精度 |
+| %e     | 用科学计数法格式化浮点数             |
+| %E     | 作用同%e，用科学计数法格式化浮点数   |
+| %g     | %f和%e的简写                         |
+| %G     | %F 和 %E 的简写                      |
+| %p     | 用十六进制数格式化变量的地址         |
+
+
+
+#### 04-05 | 三引号
+
+Python 中三引号可以将复杂的字符串进行赋值。
+
+Python 三引号允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符。
+
+三引号的语法是一对连续的单引号或者双引号（通常都是成对的用）。
+
+```py
+str = '''
+	字符串内容
+'''
+```
+
+三引号让程序员从引号和特殊字符串的泥潭里面解脱出来，自始至终保持一小块字符串的格式是所谓的WYSIWYG（所见即所得）格的。
+
+一个典型的用例是，当你需要一块HTML或者SQL时，这时当用三引号标记，使用传统的转义字符体系将十分费神。
+
+```python
+errHTML = '''
+<HTML><HEAD><TITLE>
+Friends CGI Demo</TITLE></HEAD>
+<BODY><H3>ERROR</H3>
+<B>%s</B><P>
+<FORM><INPUT TYPE=button VALUE=Back
+ONCLICK="window.history.back()"></FORM>
+</BODY></HTML>'''
+```
+
+
+
+#### 04-06 | Unicode 字符串
+
+Python 中定义一个 Unicode 字符串和定义一个普通字符串一样简单：
+
+```python
+u'Hello World !'
+```
+
+引号前小写的"u"表示这里创建的是一个 Unicode 字符串。如果你想加入一个特殊字符，可以使用 Python 的 Unicode-Escape 编码。如
+
+下例所示：
+
+```python
+>>> u'Hello\u0020World !'
+u'Hello World !'
+```
+
+
+
+#### 04-07 | 字符串内建函数
+
+字符串方法是从 python1.6到2.0慢慢加进来的——它们也被加到了Jython中。
+
+这些方法实现了string模块的大部分方法，如下表所示列出了目前字符串内建支持的方法，所有的方法都包含了对Unicode的支持，有一
+
+些甚至是专门用于Unicode的。
+
+| **方法**                                                     | **描述**                                                     |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+| [string.capitalize()](https://www.runoob.com/python/att-string-capitalize.html) | 把字符串的第一个字符大写                                     |
+| [string.center(width)](https://www.runoob.com/python/att-string-center.html) | 返回一个原字符串居中,并使用空格填充至长度 width 的新字符串   |
+| **[string.count(str, beg=0, end=len(string))](https://www.runoob.com/python/att-string-count.html)** | 返回 str 在 string 里面出现的次数，如果 beg 或者 end 指定则返回指定范围内 str 出现的次数 |
+| [string.decode(encoding='UTF-8', errors='strict')](https://www.runoob.com/python/att-string-decode.html) | 以 encoding 指定的编码格式解码 string，如果出错默认报一个 ValueError 的 异 常 ， 除非 errors 指 定 的 是 'ignore' 或 者'replace' |
+| [string.encode(encoding='UTF-8', errors='strict')](https://www.runoob.com/python/att-string-encode.html) | 以 encoding 指定的编码格式编码 string，如果出错默认报一个ValueError 的异常，除非 errors 指定的是'ignore'或者'replace' |
+| **[string.endswith(obj, beg=0, end=len(string))](https://www.runoob.com/python/att-string-endswith.html)** | 检查字符串是否以 obj 结束，如果beg 或者 end 指定则检查指定的范围内是否以 obj 结束，如果是，返回 True,否则返回 False. |
+| [string.expandtabs(tabsize=8)](https://www.runoob.com/python/att-string-expandtabs.html) | 把字符串 string 中的 tab 符号转为空格，tab 符号默认的空格数是 8。 |
+| **[string.find(str, beg=0, end=len(string))](https://www.runoob.com/python/att-string-find.html)** | 检测 str 是否包含在 string 中，如果 beg 和 end 指定范围，则检查是否包含在指定范围内，如果是返回开始的索引值，否则返回-1 |
+| **[string.format()](https://www.runoob.com/python/att-string-format.html)** | 格式化字符串                                                 |
+| **[string.index(str, beg=0, end=len(string))](https://www.runoob.com/python/att-string-index.html)** | 跟find()方法一样，只不过如果str不在 string中会报一个异常.    |
+| [string.isalnum()](https://www.runoob.com/python/att-string-isalnum.html) | 如果 string 至少有一个字符并且所有字符都是字母或数字则返回 True,否则返回 False |
+| [string.isalpha()](https://www.runoob.com/python/att-string-isalpha.html) | 如果 string 至少有一个字符并且所有字符都是字母则返回 True,否则返回 False |
+| [string.isdecimal()](https://www.runoob.com/python/att-string-isdecimal.html) | 如果 string 只包含十进制数字则返回 True 否则返回 False.      |
+| [string.isdigit()](https://www.runoob.com/python/att-string-isdigit.html) | 如果 string 只包含数字则返回 True 否则返回 False.            |
+| [string.islower()](https://www.runoob.com/python/att-string-islower.html) | 如果 string 中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是小写，则返回 True，否则返回 False |
+| [string.isnumeric()](https://www.runoob.com/python/att-string-isnumeric.html) | 如果 string 中只包含数字字符，则返回 True，否则返回 False    |
+| [string.isspace()](https://www.runoob.com/python/att-string-isspace.html) | 如果 string 中只包含空格，则返回 True，否则返回 False.       |
+| [string.istitle()](https://www.runoob.com/python/att-string-istitle.html) | 如果 string 是标题化的(见 title())则返回 True，否则返回 False |
+| [string.isupper()](https://www.runoob.com/python/att-string-isupper.html) | 如果 string 中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是大写，则返回 True，否则返回 False |
+| **[string.join(seq)](https://www.runoob.com/python/att-string-join.html)** | 以 string 作为分隔符，将 seq 中所有的元素(的字符串表示)合并为一个新的字符串 |
+| [string.ljust(width)](https://www.runoob.com/python/att-string-ljust.html) | 返回一个原字符串左对齐,并使用空格填充至长度 width 的新字符串 |
+| [string.lower()](https://www.runoob.com/python/att-string-lower.html) | 转换 string 中所有大写字符为小写.                            |
+| [string.lstrip()](https://www.runoob.com/python/att-string-lstrip.html) | 截掉 string 左边的空格                                       |
+| [string.maketrans(intab, outtab)](https://www.runoob.com/python/att-string-maketrans.html) | maketrans() 方法用于创建字符映射的转换表，对于接受两个参数的最简单的调用方式，第一个参数是字符串，表示需要转换的字符，第二个参数也是字符串表示转换的目标。 |
+| [max(str)](https://www.runoob.com/python/att-string-max.html) | 返回字符串 *str* 中最大的字母。                              |
+| [min(str)](https://www.runoob.com/python/att-string-min.html) | 返回字符串 *str* 中最小的字母。                              |
+| **[string.partition(str)](https://www.runoob.com/python/att-string-partition.html)** | 有点像 find()和 split()的结合体,从 str 出现的第一个位置起,把 字 符 串 string 分 成 一 个 3 元 素 的 元 组 (string_pre_str,str,string_post_str),如果 string 中不包含str 则 string_pre_str == string. |
+| **[string.replace(str1, str2, num=string.count(str1))](https://www.runoob.com/python/att-string-replace.html)** | 把 string 中的 str1 替换成 str2,如果 num 指定，则替换不超过 num 次. |
+| [string.rfind(str, beg=0,end=len(string) )](https://www.runoob.com/python/att-string-rfind.html) | 类似于 find() 函数，返回字符串最后一次出现的位置，如果没有匹配项则返回 -1。 |
+| [string.rindex( str, beg=0,end=len(string))](https://www.runoob.com/python/att-string-rindex.html) | 类似于 index()，不过是返回最后一个匹配到的子字符串的索引号。 |
+| [string.rjust(width)](https://www.runoob.com/python/att-string-rjust.html) | 返回一个原字符串右对齐,并使用空格填充至长度 width 的新字符串 |
+| [string.rpartition(str)](https://www.runoob.com/python/att-string-rpartition.html) | 类似于 partition()函数,不过是从右边开始查找                  |
+| [string.rstrip()](https://www.runoob.com/python/att-string-rstrip.html) | 删除 string 字符串末尾的空格.                                |
+| **[string.split(str="", num=string.count(str))](https://www.runoob.com/python/att-string-split.html)** | 以 str 为分隔符切片 string，如果 num 有指定值，则仅分隔 **num+1** 个子字符串 |
+| [string.splitlines([keepends\])](https://www.runoob.com/python/att-string-splitlines.html) | 按照行('\r', '\r\n', '\n')分隔，返回一个包含各行作为元素的列表，如果参数 keepends 为 False，不包含换行符，如果为 True，则保留换行符。 |
+| [string.startswith(obj, beg=0,end=len(string))](https://www.runoob.com/python/att-string-startswith.html) | 检查字符串是否是以 obj 开头，是则返回 True，否则返回 False。如果beg 和 end 指定值，则在指定范围内检查. |
+| **[string.strip([obj\])](https://www.runoob.com/python/att-string-strip.html)** | 在 string 上执行 lstrip()和 rstrip()                         |
+| [string.swapcase()](https://www.runoob.com/python/att-string-swapcase.html) | 翻转 string 中的大小写                                       |
+| [string.title()](https://www.runoob.com/python/att-string-title.html) | 返回"标题化"的 string,就是说所有单词都是以大写开始，其余字母均为小写(见 istitle()) |
+| **[string.translate(str, del="")](https://www.runoob.com/python/att-string-translate.html)** | 根据 str 给出的表(包含 256 个字符)转换 string 的字符,要过滤掉的字符放到 del 参数中 |
+| [string.upper()](https://www.runoob.com/python/att-string-upper.html) | 转换 string 中的小写字母为大写                               |
+| [string.zfill(width)](https://www.runoob.com/python/att-string-zfill.html) | 返回长度为 width 的字符串，原字符串 string 右对齐，前面填充0 |
+
 ### 小结：
 
 |        | 是否有序 | 是否可变类型           |
