@@ -766,3 +766,169 @@ except Exception as error:
 
 
 
+## 五、进程和线程
+
+### 01 | 多进程使用
+
+####  1.1 - 导入进程包
+
+```
+# 导入进程包
+import multiprocessing
+```
+
+#### 1.2 - Process 进程类的说明
+
+**Process([group [, target [,name [, arges [, kwargs]]]]])**
+
+- group：指定进程，目前只能使用 none
+- target：执行的目标任务名
+- name：进程名字
+- args：以元祖的方式给执行任务传参
+- kwargs：以字典的方式给执行任务传参
+
+**Process 创建的实例对象的常用方法：**
+
+- start：启动子进程实例(创建子进程)
+- join()：等待子进程执行结束
+- `terminate()`：不管任务是否完成，立即终止子进程
+
+**Process 创建的实例对象的常用属性：**
+
+- name：当前进程的别名，默认 Process-N，N 为从 1 开始递增的整数
+
+#### 1.3 - 实例
+
+```python
+# 1. 导入进程包
+import multiprocessing
+from multiprocessing import Process
+import time
+# 跳舞任务
+def dance():
+    for i in range(10):
+        print("跳舞中")
+        time.sleep(.5)
+
+def sing():
+    for i in range(10):
+        print("唱歌中")
+        time.sleep(.5)
+
+# 2. 创建子进程 ( 自己创建的进程是子进程,在 __init__.py 中已经导入了 Process 类
+# 1. group: 进程组,目前只能使用 none,一般不需要设置
+# 2. target: 执行进程的具体目标,一般是个函数
+# 3. name: 进程名,如果不设置,默认 Process-1,.........
+dance_proce = multiprocessing.Process(target=dance)
+sing_process = multiprocessing.Process(target=sing)
+
+# 3. 启动进程执行对应的任务
+# dance_proce.start()
+# 主进程执行
+# sing()
+if __name__ == "__main__":
+    dance_proce.start()
+    sing_process.start()
+
+```
+
+
+
+### 02 | 获取进程编号
+
+#### 2.1 - 获取进程编号的目的
+
+获取进程编号的目的是验证主进程和子进程的关系，可以得知子进程是由哪个主进程创建的
+
+获取进程编号的两种操作
+
+- 获取当前进程编号
+- 获取当前父进程编号
+
+
+
+#### 2.2 获取当前进程编号
+
+`os.getpid()` ：获取当前进程的编号
+
+```python
+# 1. 导入进程包
+import multiprocessing
+import time
+import os
+
+# 跳舞任务
+def dance():
+    print("开始跳舞")
+    process_id = os.getpid()
+    ...
+
+def sing():
+    print("开始唱歌")
+    process_id = os.getpid()
+    print(process_id, multiprocessing.current_process())
+    ...
+
+# 2. 创建子进程 ( 自己创建的进程是子进程,在 __init__.py 中已经导入了 Process 类
+# 1. group: 进程组,目前只能使用 none,一般不需要设置
+# 2. target: 执行进程的具体目标,一般是个函数
+# 3. name: 进程名,如果不设置,默认 Process-1,.........
+dance_proce = multiprocessing.Process(target=dance, name="dance_process")
+sing_process = multiprocessing.Process(target=sing)
+
+# 3. 启动进程执行对应的任务
+# dance_proce.start()
+# 主进程执行
+# sing()
+if __name__ == "__main__":
+    dance_proce.start()
+    sing_process.start()
+   
+```
+
+
+
+#### 2.3 获取当前父进程编号
+
+`os.getppid()`：获取当前父进程编号
+
+```python
+# 1. 导入进程包
+import multiprocessing
+import time
+import os
+
+# 跳舞任务
+def dance():
+    print("开始跳舞")
+    process_id = os.getpid()
+    print(process_id, multiprocessing.current_process())
+    parent_id = os.getppid()
+    print("父进程:", parent_id)
+    ...
+
+def sing():
+    print("开始唱歌")
+    process_id = os.getpid()
+    print(process_id, multiprocessing.current_process())
+    parent_id = os.getppid()
+    print("父进程:", parent_id)
+    ...
+...
+dance_proce = multiprocessing.Process(target=dance, name="dance_process")
+sing_process = multiprocessing.Process(target=sing)
+
+# 3. 启动进程执行对应的任务
+# dance_proce.start()
+# 主进程执行
+# sing()
+if __name__ == "__main__":
+    print("主进程:", os.getpid())
+    dance_proce.start()
+    sing_process.start()
+ 
+```
+
+> 主动杀死进程
+>
+> os.kill()
