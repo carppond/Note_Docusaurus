@@ -194,6 +194,7 @@ const katex = require('rehype-katex');
           editUrl: "https://github.com/carppond/Wiki_Docusaurus/tree/edit/",
           remarkPlugins: [math],
           rehypePlugins: [katex],
+          remarkPlugins: [require('mdx-mermaid')]
         },
         blog: {
           //blogTitle: 'Power\'s blog!',

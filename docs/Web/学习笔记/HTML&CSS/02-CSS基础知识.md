@@ -1939,3 +1939,16 @@ button {
 
 
 
+### 文字最后...
+
+```css
+// 文字不允许换行：单行文本
+white-space: nowrap;
+// 溢出部分隐藏
+overflow: hidden;
+// 文本溢出后，使用 ... 代替
+text-overflow: ellipsis;
+```
+
+
+
