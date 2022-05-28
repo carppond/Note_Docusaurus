@@ -517,7 +517,41 @@ print(response.text)
 
 
 
-## jsonpath
+## 数据提取
+
+数据解析：
+
+```mermaid
+graph LR
+A(数据解析) -->B(结构化数据)
+A(数据解析) -->C(非结构化数据)
+B(结构化数据) -->D(JSON) 
+D(JSON) -->E(jsonh模块)	
+D(JSON) -->F(jsonpath模块)	
+B(结构化数据) -->H(XML) 
+H(XML) -->I(re模块: 正则语法)	
+H(XML) -->J(lxml模块: xpath 语法)	
+
+C(非结构化数据) -->K(HTML) 
+K(HTML)  -->O(re模块: 正则语法) 
+K(HTML)  -->L(beautifulsoup)	
+K(HTML)  -->M(lxml模块: xpath 语法)	
+K(HTML)  -->N(pyquery: css选择器) 
+L(beautifulsoup) --> P(xpath) 
+L(beautifulsoup) --> Q(正则) 
+L(beautifulsoup) --> R(css选择器) 
+```
+
+效率排行：
+
+- 正则
+- xpath
+- lxml
+- beautifulsoup
+
+
+
+### jsonpath
 
 如果有一个多层嵌套的复杂字典，想要根据key和下标来批量提取value，这是比较困难的。jsonpath模块就能解决这个痛点，接下来我们
 
@@ -527,7 +561,7 @@ print(response.text)
 
 
 
-### 01 | jsonpath 模块的使用方法
+#### 01 | jsonpath 模块的使用方法
 
 jsonpath是第三方模块，需要额外安装
 
@@ -561,7 +595,7 @@ ret = jsonpath(a, 'jsonpath语法规则字符串')
 
 
 
-### 02 | jsonpath使用示例
+#### 02 | jsonpath使用示例
 
 ```python
 book_dict = { 

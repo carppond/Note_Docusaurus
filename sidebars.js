@@ -152,7 +152,7 @@ module.exports = {
       items: [
         'python/python入门第一天',
         'python/爬虫',
-        'python/requests'
+        'python/python-module'
       ],
     },
   ],
