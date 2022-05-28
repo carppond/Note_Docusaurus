@@ -932,3 +932,190 @@ if __name__ == "__main__":
 > 主动杀死进程
 >
 > os.kill()
+
+
+
+### 03 | 进程执行带有参数的任务
+
+#### 3.1 进程执行带有参数的任务介绍
+
+Process 类执行任务并给任务传参有 2 中方式
+
+- args 表示以元祖的方式给执行任务传参
+- kwargs 表示以字典的方式给执行任务传参
+
+
+
+#### 3.2 args 参数的使用
+
+```python
+import multiprocessing
+
+def say(name):
+    print( name)
+
+if __name__ == "__main__":
+    # 元素顺序要和函数的参数顺序保持一致
+    # 元祖只有一个参数时，要加一个，
+    sub_process = multiprocessing.Process(target=say, args=("李四",))
+    sub_process.start()
+```
+
+
+
+#### 3.3 kwargs 参数的使用
+
+```` python
+def say(name):
+    print( name)
+
+
+
+if __name__ == "__main__":
+    # 元素顺序要和函数的参数顺序保持一致
+    sub_process = multiprocessing.Process(target=say, kwargs={"name":'zs'})
+    sub_process.start()
+
+````
+
+
+
+### 04 | 线程的使用
+
+#### 4.1 导入线程模块
+
+```python
+import threading
+```
+
+
+
+#### 4.2 线程类 Thread 参数的说明
+
+**Thread ([group [, target [,name [, arges [, kwargs]]]]])**
+
+- group：线程组，目前只能使用 none
+- target：执行的目标任务名
+- name：线程名字，一般不用设置
+- args：以元祖的方式给执行任务传参
+- kwargs：以字典的方式给执行任务传参
+
+
+
+#### 4.3 线程方法
+
+- 启动线程使用 start 方法
+- 获取当前线程：threading.current_thread()
+  - 如果是主线程会返回 `MainThread `
+  - 如果是子线程会返回 `Thread-x`
+- join()：等待上面任务执行完毕，在往下执行
+- 传参规则与进程一样，这里不做说明
+
+
+
+#### 4.4 多线程完成多任务的代码
+
+```python
+# 1. 导入线程模块
+import threading
+import time
+
+def sing():
+    for i in range(10):
+        print("我在唱歌")
+        time.sleep(0.5)
+
+def dance():
+    for i in range(10):
+        print("我在跳舞")
+        time.sleep(0.5)
+
+
+if __name__ == "__main__":
+    # 2. 创建子线程
+    sing_thread = threading.Thread(target=sing)
+    dance_thread = threading.Thread(target=dance)
+
+    # 3. 启动子线程执行对应的任务
+    sing_thread.start()
+    dance_thread.start()
+```
+
+
+
+#### 4.5 join
+
+与进程中的 join 一样
+
+```python
+import threading
+import time
+
+list = []
+
+def add_item():
+  for i in range(10):
+    list.append(i)
+    time.sleep(1)
+
+def read_list():
+  print(list)
+  
+if __name__ == "__main__":
+  # 创建子线程，并绑定方法 add_item
+  add_thread = threading.Thread(target=add_item)
+  # 创建子线程，并绑定方法 read_list
+  read_thread= threading.Thread(target=read_list)
+  # 开启子线程任务
+  add_thread.start()
+  # 由于当前子线程调用了 join 方法，所以主线程会等当前子线程执行完毕之后，在执行下面的任务
+  sub_add_thread.join()
+  read__thread.start()
+```
+
+
+
+### 05 | 线程的注意点
+
+- 线程之间执行是无序的
+- 主线程会等待所有的子线程执行结束在结束
+- 线程之间共享全局变量
+- 线程之间共享全局变量有可能出现数据问题
+
+
+
+### 06 | 互斥锁
+
+互斥锁对共享数据锁定，保证同一时刻只有一个线程去操作
+
+注意：
+
+互斥锁是多个线程一起去抢，抢到锁的线程先执行，没有抢到锁的线程需要等待，等互斥锁使用完毕释放后，其他等待的线程再去抢这个锁
+
+
+
+#### 6.1 互斥锁的使用
+
+threading 模块中定义了 Lock 变量，这个变量本质上是一个函数，通过调用这个函数可以获得一把互斥锁
+
+```python
+# 创建锁
+mutex = threading.lock()
+
+# 上锁
+mutex.acquire()
+
+# 释放锁
+mutex.release()
+```
+
+注意点：
+
+- acquire 和 release 方法之间的的代码在同一时刻只能有一个线程去啊哦做
+- 如果在调用 acquire 方法的时候，其他线程已经使用了这个互斥锁，那么此事 acquire 方法会堵塞，直到这个互斥锁释放后才能再次上锁
+- 线程等待和互斥锁都是把多任务改成单任务去执行，保证 数据的准确性，但是执行的效率会降低
+
+
+
+
+
