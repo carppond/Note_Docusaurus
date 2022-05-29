@@ -667,3 +667,344 @@ with open('city_name.txt','w') as f:
     f.write(content)
 ```
 
+
+
+### lxml模块：xpath
+
+- lxml模块可以利用XPath规则语法，来快速的定位HTML\XML 文档中特定元素以及获取节点信息（文本内容、属性值）
+- XPath (XML Path Language) 是一门在 HTML\XML 文档中查找信息的**语言**，可用来在 HTML\XML 文档中对**元素和属性进行遍历**。
+  - W3School官方文档：<http://www.w3school.com.cn/xpath/index.asp>
+- 提取xml、html中的数据需要lxml模块和xpath语法配合使用
+
+> 安装谷歌插件：XPath Helper
+
+安装：
+
+```python
+pip/pip3 install lxml
+```
+
+
+
+#### 01 | xpath的节点关系
+
+> 每个html、xml的标签我们都称之为节点，其中最顶层的节点称为根节点。我们以xml为例，html也是一样的
+
+```html
+<book>
+  <title>xxxxx</title>
+</book>
+```
+
+- book 就是根节点
+- title 是节点
+
+ ![pc_03](assets/pc_03.jpg)
+
+**`author`是`title`的第一个兄弟节点**
+
+
+
+#### 02 | xpath语法-基础节点选择语法
+
+> 1. XPath 使用路径表达式来选取 XML 文档中的节点或者节点集。
+> 2. 这些路径表达式和我们在常规的**电脑文件系统中看到的表达式**非常相似。
+> 3. **使用chrome插件选择标签时候，选中时，选中的标签会添加属性class="xh-highlight"**
+
+| 表达式                   | 描述                                                       |
+| ------------------------ | ---------------------------------------------------------- |
+| nodename：其实就是标签名 | 选中该元素。                                               |
+| /                        | 从根节点选取、或者是元素和元素间的过渡。                   |
+| //                       | 从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置。 |
+| .                        | 选取当前节点。                                             |
+| ..                       | 选取当前节点的父节点。                                     |
+| @                        | 选取属性。如：@href                                        |
+| text()                   | 选取文本。                                                 |
+
+- 选择所有的h2下的文本
+  - `//h2/text()`
+- 获取所有的a标签的href
+  - `//a/@href`
+- 获取html下的head下的title的文本
+  - `/html/head/title/text()`
+- 获取html下的head下的link标签的href
+  - `/html/head/link/@href`
+
+
+
+#### 03 | 节点修饰语法
+
+可以根据标签的属性值、下标等来获取特定的节点
+
+
+
+| 路径表达式                          | 结果                                                         |
+| ----------------------------------- | ------------------------------------------------------------ |
+| //title[@lang="eng"]                | 选择lang属性值为eng的所有title元素                           |
+| /bookstore/book[1]                  | 选取属于 bookstore 子元素的第一个 book 元素。                |
+| /bookstore/book[last()]             | 选取属于 bookstore 子元素的最后一个 book 元素。              |
+| /bookstore/book[last()-1]           | 选取属于 bookstore 子元素的倒数第二个 book 元素。            |
+| /bookstore/book[position()>1]       | 选择bookstore下面的book元素，从第二个开始选择                |
+| //book/title[text()='Harry Potter'] | 选择所有book下的title元素，仅仅选择文本为Harry Potter的title元素 |
+| /bookstore/book[price>35.00]/title  | 选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00。 |
+
+**关于xpath的下标**
+
+- 在xpath中，第一个元素的位置是1
+- 最后一个元素的位置是last()
+- 倒数第二个是last()-1
+
+
+
+**语法练习**
+
+- 所有的学科的名称
+  - `//div[@class="nav_txt"]//a[@class="a_gd"]`
+- 第一个学科的链接
+  - `//div[@class="nav_txt"]/ul/li[1]/a/@href`
+- 最后一个学科的链接
+  - `//div[@class="nav_txt"]/ul/li[last()]/a/@href`
+
+
+
+#### 04 | 其他常用节点选择语法
+
+可以通过**通配符**来选取未知的html、xml的元素
+
+| 通配符 | 描述                 | 示例         |                                 |
+| ------ | -------------------- | ------------ | ------------------------------- |
+| *      | 匹配任何元素节点。   | /bookstore/* | 选取 bookstore 元素的所有子元素 |
+| node() | 匹配任何类型的节点。 | //*          | 选取文档中的所有元素            |
+| @*     | 匹配任何属性节点。   | //title[@*]  | 选取所有带有属性的 title 元素。 |
+
+**语法练习**
+
+- 全部的标签
+  - `//*`
+- 全部的属性
+  - `//node()`
+
+
+
+#### 05 | 其他方法
+
+**Contains()**
+
+Contains() 是一个在 XPath 表达式中使用的方法。当任何属性的值动态变化（例如，登录信息）时，将使用该属性。
+
+contain 功能可以查找具有部分文本的元素，如以下示例所示。
+
+在这个例子中，我们尝试仅仅通过属性的部分文本值来辨认元素。在下面的 XPath 表达式中部分值’sub’用来替代提交按钮。可以观察到成功找到了元素。
+
+‘Type’的完整值是’submit’但是只使用了部分值’sub’。
+
+```py
+Xpath=//*[contains(@type,'sub')] 
+```
+
+‘name’的完整值是’btnLogin’但是只用了部分值’btn’。
+
+```python
+Xpath=//*[contains(@name,'btn')]
+```
+
+
+
+**使用 OR & AND**
+
+在 OR 表达式中，有两个条件要用到，条件一或者条件二应为真。如果任何一个条件为真或两者皆为真，则也适
+
+用。 意味着任何一种条件都应为真才能找到该元素。
+
+在下面的 XPath 表达式中，辨认出了单个条件或者两个条件皆为真的元素。
+
+```js
+Xpath=//*[@type='submit' or @name='btnReset']
+```
+
+在 AND 表达式中，有两个条件要用到，这两个条件必须全部为真才能找到元素。如果任意一个条件为假就不能查
+
+找到元素。
+
+```python
+Xpath=//input[@type='submit' and @name='btnLogin']
+```
+
+
+
+**Starts-with**
+
+XPath starts-with() 是一个用来查找属性值随着页面刷新或者其他动态操作而改变的页面元素的函数。在这个方法
+
+中，属性的开始文件被匹配到用来查找属性值动态变化的元素。你也可以查找属性值是静态 (不变) 的元素。
+
+例如：假设特定元素的 ID 这样动态变化：
+
+```python
+Id=”message12”
+
+Id=”message345”
+
+Id=”message8769”
+```
+
+等等等等… 但是初始文本是一样的。在这种情况下，我们就可以使用 Start-with 表达式。
+
+在下面的函数中，有两个以”message” 开头的 id 元素 (例如：’用户 - Id 不能为空’&’密码不能为空’)。在下面的表达
+
+式中，XPath 查找到这些以’message’开头的’ID’元素。
+
+```python
+Xpath=//label[starts-with(@id, 'message')]
+```
+
+
+
+#### 06 | 运算符
+
+下面列出了可用在 XPath 表达式中的运算符：
+
+| 运算符 | 描述           | 实例                      | 返回值                                                       |
+| :----- | :------------- | :------------------------ | :----------------------------------------------------------- |
+| \|     | 计算两个节点集 | //book \| //cd            | 返回所有拥有 book 和 cd 元素的节点集                         |
+| +      | 加法           | 6 + 4                     | 10                                                           |
+| -      | 减法           | 6 - 4                     | 2                                                            |
+| *      | 乘法           | 6 * 4                     | 24                                                           |
+| div    | 除法           | 8 div 4                   | 2                                                            |
+| =      | 等于           | price=9.80                | 如果 price 是 9.80，则返回 true。如果 price 是 9.90，则返回 false。 |
+| !=     | 不等于         | price!=9.80               | 如果 price 是 9.90，则返回 true。如果 price 是 9.80，则返回 false。 |
+| <      | 小于           | price<9.80                | 如果 price 是 9.00，则返回 true。如果 price 是 9.90，则返回 false。 |
+| <=     | 小于或等于     | price<=9.80               | 如果 price 是 9.00，则返回 true。如果 price 是 9.90，则返回 false。 |
+| >      | 大于           | price>9.80                | 如果 price 是 9.90，则返回 true。如果 price 是 9.80，则返回 false。 |
+| >=     | 大于或等于     | price>=9.80               | 如果 price 是 9.90，则返回 true。如果 price 是 9.70，则返回 false。 |
+| or     | 或             | price=9.80 or price=9.70  | 如果 price 是 9.80，则返回 true。如果 price 是 9.50，则返回 false。 |
+| and    | 与             | price>9.00 and price<9.90 | 如果 price 是 9.80，则返回 true。如果 price 是 8.50，则返回 false。 |
+| mod    | 计算除法的余数 | 5 mod 2                   | 1                                                            |
+
+
+
+#### 07 | 轴（Axes）
+
+轴可定义相对于当前节点的节点集。
+
+| 轴名称             | 结果                                                     |
+| :----------------- | :------------------------------------------------------- |
+| ancestor           | 选取当前节点的所有先辈（父、祖父等）。                   |
+| ancestor-or-self   | 选取当前节点的所有先辈（父、祖父等）以及当前节点本身。   |
+| attribute          | 选取当前节点的所有属性。                                 |
+| child              | 选取当前节点的所有子元素。                               |
+| descendant         | 选取当前节点的所有后代元素（子、孙等）。                 |
+| descendant-or-self | 选取当前节点的所有后代元素（子、孙等）以及当前节点本身。 |
+| following          | 选取文档中当前节点的结束标签之后的所有节点。             |
+| following-sibling  | 选取当前节点之后的所有兄弟节点                           |
+| namespace          | 选取当前节点的所有命名空间节点。                         |
+| parent             | 选取当前节点的父节点。                                   |
+| preceding          | 选取文档中当前节点的开始标签之前的所有节点。             |
+| preceding-sibling  | 选取当前节点之前的所有同级节点。                         |
+| self               | 选取当前节点。                                           |
+
+
+
+#### 08 |  lxml模块的使用
+
+1. 导入 lxml 的 etree 库
+
+   ``from lxml import etree``
+
+2. 利用etree.HTML，将html字符串（bytes类型或str类型）转化为Element对象，Element对象具有xpath的方法，返回结果的列表
+
+   ```python
+   html = etree.HTML(text) 
+   ret_list = html.xpath("xpath语法规则字符串")
+   ```
+
+3. xpath方法返回列表的三种情况
+
+   - 返回空列表：根据xpath语法规则字符串，没有定位到任何元素
+   - 返回由字符串构成的列表：xpath字符串规则匹配的一定是文本内容或某属性的值
+   - 返回由Element对象构成的列表：xpath规则字符串匹配的是标签，列表中的Element对象可以继续进行xpath
+
+**示例：**
+
+```python
+from lxml import etree
+text = ''' 
+<div> 
+  <ul> 
+    <li class="item-1">
+      <a href="link1.html">first item</a>
+    </li> 
+    <li class="item-1">
+      <a href="link2.html">second item</a>
+    </li> 
+    <li class="item-inactive">
+      <a href="link3.html">third item</a>
+    </li> 
+    <li class="item-1">
+      <a href="link4.html">fourth item</a>
+    </li> 
+    <li class="item-0">
+      a href="link5.html">fifth item</a>
+  </ul> 
+</div>
+'''
+
+html = etree.HTML(text)
+
+#获取href的列表和title的列表
+href_list = html.xpath("//li[@class='item-1']/a/@href")
+title_list = html.xpath("//li[@class='item-1']/a/text()")
+
+#组装成字典
+for href in href_list:
+    item = {}
+    item["href"] = href
+    item["title"] = title_list[href_list.index(href)]
+    print(item)
+```
+
+#### 09 | lxml模块中etree.tostring函数的使用
+
+运行下边的代码，观察对比html的原字符串和打印输出的结果
+
+```python
+
+from lxml import etree
+html_str = ''' <div> <ul> 
+        <li class="item-1"><a href="link1.html">first item</a></li> 
+        <li class="item-1"><a href="link2.html">second item</a></li> 
+        <li class="item-inactive"><a href="link3.html">third item</a></li> 
+        <li class="item-1"><a href="link4.html">fourth item</a></li> 
+        <li class="item-0"><a href="link5.html">fifth item</a> 
+        </ul> </div> '''
+
+html = etree.HTML(html_str)
+
+handeled_html_str = etree.tostring(html).decode()
+print(handeled_html_str)
+```
+
+**现象和结论**
+
+> 打印结果和原来相比：
+>
+> 1. 自动补全原本缺失的`li`标签
+> 2. 自动补全`html`等标签
+
+```html
+<html><body><div> <ul> 
+<li class="item-1"><a href="link1.html">first item</a></li> 
+<li class="item-1"><a href="link2.html">second item</a></li> 
+<li class="item-inactive"><a href="link3.html">third item</a></li> 
+<li class="item-1"><a href="link4.html">fourth item</a></li> 
+<li class="item-0"><a href="link5.html">fifth item</a> 
+</li></ul> </div> </body></html>
+```
+
+**结论**：
+
+- lxml.etree.HTML(html_str)可以自动补全标签
+
+- `lxml.etree.tostring`函数可以将转换为Element对象再转换回html字符串
+- 爬虫如果使用lxml来提取数据，应该以`lxml.etree.tostring`的返回结果作为提取数据的依据
+

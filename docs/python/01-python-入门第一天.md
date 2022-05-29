@@ -1117,5 +1117,17 @@ mutex.release()
 
 
 
+## 小知识
 
+### for..in..
 
+```python
+list = [1,2,3,4]
+list2 = ['a','f','c','g']
+for index, value in zip(list, list2):
+	print(index, value)
+```
+
+以相同的索引遍历两个数组
+
+数组的长度必须一样，否则会报错
