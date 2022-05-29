@@ -1,7 +1,12 @@
 ---
 id: python-module
-title: 03 - requests、jsonpath
+title: 03 - 爬虫涉及的框架
 ---
+
+- requests
+- jsonpath
+- xpath
+- selenium
 
 ## Requests
 
@@ -1008,3 +1013,97 @@ print(handeled_html_str)
 - `lxml.etree.tostring`函数可以将转换为Element对象再转换回html字符串
 - 爬虫如果使用lxml来提取数据，应该以`lxml.etree.tostring`的返回结果作为提取数据的依据
 
+
+
+## selenium
+
+Selenium是一个Web的自动化测试工具，最初是为网站自动化测试而开发的，Selenium 可以直接调用浏览器，
+
+它支持所有主流的浏览器（包括PhantomJS这些无界面的浏览器），可以接收指令，让浏览器自动加载页面，获
+
+取需要的数据，甚至页面截屏等。我们可以使用selenium很容易完成之前编写的爬虫，接下来我们就来看一下
+
+selenium的运行效果
+
+**selenium的作用和工作原理**
+
+利用浏览器原生的API，封装成一套更加面向对象的Selenium WebDriver API，直接操作浏览器页面里的元素，甚
+
+至操作浏览器本身（截屏，窗口大小，启动，关闭，安装插件，配置证书之类的）
+
+```mermaid
+graph TB
+A(python代码) --> B(浏览器厂商提供的 webdriver)
+B(浏览器厂商提供的 webdriver) --> C(浏览器)
+
+
+
+```
+
+- 不同的浏览器使用各自不同的 webdriver
+- webdriver 本质是一个 web-server，对外提供 webapi，其中封装了浏览器各种功能的 api
+- phantomjs 无界面浏览器被封装到了 webdriver
+
+> PhantomJS 是一个基于Webkit的“无界面”(headless)浏览器，它会把网站加载到内存并执行页面上的 JavaScript。下载地址：<http://phantomjs.org/download.html>
+
+
+
+### 01 | selenium的安装以及简单使用
+
+> 以谷歌浏览器的 chromedriver 为例
+
+`pip/pip3 install selenium`
+
+**下载版本符合的webdriver**
+
+1. 查看谷歌浏览器的版本
+2. 访问https://npm.taobao.org/mirrors/chromedriver，点击进入不同版本的chromedriver下载页面
+3. 点击notes.txt进入版本说明页面
+4. 查看chrome和chromedriver匹配的版本
+5. 根据操作系统下载正确版本的chromedriver
+6. 解压压缩包后获取python代码可以调用的谷歌浏览器的webdriver可执行文件
+   1. windows为`chromedriver.exe`
+   2. linux和macos为`chromedriver`
+7. chromedriver环境的配置
+   1. windows环境下需要将 chromedriver.exe 所在的目录设置为path环境变量中的路径
+   2. linux/mac环境下，将 chromedriver 所在的目录设置到系统的PATH环境值中
+      1. echo $PATH：获取 Mac 中环境值的目录
+      2. 把 chromedriver 拷贝到任一目录
+
+
+
+**selenium的简单使用**
+
+接下来我们就通过代码来模拟百度搜索
+
+```python
+import time
+from selenium import webdriver
+
+# 通过指定chromedriver的路径来实例化driver对象，chromedriver放在当前目录。
+# driver = webdriver.Chrome(executable_path='./chromedriver')
+# chromedriver已经添加环境变量
+driver = webdriver.Chrome()
+
+# 控制浏览器访问url地址
+driver.get("https://www.baidu.com/")
+
+# 在百度搜索框中搜索'python'
+driver.find_element_by_id('kw').send_keys('python')
+# 点击'百度搜索'
+driver.find_element_by_id('su').click()
+
+time.sleep(6)
+# 退出浏览器
+driver.quit()
+```
+
+- `webdriver.Chrome(executable_path='./chromedriver')`中executable参数指定的是下载好的chromedriver文件的路径
+
+- `driver.find_element_by_id('kw').send_keys('python')`定位id属性值是'kw'的标签，并向其中输入字符串'python'
+
+- `driver.find_element_by_id('su').click()`定位id属性值是su的标签，并点击
+
+  - click函数作用是：触发标签的js的click事件
+
+  
