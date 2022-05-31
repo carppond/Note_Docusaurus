@@ -1,6 +1,6 @@
 ---
 id: python入门第一天
-title: 01 | python 入门第一天
+title: 01 | python 入门
 ---
 
 

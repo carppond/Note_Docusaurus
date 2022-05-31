@@ -1371,7 +1371,7 @@ driver.delete_all_cookies()
 
 selenium可以让浏览器执行我们规定的js代码，运行下列代码查看运行效果
 
-```python
+```python {8,9}
 import time
 from selenium import webdriver
 
@@ -1379,9 +1379,7 @@ driver = webdriver.Chrome()
 driver.get("http://www.itcast.cn/")
 time.sleep(1)
 
-// highlight-next-line
 js = 'window.scrollTo(0,document.body.scrollHeight)' # js语句
- // highlight-next-line
 driver.execute_script(js) # 执行js的方法
 
 time.sleep(5)
