@@ -1131,3 +1131,24 @@ for index, value in zip(list, list2):
 以相同的索引遍历两个数组
 
 数组的长度必须一样，否则会报错
+
+
+
+### 字典推导式
+
+普通写法
+
+```python
+cookies = {}
+for data get_cookies：
+	cookies[data['name']] = data['value']
+```
+
+改进成字典推导式就是：
+
+```python
+cookies = { data['name'] : data['value'] for data get_cookies}
+```
+
+也有列表推导式
+

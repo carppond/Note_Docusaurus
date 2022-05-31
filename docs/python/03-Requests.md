@@ -1138,6 +1138,22 @@ find_element(s)_by_tag_name 			(根据标签名获取元素列表)
 find_element(s)_by_css_selector 		(根据css选择器来获取元素列表)
 ```
 
+**上面的基本上废弃，建议使用下面的语法**
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+driver.find_element(by=By.ID, value='xxxx')                    # (返回一个元素)， 默认，可以不写 by=By.ID
+driver.find_element(s)(by=By.CLASS_NAME, value='xxxx')         # 根据类名获取元素列表
+driver.find_element(s)(by=By.NAME, value='xxxx')               # 根据标签的name属性值返回包含标签对象元素的列表
+driver.find_element(s)(by=By.XPATH, value='xxxx')              # 返回一个包含元素的列表
+driver.find_element(s)(by=By.LINK_TEXT, value='xxxx')          # 根据连接文本获取元素列表
+driver.find_element(s)(by=By.PARTIAL_LINK_TEXT, value='xxxx')  # 根据链接包含的文本获取元素列表
+driver.find_element(s)(by=By.TAG_NAME, value='xxxx')           # 根据标签名获取元素列表
+driver.find_element(s)(by=By.CSS_SELECTOR, value='xxxx')       # 根据css选择器来获取元素列表
+```
+
 > 注意：
 >
 > - find_element和find_elements的区别：
@@ -1146,6 +1162,28 @@ find_element(s)_by_css_selector 		(根据css选择器来获取元素列表)
 > - by_link_text和by_partial_link_tex的区别：全部文本和包含某个文本
 > - 以上函数的使用方法
 >   - `driver.find_element_by_id('id_str')`
+
+**示例：**
+
+```python
+# 获取 id su 对应的元素
+driver.find_element(by=By.ID, value='su')
+# 获取类名 为 container 的元素
+driver.find_element(s)(by=By.CLASS_NAME, value='container') 
+# 获取元素属性 name 为 zhangsan 的标签对象元素
+driver.find_element(s)(by=By.NAME, value='zhangsan')        
+# 根据 xpath，获取元素
+driver.find_element(s)(by=By.XPATH, value='//*[@id="kw"]')       
+# 链接文本为 hao123 的元素
+driver.find_element(s)(by=By.LINK_TEXT, value='hao123')       
+# 链接文本包含 hao 的元素，相对于上面更加全面
+driver.find_element(s)(by=By.PARTIAL_LINK_TEXT, value='hao')  
+# 根据标签名div获取元素
+# 目标元素再当前 html只是唯一标签的时候或者众多定位出来的标签中的第一个的时候才能使用
+driver.find_element(s)(by=By.TAG_NAME, value='div')           
+# 根据 css 选择器为#kw 的元素
+driver.find_element(s)(by=By.CSS_SELECTOR, value='#kw')      
+```
 
 
 
@@ -1178,10 +1216,10 @@ find_element仅仅能够获取元素，不能够直接获取其中的数据，�
   
   driver.get('http://www.itcast.cn/')
   
-  ret = driver.find_elements_by_tag_name('h2')
+  ret = driver.find_elements(by=By.TAG_NAME, value='h2')
   print(ret[0].text) # 
   
-  ret = driver.find_elements_by_link_text('黑马程序员')
+  ret = driver.find_elements(by=By.LINK_TEXT, value='黑马程序员')
   print(ret[0].get_attribute('href'))
   
   driver.quit()
@@ -1189,7 +1227,7 @@ find_element仅仅能够获取元素，不能够直接获取其中的数据，�
 
   
 
-### 03 |  selenium标签页的切换
+### 03 |  selenium标签页的切换：切换句柄
 
 当selenium控制浏览器打开多个标签页时，如何控制浏览器在不同的标签页中进行切换呢？需要我们做以下两步:
 
@@ -1220,9 +1258,9 @@ find_element仅仅能够获取元素，不能够直接获取其中的数据，�
   driver.get("https://www.baidu.com/")
   
   time.sleep(1)
-  driver.find_element_by_id('kw').send_keys('python')
+  driver.find_element(by=By.ID, value='kw').send_keys('python')
   time.sleep(1)
-  driver.find_element_by_id('su').click()
+  driver.find_element(by=By.ID, value='su').click()
   time.sleep(1)
   
   # 通过执行js来新开一个标签页
@@ -1341,7 +1379,9 @@ driver = webdriver.Chrome()
 driver.get("http://www.itcast.cn/")
 time.sleep(1)
 
+// highlight-next-line
 js = 'window.scrollTo(0,document.body.scrollHeight)' # js语句
+ // highlight-next-line
 driver.execute_script(js) # 执行js的方法
 
 time.sleep(5)
