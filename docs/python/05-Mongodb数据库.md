@@ -45,7 +45,7 @@ mongodb的官方文档：https://docs.mongodb.com/manual/introduction/
 
 ### 02 |  mongodb的安装
 
-**命令安装**
+#### **命令安装**
 
 在ubuntu中使用apt-get工具安装
 
@@ -55,7 +55,7 @@ sudo apt-get install -y mongodb-org
 
 > 参考官方文档 https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
 
-**源码安装**
+#### **源码安装**
 
 - 选择相应版本和操作系统并下载
 
@@ -86,7 +86,51 @@ sudo apt-get install -y mongodb-org
   export PATH=/usr/local/mongodb/bin:$PATH
   ```
 
-  
+
+#### **brew 安装**
+
+```
+brew tap mongodb/brew
+brew install mongodb-community@4.4
+```
+
+**@** 符号后面的 **4.4** 是最新版本号。
+
+安装信息：
+
+- 配置文件：**/usr/local/etc/mongod.conf**
+- 日志文件路径：**/usr/local/var/log/mongodb**
+- 数据存放路径：**/usr/local/var/mongodb**
+
+**运行 mongodb：**
+
+我们可以使用 brew 命令或 mongod 命令来启动服务。
+
+brew 启动：
+
+```
+brew services start mongodb-community@4.4
+```
+
+brew 停止：
+
+```
+brew services stop mongodb-community@4.4
+```
+
+mongod 命令后台进程方式：
+
+```
+mongod --config /usr/local/etc/mongod.conf --fork
+```
+
+这种方式启动要关闭可以进入 mongo shell 控制台来实现：
+
+```
+> db.adminCommand({ "shutdown" : 1 })
+```
+
+
 
 ## Mongodb 的简单使用
 
@@ -107,7 +151,7 @@ mongodb服务端启动分别两种方式：
 - 停止: sudo service mongod stop
 - 重启: sudo service mongod restart
 
-
+Mac 下
 
 #### 02 | 生产环境正式的启动方式
 
@@ -121,9 +165,49 @@ mongodb服务端启动分别两种方式：
 - --f: 或-f 配置文件路径(可以将上述配置信息写入文件然后通过该文件中的参数进行加载启动)
 - --auth: 以权限认证的方式启动
 
+创建日志及数据存放的目录：
+
+- 数据存放路径：
+
+  ```
+  sudo mkdir -p /usr/local/var/mongodb
+  ```
+
+- 日志文件路径：
+
+  ```
+  sudo mkdir -p /usr/local/var/log/mongodb
+  ```
+
+- 确保两个文件有读写权限
+
+  ```
+  sudo chown 电脑用户名 /usr/local/var/mongodb
+  sudo chown 电脑用户名 /usr/local/var/log/mongodb
+  ```
+
+**使用以下命令在后台启动 mongodb：**
+
+```
+mongod --dbpath /usr/local/var/mongodb --logpath /usr/local/var/log/mongodb/mongo.log --fork
+```
+
+如果不想在后端运行，而是在控制台上查看运行过程可以直接设置配置文件启动：
+
+```
+mongod --config /usr/local/etc/mongod.conf
+```
+
+
+
 #### 03 |  查看是否启动成功
 
+```
 ps aux | grep mongod
+ps aux | grep -v grep | grep mongod
+```
+
+以上之一都可以
 
 
 
@@ -132,6 +216,19 @@ ps aux | grep mongod
 - 启动本地客户端: mongo
 - 查看帮助：mongo –help
 - 退出：exit或者ctrl+c
+
+```
+$ cd /usr/local/mongodb/bin 
+$ ./mongo
+MongoDB shell version v4.0.9
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("3c12bf4f-695c-48b2-b160-8420110ccdcf") }
+MongoDB server version: 4.0.9
+……
+> 1 + 1
+2
+> 
+```
 
 
 
