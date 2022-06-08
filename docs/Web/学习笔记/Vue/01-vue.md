@@ -1637,6 +1637,42 @@ new Vue({
   - 多个过滤器：`vue 变量 | 过滤器 1 | 过滤器 2`
 
 - ```jsx
+  //  传一个参数
+  // 使用过滤器
+  {{aaa | xxxa}}
+  
+  export default {
+    filters: {
+      // 定义过滤器
+      xxxa(aa) {
+        ....
+      }
+    }
+  }
+  
+  //  传两个个参数
+  // 使用过滤器
+  {{aaa | xxxb(bb)}}
+  export default {
+    filters: {
+      // 定义过滤器
+      xxxb(aa, bb) {
+        ....
+      }
+    }
+  }
+  
+  //  传两个个参数
+  // 使用过滤器
+  {{aaa | xxxc(bb,cc)}}
+  export default {
+    filters: {
+      // 定义过滤器
+      xxxc(aa, bb, cc) {
+        ....
+      }
+    }
+  }
   ```
 
 
