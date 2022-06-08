@@ -28,7 +28,7 @@ yarn global add @vue/cli
 
 全局包会在计算机中配置全局命令（例：nodemon、vue命令）
 
-### 03 | vue 创建脚手架项目--启动
+### 03 | vue 创建脚手架项目：手动配置 Manually select features
 
 `vue create 项目名`： 创建一个脚手架项目
 
