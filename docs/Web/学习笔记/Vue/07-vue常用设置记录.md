@@ -356,3 +356,11 @@ import 'normalize.css'
  }
 ```
 
+### 07 | template
+
+```vue
+<template>
+</template>
+```
+
+用 template 包裹一些元素的好处，可以看做成一个元素，但又不会解析成一个标签。类似于小程序中的block

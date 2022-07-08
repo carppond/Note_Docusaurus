@@ -346,10 +346,23 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 - 关系选择器：`h1>strong`
   - 表示选择嵌套在h1标记的子标记strong。
+  
 - 临近兄弟选择器：`h2+p`
   - 表示选择h2标记后紧邻的第一个兄弟标记p。
+  
 - 普通兄弟选择器：`p~h2`
   - 表示选择p标记所有的h2兄弟标记。
+  
+  - 选择当前选择器后面的所有元素
+  
+  - ```
+    li {
+    	~li {
+    	 // 表示 li 之后所有的 li
+    	}
+    }
+    ```
+  
 - 结构化伪类选择器：`:root`
   - 用于匹配文档根标记，使用“:root选择器”定义的样式，对所有页面标记都生效。
   - 
@@ -372,34 +385,158 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 
 ## 五、背景相关属性
 
-### 5.1 背景平铺
+### 5.1 background-color
 
-属性名：background-repeat，bgr
+背景色
 
-属性值：
+快捷键：bgc
 
-- repeat：默认值，水平和垂直方向都平铺
-- no-repeat：不平铺。最常用的方式
-- repeat-x：延水平方向( x 轴)平铺
-- repeat-y：沿着垂直方向( y 轴)平铺
+```
+background-color:yellow;
+background-color:#00ff00;
+background-color:rgb(255,0,255);
+```
 
-### 5.2 背景位置
+### 5.2 background-position
 
-属性名：background-positon，快捷方式 bgp
+设置背景图像的起始位置
 
-属性值：background-positon，水平方向位置，垂直方向位置
+快捷键：bgp
 
 ![web_study_12](../../../assets/Web/Study/web_study_12.png)
 
 注意点：方位名词取值和坐标取值可以混使用，第一个取值表示水平，第二个取值表示垂直
 
-### 5.3 背景相关属性的连写形式
+```css
+// top
+background-position: top; // 靠顶居中
+background-position: top 10px; // 左上角， 这里的值不管是多少 px 都固定在左上角
+
+// left
+background-position: left; // 靠左 垂直居中
+background-position: left 10px; // 靠左， 顶部往下 10px
+background-position: left top; // 靠左上
+background-position: left top 100px; // 靠左上， 往下 100px 的位置
+background-position: left center 100px; // 靠左上，这里的值不管是多少 px 都固定在左上角
+background-position: left bottom; // 靠左下
+background-position: left bottom 100px; // 靠左下，往上 100px 的位置
+
+// right
+background-position: right; // 靠右 垂直居中
+background-position: right 10px; // 靠右， 顶部往下 10px
+background-position: right top; // 靠右上
+background-position: right top 100px; // 靠右上， 往下 100px 的位置
+background-position: right center 100px; // 靠右上，这里的值不管是多少 px 都固定在左上角
+background-position: right bottom; // 靠右下
+background-position: right bottom 100px; // 靠右下，往上 100px 的位置
+
+// center
+background-position: center; // 居中
+background-position: center 10px; // 水平居中，顶部往下 10px
+background-position: center left; // 靠左 垂直居中
+background-position: center left 100px; // 靠左，往右 100px，垂直居中
+background-position: center right; // 靠右 垂直居中
+background-position: center right 100px; // 靠右 往左 100px ，垂直居中
+background-position: center center; // 居中
+在出现其他情况，左上角
+```
+
+### 5.3 background-size：
+
+设置背景图片大小。图片可以保有其原有的尺寸，或者拉伸到新的尺寸，或者在保持其原有比例的同时缩放到元素的可用空间的尺寸。
+
+快捷键：bgs
+
+- 设置图片的高度和宽度， 如果只设置一个值，另一个值为 auto
+- 关键字：
+  - cover：此时会保持图像的纵横比并将图像缩放成将完全覆盖背景定位区域的最小大小。
+  - contain：此时会保持图像的纵横比并将图像缩放成将适合背景定位区域的最大大小。
+
+```css
+/* 关键字 */
+background-size: cover
+background-size: contain
+
+/* 一个值：这个值指定图片的宽度，图片的高度隐式的为 auto */
+background-size: 50%
+background-size: 3em
+background-size: 12px
+background-size: auto
+
+/* 两个值 */
+/* 第一个值指定图片的宽度，第二个值指定图片的高度 */
+background-size: 50% auto
+background-size: 3em 25%
+background-size: auto 6px
+background-size: auto auto
+
+/* 逗号分隔的多个值：设置多重背景 */
+background-size: auto, auto     /* 不同于 background-size: auto auto */
+background-size: 50%, 25%, 25%
+background-size: 6px, auto, contain
+
+/* 全局属性 */
+background-size: inherit;
+background-size: initial;
+background-size: unset;
+```
+
+ ![xxx](./assets/css-01.jpg)
+
+### 5.4 background-repeat
+
+背景图像可以沿着水平轴，垂直轴，两个轴重复，或者根本不重复。
+
+快捷键：bgr
+
+属性值：
+
+- repeat：默认值，水平和垂直方向都平铺
+- no-repeat：不平铺。最常用的方式
+- repeat-x：延水平方向( x 轴)平铺，等价于  repeat no-repeat
+- repeat-y：沿着垂直方向( y 轴)平铺，等价于 no-repeat repeat
+- space：图像会尽可能得重复，但是不会裁剪。
+- round：随着允许的空间在尺寸上的增长，被重复的图像将会伸展 (没有空隙), 直到有足够的空间来添加一个图像。当下一个图像被添加后，所有的当前的图像会被压缩来腾出空间。
+
+> 具体效果参考：https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-repeat
+
+### 5.5 background-origin
+
+规定了指定背景图片[`background-image`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/background-image) 属性的原点位置的背景相对区域。
+
+快捷键：bgo
+
+- border-box：背景图片的摆放以 border 区域为参考
+- padding-box：背景图片的摆放以 padding 区域为参考
+- content-box：背景图片的摆放以 content 区域为参考
+
+```
+background-origin: border-box
+background-origin: padding-box
+background-origin: content-box
+```
+
+### 5.6 背景相关属性的连写形式
 
 属性名：background，快捷方式 bg
 
 属性值：
 
 - 单个属性值的合写，取值之间可以空格隔开
+
+可以设置如下属性：
+
+- background: color、postion、size、repeat、origin、clip、attachment、image
+  - background-color：设置背景色
+  - background-position：设置图像的位置
+  - background-size：设置背景的尺寸
+    - background-size：只能紧挨着  background-position 出现，以 `/` 分割。例如：`center / 100px`、`center 10px / contain`
+  - background-repeat：规定如何重复背景图像。
+  - background-origin：规定背景图片的定位区域。
+  - background-clip：设置元素的背景（背景图片或颜色）是否延伸到边框、内边距盒子、内容盒子下面。
+  - background-attachment：规定背景图像是否固定或者随着页面的其余部分滚动。
+  - background-image：指定要使用的一个或多个背景图像
+- 如果不设置其中的某个值，使用默认值
 
 书写顺序：
 
@@ -415,6 +552,7 @@ CCS 是写在 style 标签中，style 标签一般写道 header 标签里面，t
 - 如果需要设置单独的样式和连写
   - 要么把单独的样式连写的下面
   - 要么把单独的样式写在连写的里面
+- 
 
 ### 小结
 
