@@ -332,21 +332,6 @@ export default {
 - yarn run build：打包
 - yarn install 安装依赖
 
-
-
-**其他第三方**
-
-- npm install antd --save：阿里组件库
-- ant-design-vue：阿里组件库
-- axios：网络请求库
-- vue-element-admin：后端解决方法，它使用了最新的前端技术，内置了 i18 国际化解决方案，动态路由、权限验证，提供了丰富的功能组件，可快速搭建企业级中后台产品原型
-  - PC 端项目中使用
-
-- vant：有赞组件库
-- vue-router：路由
-- vuex：共享状态、共享数据
-- 
-
 ### 09 | 将单位转为 rem
 
 - [postcss-pxtorem](https://github.com/cuth/postcss-pxtorem) 是一款 postcss 插件，用于将单位转化为 rem
